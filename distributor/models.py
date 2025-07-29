@@ -15,6 +15,7 @@ class Task(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
     loops = models.IntegerField(default=0)
+    initial_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True)
 
     def __str__(self):
         return self.name
@@ -24,7 +25,8 @@ class TaskLoop(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     loop_index = models.IntegerField(default=0)
     scheduled_date = models.DateField()
-    dependencies = models.ManyToManyField("self", symmetrical=False, blank=True)
+    defined_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="defined_dependencies_set")
+    generated_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="generated_dependencies_set")
     priority = models.IntegerField(default=0)
     difficulty = models.IntegerField(default=0)
     approval_required = models.BooleanField(default=False)

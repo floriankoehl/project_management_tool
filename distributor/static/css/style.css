@@ -14,3 +14,56 @@
 /*#name_input_team {*/
 /*    height: 200px !important;*/
 /*}*/
+
+
+.create_task_form {
+    min-height: 400px;
+    background-color: #d9efff;
+    padding: 10px;
+    /*color: white*/
+}
+
+.all_tasks {
+    background-color: #274a68;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    max-width: 100%;
+}
+.task_listing {
+    height: 300px;
+    width: 200px;
+    background-color: white;
+    /*border-radius: 5px;*/
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+/*.select_possible_dependencies {*/
+/*    display: flex;*/
+/*}*/
+
+.pos_dep_add_button {
+    height: 100px !important;
+    width: 150px !important;
+    margin: 10px;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.pos_dep_add_button:hover {
+    background-color: #a5ff5e;
+}
+
+.dependency-buttons {
+  display: flex;
+  flex-wrap: wrap;         /* allow wrapping to next row */
+  gap: 10px;               /* spacing between buttons/forms */
+}
+
+.dependency-buttons form {
+  display: inline-block;   /* prevent form from forcing a new line */
+}

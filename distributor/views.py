@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import TeamCreationForm, TaskCreationForm, ProjectTimeframeForm
 
 from .models import Team, Task, Project
+from .utils import get_valid_possible_dependencies
 
 
 # Create your views here.
@@ -40,23 +41,75 @@ def tasks(request):
     task_form = TaskCreationForm()
     context = {
         'all_tasks': all_tasks,
-        'task_form': task_form
+        'task_form': task_form,
+        "show_create_button": True
     }
 
     return render(request, 'distributor/tasks.html', context)
 
 
-
+def create_task_page(request):
+    all_tasks = Task.objects.all()
+    task_form = TaskCreationForm()
+    context = {
+        'all_tasks': all_tasks,
+        'task_form': task_form
+    }
+    return render(request, 'distributor/create_task_page.html', context)
 
 def create_task(request):
     if request.method == "POST":
         form = TaskCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('tasks')
+            new_task = form.save()
+            return redirect('add_dependency_page', new_task.id)
         else:
             form = TaskCreationForm()
             return render(request, 'distributor/tasks.html', {'form': form})
+
+
+
+def add_dependency_page(request, id):
+    task_to_be_modified = Task.objects.get(id=id)
+
+    context = {
+        'possible_deps': get_valid_possible_dependencies(task_to_be_modified),
+        'task': task_to_be_modified,
+    }
+    return render(request, 'distributor/add_dep_task.html', context)
+
+
+def add_dependency(request, id):
+    if request.method == "POST":
+        dep_to_be_added = request.POST.get('dep_to_be_added')
+        task_to_be_modified = Task.objects.get(id=id)
+        task_to_be_modified.initial_dependencies.add(dep_to_be_added)
+        task_to_be_modified.save()
+
+        referer = request.META.get('HTTP_REFERER')  # where the request came from
+        return redirect(referer or 'tasks')  # fallback if header is missing
+
+
+def delete_dependency(request, id):
+    if request.method == "POST":
+        task_to_be_modified = Task.objects.get(id=id)
+        dep_to_be_removed = request.POST.get('dep_to_be_removed')
+        task_to_be_modified.initial_dependencies.remove(dep_to_be_removed)
+        task_to_be_modified.save()
+        referer = request.META.get('HTTP_REFERER')
+        return redirect(referer or 'tasks')
+
+
+
+def delete_task(request, id):
+    if request.method == "POST":
+        task = Task.objects.get(pk=id)
+        task.delete()
+        return redirect('tasks')
+
+
+
+
 
 
 
