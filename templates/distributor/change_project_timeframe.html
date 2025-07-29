@@ -1,0 +1,17 @@
+{% extends 'distributor/base.html' %}
+
+{% block title %}Timeframe{% endblock %}
+
+{% block content %}
+<h2>Start date: {{ global_project_timeframe.start_date }}</h2>
+<h2>End date: {{ global_project_timeframe.end_date }}</h2>
+
+<form method="POST" action="{% url 'define_project_timeframe' %}">
+                {% csrf_token %}
+                {{ global_project_timeframe_form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+
+{% endblock %}
+
+
