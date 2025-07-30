@@ -68,6 +68,15 @@ def create_task(request):
             return render(request, 'distributor/tasks.html', {'form': form})
 
 
+def display_task(request, id):
+    task = Task.objects.get(pk=id)
+    return render(request, 'distributor/display_task.html', {'task': task})
+
+def edit_task(request, id):
+    task = Task.objects.get(pk=id)
+    return render(request, 'distributor/edit_task.html', {'task': task})
+
+
 
 def add_dependency_page(request, id):
     task_to_be_modified = Task.objects.get(id=id)
@@ -130,7 +139,7 @@ def define_project_timeframe(request):
     else:
         form = ProjectTimeframeForm(instance=existing_project_timeframe)
 
-    return render(request, "home", {'form': form})
+    return render(request, "distributor/home", {'form': form})
 
 
 def change_project_page(request):

@@ -1,0 +1,10 @@
+{% load custom_tags %}
+
+
+<div class="all_tasks">
+        {% for task in all_tasks %}
+            <div class="task_listing">
+                {% view_task task.id %}
+            </div>
+        {% endfor %}
+    </div>

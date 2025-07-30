@@ -1,0 +1,9 @@
+{% extends "distributor/tasks.html" %}
+{% load custom_tags %}
+
+{% block title %}Task Creation Form{% endblock %}
+
+{% block task_creation_content %}
+    {% update_dependencies task.id %}
+
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "distributor/base.html" %}
+{% load custom_tags %}
+
+{% block title %}Display Task{% endblock %}
+
+{% block content %}
+    {% view_task task.id %}
+{% endblock %}

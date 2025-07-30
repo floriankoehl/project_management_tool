@@ -1,0 +1,11 @@
+{% extends "distributor/base.html" %}
+{% load custom_tags %}
+
+{% block title %}Edit task {{ task.name }}{% endblock %}
+
+{% block content %}
+    <h1>{{ task.name }}</h1>
+    <h2>Hardfacts: </h2>
+    <h2>Dependencies: </h2>
+    {% update_dependencies task.id %}
+{% endblock %}

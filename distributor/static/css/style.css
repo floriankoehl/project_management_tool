@@ -41,6 +41,34 @@
     flex-shrink: 0;
 }
 
+
+
+.all_teams {
+    background-color: #274a68;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.team_listing {
+        height: 300px;
+    width: 200px;
+    background-color: white;
+    /*border-radius: 5px;*/
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+
+
+
+
+
+
+
 /*.select_possible_dependencies {*/
 /*    display: flex;*/
 /*}*/
@@ -67,3 +95,10 @@
 .dependency-buttons form {
   display: inline-block;   /* prevent form from forcing a new line */
 }
+
+
+
+
+
+
+

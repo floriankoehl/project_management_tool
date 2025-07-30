@@ -1,0 +1,22 @@
+{% extends 'distributor/base.html' %}
+{% load custom_tags %}
+
+{% block title %}All Tasks{% endblock %}
+
+{% block content %}
+    <h1>Tasks</h1>
+
+
+    {% if show_create_button %}
+        <form method="GET" action="{% url 'create_task_page' %}">
+            <button>Create Task</button>
+        </form>
+    {% endif %}
+    {% block task_creation_content %}
+    {% endblock %}
+
+
+    {% if show_create_button %}
+    {% show_all_tasks %}
+    {% endif %}
+{% endblock %}

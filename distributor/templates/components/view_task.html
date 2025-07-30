@@ -1,0 +1,25 @@
+<h2>{{ task.name }}</h2>
+
+
+
+<h3>Dependencies: </h3>
+<ul>
+    {% for dep in task.initial_dependencies.all %}
+        <li>{{ dep.name }}</li>
+    {% endfor %}
+</ul>
+<form method="POST" action="{% url 'delete_task' task.id %}">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+</form>
+<form action="{% url 'add_dependency_page' task.id %}">
+    <button type="submit">Edit Dependencies</button>
+</form>
+<form method="GET" action="{% url 'display_task' task.id %}">
+    <button>Display task</button>
+</form>
+<form method="GET" action="{% url 'edit_task' task.id %}">
+    {% csrf_token %}
+    <button>Edit Task</button>
+</form>
+

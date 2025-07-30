@@ -14,5 +14,7 @@ urlpatterns = [
     path('add_dependency/<int:id>/', views.add_dependency, name='add_dependency'),
     path('add_dependency_page/<int:id>/', views.add_dependency_page, name='add_dependency_page'),
     path('delete_dependency/<int:id>/', views.delete_dependency, name='delete_dependency'),
+    path('display_task/<int:id>/', views.display_task, name='display_task'),
+    path('edit_task/<int:id>/', views.edit_task, name='edit_task'),
 
 ]
