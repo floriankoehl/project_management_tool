@@ -14,7 +14,7 @@ def show_all_teams():
 
 @register.inclusion_tag('components/all_tasks.html')
 def show_all_tasks():
-    tasks = Task.objects.all()
+    tasks = Task.objects.all().order_by('team')
     return {'all_tasks': tasks}
 
 @register.inclusion_tag('components/view_task.html')
@@ -33,6 +33,10 @@ def update_dependencies(task_id):
         'possible_deps': possible_deps
     }
 
+@register.inclusion_tag('components/comp_display_single_team.html')
+def comp_display_single_team(team_id):
+    team = Team.objects.get(pk=team_id)
+    return {'team': team}
 
 
 

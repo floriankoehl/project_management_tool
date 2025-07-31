@@ -1,19 +1,21 @@
 
 
 <div class="create_task_form">
-        <h1>Name: {{ task.name }}</h1>
         <h2>Current dependencies: </h2>
-        <ul>
-            {% for dep in task.initial_dependencies.all %}
-                <li>{{ dep.name }}</li>
-                <form method="POST" action="{% url 'delete_dependency' task.id %}">
-                        {% csrf_token %}
-                        <input name="dep_to_be_removed" value="{{ dep.id }}" type="hidden">
-                        <button>Delete</button>
-                    </form>
-            {% endfor %}
-        </ul>
 
+            {% for dep in task.initial_dependencies.all %}
+                <div class="display_dependency_with_button">
+
+                <form method="POST" action="{% url 'delete_dependency' task.id %}">
+                    {% csrf_token %}
+                    <input name="dep_to_be_removed" value="{{ dep.id }}" type="hidden">
+                    <button>Delete</button>
+                </form>
+                {{ dep.name }}
+                </div>
+            {% endfor %}
+
+        <h2>Possible dependencies: </h2>
         <div class="select_possible_dependencies">
             <div class="dependency-buttons">
                 {% for dep in possible_deps %}

@@ -1,0 +1,35 @@
+
+<style>
+
+{#.display_team_small {#}
+{#    background-color: {{ team.color }};#}
+{#}#}
+</style>
+
+<div style="background-color: {{ team.color }}" class="display_team_small">
+    <h2>{{ team.name }}</h2>
+
+
+    <div class="team_essential_buttons_container">
+        <form method="POST" action="{% url 'delete_team' team.id %}">
+            {% csrf_token %}
+            <button class="task_essential_button" type="submit">Delete</button>
+        </form>
+        <form method="POST" action="{% url 'edit_team_page' team.id %}">
+            {% csrf_token %}
+            <button class="task_essential_button" type="submit">Edit</button>
+        </form>
+    </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+

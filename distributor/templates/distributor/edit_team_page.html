@@ -1,0 +1,22 @@
+{% extends "distributor/base.html" %}
+
+{% block title %}Edit Team {{ team.name }}{% endblock %}
+
+{% block content %}
+    <h2>Name: {{ team.name }}</h2>
+    <form class="team_update_form_container" method="POST" action="{% url 'team_update_name' team.id %}">
+        {% csrf_token %}
+        {{ team_update_name_form }}
+        <button type="submit">Change Name</button>
+    </form>
+    <h2 style="background-color: {{ team.color }}">Color</h2>
+    <form class="team_update_form_container" method="POST" action="{% url 'team_update_color' team.id %}">
+        {% csrf_token %}
+        {{ team_update_color_form }}
+        <button type="submit">Change Color</button>
+    </form>
+
+
+
+
+{% endblock %}

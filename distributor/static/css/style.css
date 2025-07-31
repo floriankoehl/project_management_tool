@@ -51,9 +51,10 @@
     gap: 10px;
     overflow-x: auto;
     max-width: 100%;
+
 }
 
-.team_listing {
+.display_team_small {
         height: 300px;
     width: 200px;
     background-color: white;
@@ -62,9 +63,37 @@
     flex-shrink: 0;
 }
 
+.task_essential_buttons_container{
+    display: flex;
+    gap: 5px;
+
+}
+
+.task_essential_button:hover {
+    background-color: black;
+    color: white
+}
+
+.display_dependency_with_button {
+    display: flex;
+    gap: 5px;
+}
+
+.view_task_container * {
+    font-size: 15px;
+    width: 100%;
+    height: 100%;
+}
+
+.view_task_container h1 {
+    font-size: 25px;
+}
 
 
 
+/*h1 {*/
+/*    font-size: 400px;*/
+/*}*/
 
 
 
@@ -96,7 +125,15 @@
   display: inline-block;   /* prevent form from forcing a new line */
 }
 
+.task_update_form_container {
+    display: flex;
+    gap: 5px;
+}
 
+.team_update_form_container {
+        display: flex;
+    gap: 5px;
+}
 
 
 

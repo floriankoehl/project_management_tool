@@ -1,0 +1,30 @@
+{% extends "distributor/base.html" %}
+{% load custom_tags %}
+
+{% block title %}Edit task {{ task.name }}{% endblock %}
+
+{% block content %}
+    <h1>Edit Task: </h1>
+    <h2>Name: {{ task.name }}</h2>
+    <form class="task_update_form_container" method="POST" action="{% url 'task_name_update' task.id %}">
+        {% csrf_token %}
+        {{ task_name_update_form }}
+        <button>Update Name</button>
+    </form>
+    <h2 style="background-color: {{ task.team.color }}">Team: {{ task.team }}</h2>
+    <form class="task_update_form_container" method="POST" action="{% url 'task_team_update' task.id %}">
+        {% csrf_token %}
+        {{ task_team_update_form }}
+        <button>Update Team</button>
+    </form>
+    <h2>Loops: {{ task.loops }}</h2>
+    <form class="task_update_form_container" method="POST" action="{% url 'task_loops_update' task.id %}">
+        {% csrf_token %}
+        {{ task_loop_update_form }}
+        <button>Update Loops</button>
+    </form>
+
+
+    <h2>Dependencies</h2>
+    {% update_dependencies task.id %}
+{% endblock %}

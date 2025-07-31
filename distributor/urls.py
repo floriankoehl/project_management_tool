@@ -15,6 +15,14 @@ urlpatterns = [
     path('add_dependency_page/<int:id>/', views.add_dependency_page, name='add_dependency_page'),
     path('delete_dependency/<int:id>/', views.delete_dependency, name='delete_dependency'),
     path('display_task/<int:id>/', views.display_task, name='display_task'),
-    path('edit_task/<int:id>/', views.edit_task, name='edit_task'),
+    path('edit_task_page/<int:id>/', views.edit_task_page, name='edit_task_page'),
+    path('delete_team/<int:id>/', views.delete_team, name='delete_team'),
+    path('task_team_update/<int:id>/', views.task_team_update, name='task_team_update'),
+    path('task_loops_update/<int:id>/', views.task_loops_update, name='task_loops_update'),
+    path('task_name_update/<int:id>/', views.task_name_update, name='task_name_update'),
+    path('edit_team_page/<int:id>/', views.edit_team_page, name='edit_team_page'),
+    path('team_update_name/<int:id>/', views.team_update_name, name='team_update_name'),
+    path('team_update_color/<int:id>/', views.team_update_color, name='team_update_color'),
+    # path('edit_task/<int:id>/', views.edit_task, name='edit_task'),
 
 ]

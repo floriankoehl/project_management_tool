@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import TeamCreationForm, TaskCreationForm, ProjectTimeframeForm
+from .forms import TeamCreationForm, TaskCreationForm, ProjectTimeframeForm, TaskTeamUpdateForm, TaskLoopUpdateForm, TaskNameUpdateForm, TeamUpdateNameForm, TeamUpdateColorForm
 
 from .models import Team, Task, Project
 from .utils import get_valid_possible_dependencies
@@ -34,10 +34,54 @@ def create_team(request):
 
         return render(request, 'distributor/teams.html', {'form': form})
 
+def delete_team(request, id):
+    if request.method == "POST":
+        team = Team.objects.get(pk=id)
+        team.delete()
+        return redirect('teams')
+
+
+
+def edit_team_page(request, id):
+    team = Team.objects.get(pk=id)
+    team_update_name_form = TeamUpdateNameForm(instance=team)
+    team_update_color_form = TeamUpdateColorForm(instance=team)
+    context = {
+        'team': team,
+        'team_update_name_form': team_update_name_form,
+        'team_update_color_form': team_update_color_form
+    }
+    return render(request, 'distributor/edit_team_page.html', context)
+
+
+def team_update_name(request, id):
+    team = Team.objects.get(pk=id)
+    if request.method == "POST":
+        form = TeamUpdateNameForm(request.POST, instance=team)
+        if form.is_valid():
+            form.save()
+            return redirect('edit_team_page', id)
+    else:
+        form = TeamUpdateNameForm(instance=team)
+
+    return render(request, 'edit_team_page', {'form': form, 'team': team})
+
+
+def team_update_color(request, id):
+    team = Team.objects.get(pk=id)
+    if request.method == "POST":
+        form = TeamUpdateColorForm(request.POST, instance=team)
+        if form.is_valid():
+            form.save()
+            return redirect('edit_team_page', id)
+    else:
+        form = TeamUpdateColorForm(instance=team)
+
+    return render(request, 'edit_team_page', {'form': form, 'team': team})
 
 
 def tasks(request):
-    all_tasks = Task.objects.all()
+    all_tasks = Task.objects.all().order_by('team')
     task_form = TaskCreationForm()
     context = {
         'all_tasks': all_tasks,
@@ -62,7 +106,7 @@ def create_task(request):
         form = TaskCreationForm(request.POST)
         if form.is_valid():
             new_task = form.save()
-            return redirect('add_dependency_page', new_task.id)
+            return redirect('edit_task_page', new_task.id)
         else:
             form = TaskCreationForm()
             return render(request, 'distributor/tasks.html', {'form': form})
@@ -72,10 +116,88 @@ def display_task(request, id):
     task = Task.objects.get(pk=id)
     return render(request, 'distributor/display_task.html', {'task': task})
 
-def edit_task(request, id):
-    task = Task.objects.get(pk=id)
-    return render(request, 'distributor/edit_task.html', {'task': task})
 
+
+def edit_task_page(request, id):
+    task = Task.objects.get(pk=id)
+    task_name_update_form = TaskNameUpdateForm(instance=task)
+    task_team_update_form = TaskTeamUpdateForm(instance=task)
+    task_loop_update_form = TaskLoopUpdateForm(instance=task)
+
+
+    context = {
+        'task': task,
+        'task_name_update_form': task_name_update_form,
+        'task_team_update_form': task_team_update_form,
+        'task_loop_update_form': task_loop_update_form
+    }
+    return render(request, 'distributor/edit_task_page.html', context)
+
+def task_name_update(request, id):
+    task = Task.objects.get(pk=id)
+
+    if request.method == "POST":
+        form = TaskNameUpdateForm(request.POST, instance=task)
+
+        if form.is_valid():
+            form.save()
+            return redirect('edit_task_page', task.id)
+
+    else:
+        form = TaskNameUpdateForm(instance=task)
+
+    return render(request, 'edit_task_pages.html', {'TaskTeamUpdateForm': form, 'task': task})
+
+def task_team_update(request, id):
+    task = Task.objects.get(pk=id)
+
+    if request.method == "POST":
+        form = TaskTeamUpdateForm(request.POST, instance=task)
+
+        if form.is_valid():
+            form.save()
+            return redirect('edit_task_page', task.id)
+
+    else:
+        form = TaskTeamUpdateForm(instance=task)
+
+    return render(request, 'edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
+
+def task_loops_update(request, id):
+    task = Task.objects.get(pk=id)
+
+    if request.method == "POST":
+        form = TaskLoopUpdateForm(request.POST, instance=task)
+
+        if form.is_valid():
+            form.save()
+            return redirect('edit_task_page', task.id)
+
+    else:
+        form = TaskLoopUpdateForm(instance=task)
+
+    return render(request, 'edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
+
+
+# def edit_task_page(request, id):
+#     task = Task.objects.get(pk=id)
+#     return render(request, 'distributor/edit_task_page.html', {'task': task})
+
+# def edit_task(request, id):
+#     task = Task.objects.get(pk=id)
+#
+#     if request.method == "POST":
+#         form = TaskCreationForm(request.POST, instance=task)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("display_task", task.id)
+#     else:
+#         form = TaskCreationForm(instance=task)
+#
+#     return render(request, "distributor/edit_task_page.html", {
+#         "task": task,
+#         "form": form
+#     })
 
 
 def add_dependency_page(request, id):
