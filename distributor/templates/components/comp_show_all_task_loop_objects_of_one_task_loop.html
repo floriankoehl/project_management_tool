@@ -1,0 +1,17 @@
+{% load custom_tags %}
+
+<h1>Task Loops</h1>
+<div class="task_loop_objects_for_task_container">
+
+    <div class="all_task_loop_objects">
+
+        {% for task_loop_object in task_loop_objects %}
+
+            <div class="task_loop_object_listing">
+
+
+                {% comp_display_task_loop_object task_loop_object.id %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

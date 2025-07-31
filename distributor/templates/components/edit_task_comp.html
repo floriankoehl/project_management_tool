@@ -1,0 +1,38 @@
+<div class="edit_task_form_comp">
+    <h1>Edit Hard facts</h1>
+    <form class="task_update_form_container" method="POST" action="{% url 'task_name_update' task.id %}">
+        {% csrf_token %}
+        {{ task_name_update_form }}
+        <button>Update Name</button>
+    </form>
+
+    <form class="task_update_form_container" method="POST" action="{% url 'task_team_update' task.id %}">
+        {% csrf_token %}
+        {{ task_team_update_form }}
+        <button>Update Team</button>
+    </form>
+
+    <form class="task_update_form_container" method="POST" action="{% url 'task_priority_update' task.id %}">
+        {% csrf_token %}
+        {{ task_priorty_update_form }}
+        <button>Update Priority</button>
+    </form>
+
+    <form class="task_update_form_container" method="POST" action="{% url 'task_difficulty_update' task.id %}">
+        {% csrf_token %}
+        {{ task_difficulty_update_form }}
+        <button>Update Difficulty</button>
+    </form>
+
+    <form class="task_update_form_container" method="POST" action="{% url 'task_approval_required_update' task.id %}">
+        {% csrf_token %}
+        {{ task_approval_required_update_form }}
+        <button>Update Approval Required</button>
+    </form>
+
+    <form class="task_update_form_container" method="POST" action="{% url 'task_loops_update' task.id %}">
+        {% csrf_token %}
+        {{ task_loop_update_form }}
+        <button>Update Loops</button>
+    </form>
+</div>

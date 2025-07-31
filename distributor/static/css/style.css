@@ -33,13 +33,67 @@
     max-width: 100%;
 }
 .task_listing {
-    height: 300px;
-    width: 200px;
+    height: 400px;
+    width: 250px;
     background-color: white;
     /*border-radius: 5px;*/
     padding: 5px;
     flex-shrink: 0;
+    overflow-y: auto;
 }
+
+.all_task_loop_objects * {
+    font-size: 15px;
+}
+
+.all_task_loop_objects h1 {
+    font-size: 25px;
+}
+
+.all_task_loop_objects h2 {
+    margin-top: 30px;
+}
+
+
+.all_task_loop_objects {
+
+    background-color: #274a68;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.task_loop_object_listing {
+    height: 800px;
+    width: 250px;
+    background-color: white;
+    /*border-radius: 5px;*/
+    padding: 5px;
+    flex-shrink: 0;
+    overflow-y: auto;
+
+}
+
+
+.task_loop_objects_for_task_container {
+    width: 93vw;
+    border-radius: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -79,15 +133,6 @@
     gap: 5px;
 }
 
-.view_task_container * {
-    font-size: 15px;
-    width: 100%;
-    height: 100%;
-}
-
-.view_task_container h1 {
-    font-size: 25px;
-}
 
 
 
@@ -136,6 +181,168 @@
 }
 
 
+
+
+
+
+
+
+
+
+
+.dependency-hover-container {
+    position: relative;
+}
+
+
+
+.dependency-popup {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    background-color: #fff;
+    color: #000;
+    padding: 8px;
+    font-size: 14px;
+    width: 200px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    white-space: normal;
+}
+
+
+.dependency-hover-container:hover .dependency-popup {
+    display: block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*.timeline_table td {*/
+/*    border: 1px solid black;*/
+/*    padding: 8px;*/
+/*    width: 200px; !* optional: only apply to content cells *!*/
+/*    height: 50px;*/
+/*    text-align: left;*/
+/*}*/
+
+/*.timeline_table th {*/
+/*    border: 1px solid black;*/
+/*    padding: 8px;*/
+/*    height: 50px;*/
+/*    text-align: left;*/
+/*    white-space: nowrap;         !* ✅ inline, or via class *!*/
+/*    width: auto;                 !* ✅ grow based on content *!*/
+/*    max-width: none;             !* ✅ don't limit *!*/
+/*}*/
+
+
+
+.timeline_table {
+    overflow-x: auto;
+    table-layout: fixed;
+}
+
+
+.timeline_table td {
+    border: 1px solid black;
+    height: 30px;
+}
+
+.timeline_table th {
+    border: 1px solid black;
+}
+
+.scheduled_cell {
+    background-color: #7aff7a !important;
+    font-weight: bold;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border: none !important;
+}
+
+.not_scheduled_cell, .scheduled_cell {
+    width: 50px;
+}
+
+
+.scheduled_task_details_cells {
+    width: 150px;
+}
+
+.edit_task_button_timeline {
+
+}
+
+
+.view_task_container {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.view_task_container * {
+    font-size: 15px;
+
+    /*width: 100%;*/
+    /*height: 100%;*/
+}
+
+.view_task_container h1 {
+    font-size: 25px;
+}
+
+
+
+
+.edit_task_form_temp {
+
+    display: flex;
+
+}
+
+.edit_task_form_temp > * {
+    width: 45vw !important;
+
+}
+
+.edit_task_form_comp {
+    background-color: #d9efff;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+.edit_task_form_comp * {
+    font-size: 15px;
+
+}
+
+.edit_task_form_comp h1 {
+    font-size: 25px;
+}
+
+
+.update_dependencies_container {
+    width: 92vw;
+    background-color: #d9efff;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+}
 
 
 

@@ -37,10 +37,22 @@ class TeamUpdateColorForm(forms.ModelForm):
 class TaskCreationForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ["name", 'team', 'loops']
+        fields = ["name", 'priority', 'difficulty', 'approval_required',  'team', 'loops']
         widgets = {
             'name': forms.TextInput(attrs={'id': 'name_input_task', 'placeholder': 'Task Name'}),
             'team': forms.Select(attrs={'id': 'team_input_task', 'placeholder': 'Team'}),
+            'priority': forms.Select(
+                choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                attrs={'id': 'priority_input_task'}
+                ),
+            'difficulty': forms.Select(
+                choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                attrs={'id': 'difficulty_input_task'}
+            ),
+            'approval_required': forms.Select(
+                choices=[(True, 'Yes'), (False, 'No')],
+                attrs={'id': 'difficulty_input_task'}
+            ),
             'loops': forms.Select(
                 choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
                 attrs={'id': 'loops_input_task'}
@@ -73,6 +85,47 @@ class TaskNameUpdateForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'id': 'name_input_task', 'placeholder': 'Task Name'}),
         }
+
+class TaskPriorityUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["priority"]
+        widgets = {
+            'priority': forms.Select(
+                choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                attrs={'id': 'priority_input_task'}
+            )
+        }
+
+class TaskDifficultyUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["difficulty"]
+        widgets = {
+            'difficulty': forms.Select(
+                choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                attrs={'id': 'difficulty_input_task'}
+            )
+        }
+
+class TaskApprovalRequiredUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["approval_required"]
+        widgets = {
+            'approval_required': forms.Select(
+                choices=[(True, 'Yes'), (False, 'No')],
+                attrs={'id': 'difficulty_input_task'}
+            )
+        }
+
+
+
+
+
+
+
+
 
 
 class ProjectTimeframeForm(forms.ModelForm):

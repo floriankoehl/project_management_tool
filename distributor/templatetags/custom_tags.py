@@ -1,8 +1,9 @@
 
 
 from django import template
-from distributor.models import Team, Task
+from distributor.models import Team, Task, TaskLoop
 from distributor.utils import get_valid_possible_dependencies
+from ..forms import *
 
 register = template.Library()
 
@@ -38,6 +39,48 @@ def comp_display_single_team(team_id):
     team = Team.objects.get(pk=team_id)
     return {'team': team}
 
+@register.inclusion_tag('components/comp_all_taskloop_objects.html')
+def all_task_loop_objects():
+    all_task_loop_objects = TaskLoop.objects.all()
+    return {'task_loop_objects': all_task_loop_objects}
+
+@register.inclusion_tag('components/comp_display_task_loop_object.html')
+def comp_display_task_loop_object(task_loop_id):
+    task_loop_object = TaskLoop.objects.get(pk=task_loop_id)
+    return {'task_loop_object': task_loop_object}
+
+@register.inclusion_tag('components/edit_task_comp.html')
+def edit_task_comp(task_id):
+    task = Task.objects.get(pk=task_id)
+    task_name_update_form = TaskNameUpdateForm(instance=task)
+    task_team_update_form = TaskTeamUpdateForm(instance=task)
+    task_loop_update_form = TaskLoopUpdateForm(instance=task)
+    task_priorty_update_form = TaskPriorityUpdateForm(instance=task)
+    task_difficulty_update_form = TaskDifficultyUpdateForm(instance=task)
+    task_approval_required_update_form = TaskApprovalRequiredUpdateForm(instance=task)
+
+    context = {
+        'task': task,
+        'task_name_update_form': task_name_update_form,
+        'task_team_update_form': task_team_update_form,
+        'task_loop_update_form': task_loop_update_form,
+        'task_priorty_update_form': task_priorty_update_form,
+        'task_difficulty_update_form': task_difficulty_update_form,
+        'task_approval_required_update_form': task_approval_required_update_form
+    }
+
+
+    return context
+
+
+@register.inclusion_tag('components/comp_show_all_task_loop_objects_of_one_task_loop.html')
+def comp_show_all_task_loop_objects_of_one_task_loop(task_id):
+    task = Task.objects.get(pk=task_id)
+    task_loop_objects = task.taskloop_set.all()
+    return {'task_loop_objects': task_loop_objects}
 
 
 
+@register.filter
+def dict_get(d, key):
+    return d.get(key)

@@ -1,0 +1,61 @@
+{% extends 'distributor/base.html' %}
+{% load custom_tags %}
+
+{% block title %}Timeline{% endblock %}
+
+{% block content %}
+    <h1>Timeline</h1>
+
+
+    <table class="timeline_table">
+        <tr>
+            <th class="scheduled_task_details_cells">Team</th>
+            <th class="scheduled_task_details_cells">Task</th>
+            <th class="edit_task_button_timeline"></th>
+
+            {% for order in order_range %}
+                <th>{{ order }}</th>
+            {% endfor %}
+        </tr>
+        {% for taskloop in all_task_loops %}
+            <tr>
+                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.task.team }}</td>
+                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop }}</td>
+                <td class="dependency-hover-container">
+                    <form method="POST" action="{% url 'edit_task_page' taskloop.task.id %}">
+                        {% csrf_token %}
+                        <button class="task_essential_button dependency-hover-trigger" type="submit">Edit</button>
+                        <div class="dependency-popup">
+                            <strong>Dependencies:</strong>
+                            <ul>
+                                {% for dep in taskloop.all_dependencies %}
+                                    <li style="background-color: {{ dep.task.team.color }}">{{ dep }}</li>
+                                {% empty %}
+                                    <li><em>None</em></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </form>
+                </td>
+
+                {% for order in order_range %}
+                    {% if taskloop.order_number == order %}
+                        <td class="scheduled_cell">{{ taskloop.loop_index }}</td>
+                    {% else %}
+                        <td class="not_scheduled_cell"></td>
+                    {% endif %}
+
+                {% endfor %}
+            </tr>
+        {% endfor %}
+
+
+    </table>
+
+
+
+
+
+
+
+{% endblock %}

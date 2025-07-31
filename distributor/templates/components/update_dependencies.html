@@ -1,6 +1,6 @@
 
 
-<div class="create_task_form">
+<div class="update_dependencies_container">
         <h2>Current dependencies: </h2>
 
             {% for dep in task.initial_dependencies.all %}
@@ -23,7 +23,7 @@
                         <form method="POST" action="{% url 'add_dependency' task.id %}">
                             {% csrf_token %}
 
-                            <button name="dep_to_be_added" value="{{ dep.id }}"
+                            <button style="background-color: {{ dep.team.color }}" name="dep_to_be_added" value="{{ dep.id }}"
                             class="pos_dep_add_button">{{ dep.name }}</button>
                         </form>
                     {% endif %}
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <form method="GET" action="{% url 'display_task' task.id %}">
-            <button type="submit">Finish Task</button>
-        </form>
+{#        <form method="GET" action="{% url 'display_task' task.id %}">#}
+{#            <button type="submit">Finish Task</button>#}
+{#        </form>#}
     </div>

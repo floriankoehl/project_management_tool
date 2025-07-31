@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from .forms import TeamCreationForm, TaskCreationForm, ProjectTimeframeForm, TaskTeamUpdateForm, TaskLoopUpdateForm, TaskNameUpdateForm, TeamUpdateNameForm, TeamUpdateColorForm
+from .forms import TeamCreationForm, TaskCreationForm, ProjectTimeframeForm, TaskTeamUpdateForm, TaskLoopUpdateForm, TaskNameUpdateForm, TeamUpdateNameForm, TeamUpdateColorForm, TaskPriorityUpdateForm, TaskDifficultyUpdateForm, TaskApprovalRequiredUpdateForm
 
-from .models import Team, Task, Project
-from .utils import get_valid_possible_dependencies
+from .models import Team, Task, Project, TaskLoop
+from .timeline import plan_order_of_task_loops
+from .utils import get_valid_possible_dependencies, create_task_loop_objects
 
 
 # Create your views here.
@@ -83,6 +84,7 @@ def team_update_color(request, id):
 def tasks(request):
     all_tasks = Task.objects.all().order_by('team')
     task_form = TaskCreationForm()
+    create_task_loop_objects()
     context = {
         'all_tasks': all_tasks,
         'task_form': task_form,
@@ -106,6 +108,7 @@ def create_task(request):
         form = TaskCreationForm(request.POST)
         if form.is_valid():
             new_task = form.save()
+
             return redirect('edit_task_page', new_task.id)
         else:
             form = TaskCreationForm()
@@ -123,15 +126,74 @@ def edit_task_page(request, id):
     task_name_update_form = TaskNameUpdateForm(instance=task)
     task_team_update_form = TaskTeamUpdateForm(instance=task)
     task_loop_update_form = TaskLoopUpdateForm(instance=task)
-
+    task_priorty_update_form = TaskPriorityUpdateForm(instance=task)
+    task_difficulty_update_form = TaskDifficultyUpdateForm(instance=task)
+    task_approval_required_update_form = TaskApprovalRequiredUpdateForm(instance=task)
 
     context = {
         'task': task,
         'task_name_update_form': task_name_update_form,
         'task_team_update_form': task_team_update_form,
-        'task_loop_update_form': task_loop_update_form
+        'task_loop_update_form': task_loop_update_form,
+        'task_priorty_update_form': task_priorty_update_form,
+        'task_difficulty_update_form': task_difficulty_update_form,
+        'task_approval_required_update_form': task_approval_required_update_form
     }
     return render(request, 'distributor/edit_task_page.html', context)
+
+
+
+def task_priority_update(request, id):
+    task = Task.objects.get(pk=id)
+
+    if request.method == "POST":
+        form = TaskPriorityUpdateForm(request.POST, instance=task)
+
+        if form.is_valid():
+            form.save()
+            return redirect('edit_task_page', task.id)
+
+    else:
+        form = TaskPriorityUpdateForm(instance=task)
+
+    return render(request, 'edit_task_pages.html', {'TaskTeamUpdateForm': form, 'task': task})
+
+
+def task_difficulty_update(request, id):
+    task = Task.objects.get(pk=id)
+
+    if request.method == "POST":
+        form = TaskDifficultyUpdateForm(request.POST, instance=task)
+
+        if form.is_valid():
+            form.save()
+            return redirect('edit_task_page', task.id)
+
+    else:
+        form = TaskDifficultyUpdateForm(instance=task)
+
+    return render(request, 'edit_task_pages.html', {'TaskTeamUpdateForm': form, 'task': task})
+
+
+
+def task_approval_required_update(request, id):
+    task = Task.objects.get(pk=id)
+
+    if request.method == "POST":
+        form = TaskApprovalRequiredUpdateForm(request.POST, instance=task)
+
+        if form.is_valid():
+            form.save()
+            return redirect('edit_task_page', task.id)
+
+    else:
+        form = TaskApprovalRequiredUpdateForm(instance=task)
+
+    return render(request, 'edit_task_pages.html', {'TaskTeamUpdateForm': form, 'task': task})
+
+
+
+
 
 def task_name_update(request, id):
     task = Task.objects.get(pk=id)
@@ -270,6 +332,18 @@ def change_project_page(request):
 
 
 
+def timeline(request):
+    order_counter = plan_order_of_task_loops()   # this returns the max value assigned
+    order_range = range(order_counter + 1)       # ✅ include all possible values
+
+    all_task_loops = TaskLoop.objects.all().order_by('task__team')
+
+    context = {
+        'all_task_loops': all_task_loops,
+        'order_range': order_range,
+    }
+
+    return render(request, 'distributor/timeline.html', context)
 
 
 

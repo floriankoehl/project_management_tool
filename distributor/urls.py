@@ -23,6 +23,10 @@ urlpatterns = [
     path('edit_team_page/<int:id>/', views.edit_team_page, name='edit_team_page'),
     path('team_update_name/<int:id>/', views.team_update_name, name='team_update_name'),
     path('team_update_color/<int:id>/', views.team_update_color, name='team_update_color'),
+    path('task_priority_update/<int:id>/', views.task_priority_update, name='task_priority_update'),
+    path('task_approval_required_update/<int:id>/', views.task_approval_required_update, name='task_approval_required_update'),
+    path('task_difficulty_update/<int:id>/', views.task_difficulty_update, name='task_difficulty_update'),
+    path('timeline', views.timeline, name='timeline'),
     # path('edit_task/<int:id>/', views.edit_task, name='edit_task'),
 
 ]

@@ -1,0 +1,48 @@
+<h1>{{ task_loop_object }}</h1>
+{#<h3 style="background-color: aquamarine">TaskLoop index: {{ task_loop_object.loop_index }}</h3>#}
+<h3>scheduled_date: {{ task_loop_object.scheduled_date }}</h3>
+<h3>priority: {{ task_loop_object.priority }}</h3>
+<h3>difficulty: {{ task_loop_object.difficulty }}</h3>
+<h3>approval_required: {{ task_loop_object.approval_required }}</h3>
+
+
+
+<h2 style="font-weight: bold">Required by</h2>
+<ul>
+    {% for required_by in task_loop_object.task.required_by.all %}
+        <li>{{ required_by }}</li>
+
+    {% endfor %}
+</ul>
+
+<h2 style="font-weight: bold">Dependencies</h2>
+<h3>Initial Dependencies:</h3>
+<ul>
+    {% for init_dep in task_loop_object.task.initial_dependencies.all %}
+        <li>{{ init_dep }}</li>
+    {% endfor %}
+</ul>
+<h3>Defined Dependencies:</h3>
+<ul>
+    {% for init_dep in task_loop_object.defined_dependencies.all %}
+        <li>{{ init_dep }}</li>
+    {% endfor %}
+</ul>
+<h3>Prior Loop Dependencies:</h3>
+<ul>
+    {% for init_dep in task_loop_object.prior_loop_dependencies.all %}
+        <li>{{ init_dep }}</li>
+    {% endfor %}
+</ul>
+<h3>Cross Loop Dependencies:</h3>
+<ul>
+    {% for init_dep in task_loop_object.cross_loop_dependencies.all %}
+        <li>{{ init_dep }}</li>
+    {% endfor %}
+</ul>
+
+
+
+
+
+

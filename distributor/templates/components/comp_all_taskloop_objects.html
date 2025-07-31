@@ -1,0 +1,15 @@
+{% load custom_tags %}
+
+
+<div class="all_task_loop_objects">
+        {% for task_loop_object in task_loop_objects %}
+            {% if task_loop_object.loop_index < 2 %}
+                    <br>
+                {% endif %}
+            <div class="task_loop_object_listing">
+
+
+                {% comp_display_task_loop_object task_loop_object.id%}
+            </div>
+        {% endfor %}
+    </div>
