@@ -9,7 +9,7 @@
 
 <h2 style="font-weight: bold">Required by</h2>
 <ul>
-    {% for required_by in task_loop_object.task.required_by.all %}
+    {% for required_by in task_loop_object.all_required_by %}
         <li>{{ required_by }}</li>
 
     {% endfor %}

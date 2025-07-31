@@ -45,12 +45,51 @@ def create_task_loop_objects():
         # if task.loops <= 1:
         #     TaskLoop.objects.create(task=task)
         # else:
-        for loop in range(task.loops):
-            TaskLoop.objects.create(task=task, priority=task.priority, difficulty=task.difficulty, approval_required=task.approval_required,  loop_index=loop+1)
+        for index, loop in enumerate(range(task.loops)):
+            prio = (task.priority-index)
+            if prio < 1:
+                prio = 1
+
+            TaskLoop.objects.create(task=task, priority=prio, difficulty=task.difficulty, approval_required=task.approval_required,  loop_index=loop+1)
 
     setup_up_prior_loop_dependencies()
     setup_up_cross_loop_dependencies()
     setup_up_inital_dependencies()
+    cache_magnitudes()
+
+
+
+
+def cache_magnitudes():
+    loop_magnitudes = {}
+    total = 0
+
+    for loop in TaskLoop.objects.all():
+        visited = set()
+
+        def dfs(tl):
+            if tl.pk in visited:
+                return 0
+            visited.add(tl.pk)
+            total_val = 0 if tl.task_id == loop.task_id and tl != loop else tl.priority
+            for dep in tl.all_required_by:
+                total_val += dfs(dep)
+            return total_val
+
+        mag = dfs(loop)
+        loop_magnitudes[loop.pk] = mag
+        total += mag
+
+    for loop in TaskLoop.objects.all():
+        standardized = loop_magnitudes[loop.pk] / total if total else 0
+        percentage = standardized * 100
+        loop.magnitude = round(percentage, 2)
+        loop.save()
+
+
+
+
+
 
 
 

@@ -12,6 +12,8 @@
             <th class="scheduled_task_details_cells">Team</th>
             <th class="scheduled_task_details_cells">Task</th>
             <th class="edit_task_button_timeline"></th>
+            <th class="edit_task_button_timeline">Prio.</th>
+            <th class="edit_task_button_timeline">Magn.</th>
 
             {% for order in order_range %}
                 <th>{{ order }}</th>
@@ -34,9 +36,19 @@
                                     <li><em>None</em></li>
                                 {% endfor %}
                             </ul>
+                            <strong>Required by:</strong>
+                            <ul>
+                                {% for dep in taskloop.all_required_by %}
+                                    <li style="background-color: {{ dep.task.team.color }}">{{ dep }}</li>
+                                {% empty %}
+                                    <li><em>None</em></li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </form>
                 </td>
+                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.priority }}</td>
+                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.magnitude }}</td>
 
                 {% for order in order_range %}
                     {% if taskloop.order_number == order %}

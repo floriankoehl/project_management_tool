@@ -44,6 +44,8 @@ class TaskLoop(models.Model):
     order_number = models.IntegerField(null=True, blank=True)
     is_scheduled = models.BooleanField(default=False)
 
+    magnitude = models.FloatField(default=0)
+
     def __str__(self):
         return f"{self.task} - {self.loop_index}"
 
@@ -59,6 +61,46 @@ class TaskLoop(models.Model):
                 self.defined_dependencies.all()
         ).distinct().order_by('task__team__name')
 
+    @property
+    def all_required_by(self):
+        """
+        Returns a combined queryset of all TaskLoops that depend on this TaskLoop,
+        whether through defined, prior_loop, or cross_loop dependencies.
+        """
+        return (
+                self.defined_dependencies_set.all() |
+                self.generated_dependencies_set.all() |
+                self.cross_loop_dependencies_set.all()
+        ).distinct().order_by("task__team__name")
+
+    # @property
+    # def magnitude(self):
+    #     def magnitude_for(task_loop, origin_task_id, visited):
+    #         if task_loop.pk in visited:
+    #             return 0
+    #         visited.add(task_loop.pk)
+    #
+    #         # Skip priority if it's from the same Task (unless it's the original)
+    #         total = 0 if task_loop.task_id == origin_task_id and task_loop != self else task_loop.priority
+    #
+    #         for dep in task_loop.all_required_by:
+    #             total += magnitude_for(dep, origin_task_id, visited)
+    #         return total
+    #
+    #     # This TaskLoop's magnitude
+    #     visited_self = set()
+    #     own_magnitude = magnitude_for(self, self.task_id, visited_self)
+    #
+    #     # Total magnitude across all TaskLoops
+    #     total_magnitude = 0
+    #     for loop in TaskLoop.objects.all():
+    #         visited = set()
+    #         total_magnitude += magnitude_for(loop, loop.task_id, visited)
+    #
+    #     if total_magnitude == 0:
+    #         return 0.0
+    #
+    #     return own_magnitude / total_magnitude
 
 
 class ActivityLog(models.Model):

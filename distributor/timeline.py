@@ -11,7 +11,8 @@ def plan_order_of_task_loops():
     ActivityLog.objects.filter(type="schedule_log").delete()
     TaskLoop.objects.update(order_number=None)
 
-    all_task_loops = TaskLoop.objects.all()
+    all_task_loops = sorted(TaskLoop.objects.all(), key=lambda t: t.magnitude, reverse=True)
+
     order_counter = -1
 
     while not check_if_all_task_loops_distributed():
@@ -21,12 +22,13 @@ def plan_order_of_task_loops():
 
 
         for task_loop in all_task_loops:
+            #Check if Task is already scheduled
             if task_loop.order_number is not None:
                 continue
 
+            # Check if Team has already scheduled task on same order number
             has_conflict, conflict_task_loop = check_if_team_has_already_scheduled_task_on_same_order_counter(task_loop,
                                                                                                               order_counter)
-
             if has_conflict:
                 ActivityLog.objects.create(
                     task_loop=task_loop,
@@ -37,38 +39,27 @@ def plan_order_of_task_loops():
                 )
                 continue
 
+            #Check if all dependencies are met and are not on the same order number
             if not check_if_dependencies_are_met(task_loop, order_counter):
-
-                # print(f"     ⛔️ [SKIP] Task: {task_loop} dependencies are not met")
                 continue
 
+            #Check if inside the team of the Taskloop, every taskloop that has a lower taskloop index is already scheduled
             if not check_if_all_loop_indexes_inside_team_are_finished(task_loop, order_counter):
                 continue
 
-            #ALL CONDITIONS ARE MET
-            # print(f"     ✅ [TRUE] - All conditions are met! {task_loop} is therefore scheduled")
-            # print(f"    ▶️ Before")
-            # print(f"        ➖ Task Loop: {task_loop}")
-            # print(f"        ➖ Task Loop Order Number: {task_loop.order_number}")
+
+
+
+            #All conditions are met here
             ActivityLog.objects.create(task_loop=task_loop, type="schedule_log",
                                        title="✅ [TRUE]",
                                        message=f"All conditions are met!",
                                        order_number=order_counter)
             task_loop.order_number = order_counter
-
-            # print(f"    ▶️ After")
-            # print(f"        ➖ Task Loop: {task_loop}")
-            # print(f"        ➖ Task Loop Order Number: {task_loop.order_number}")
             task_loop.save()
-
             task_loop.task.team.schedule_flag = True
             task_loop.task.team.save()
 
-
-
-
-
-    print(order_counter)
     return order_counter
 
 
