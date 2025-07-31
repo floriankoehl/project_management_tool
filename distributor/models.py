@@ -66,9 +66,12 @@ class ActivityLog(models.Model):
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
     task_loop = models.ForeignKey(TaskLoop, on_delete=models.SET_NULL, null=True, blank=True)
+    order_number = models.IntegerField(null=True, blank=True)
 
 
     type = models.CharField(max_length=100)
+
+    title = models.CharField(max_length=100, null=True, blank=True)
     message = models.CharField(max_length=500)
 
 

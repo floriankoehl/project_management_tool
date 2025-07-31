@@ -40,7 +40,23 @@
 
                 {% for order in order_range %}
                     {% if taskloop.order_number == order %}
-                        <td class="scheduled_cell">{{ taskloop.loop_index }}</td>
+                        <td class="scheduled_cell activity-hover-container">
+                            {{ taskloop.loop_index }}
+                            <div class="activity-popup">
+
+
+                                    {% for log in taskloop.activitylog_set.all %}
+                                        <strong>Order Number: {{ log.order_number }}</strong>
+
+                                        <div style="margin-bottom: 5px;">{{ log.title }}
+                                            {{ log.message }}</div>
+                                    {% empty %}
+                                        <p><em>No logs</em></p>
+                                    {% endfor %}
+
+                            </div>
+                        </td>
+
                     {% else %}
                         <td class="not_scheduled_cell"></td>
                     {% endif %}
