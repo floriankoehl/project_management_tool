@@ -1,0 +1,8 @@
+{% for log in schedule_log_messages %}
+    <strong>Order Number: {{ log.order_number }}</strong>
+
+    <div style="margin-bottom: 5px;">{{ log.title }}
+        {{ log.message }}</div>
+{% empty %}
+    <p><em>No logs</em></p>
+{% endfor %}

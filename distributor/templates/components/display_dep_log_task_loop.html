@@ -1,0 +1,21 @@
+
+
+{% for log in dep_log_messages %}
+    <div style="margin-bottom: 5px;">{{ log.title }}
+        {{ log.message }}</div>
+{% empty %}
+    <p><em>No logs</em></p>
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+

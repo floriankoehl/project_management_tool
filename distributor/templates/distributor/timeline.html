@@ -4,8 +4,13 @@
 {% block title %}Timeline{% endblock %}
 
 {% block content %}
+    <div class="timeline_headline">
     <h1>Timeline</h1>
+    {% display_reload_buttons %}
 
+
+
+    </div>
 
     <table class="timeline_table">
         <tr>
@@ -25,7 +30,8 @@
                 <td class="task-todo-hover-container" style="background-color: {{ taskloop.task.team.color }}">
     {{ taskloop }}
     <div class="task-todo-popup">
-        {% todo_component taskloop.task %}
+{#        {% todo_component taskloop.task %}#}
+            {% display_dep_log_task_loop taskloop %}
     </div>
 </td>
 
@@ -66,14 +72,7 @@
                             <div class="activity-popup">
 
 
-                                    {% for log in taskloop.activitylog_set.all %}
-                                        <strong>Order Number: {{ log.order_number }}</strong>
-
-                                        <div style="margin-bottom: 5px;">{{ log.title }}
-                                            {{ log.message }}</div>
-                                    {% empty %}
-                                        <p><em>No logs</em></p>
-                                    {% endfor %}
+                                {% display_schedule_log taskloop %}
 
                             </div>
                         </td>
@@ -88,6 +87,23 @@
 
 
     </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <br>
+    <br>
+    <br>
 
 
 

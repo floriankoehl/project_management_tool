@@ -1,4 +1,5 @@
-from .models import Task
+from .models import *
+
 
 def get_valid_possible_dependencies(main_task):
     """
@@ -34,7 +35,14 @@ def get_valid_possible_dependencies(main_task):
     return valid_candidates
 
 
-from .models import Task, TaskLoop
+
+
+
+
+
+from .timeline import plan_order_of_task_loops
+
+
 
 def create_task_loop_objects():
     all_inital_tasks = Task.objects.all()
@@ -56,6 +64,9 @@ def create_task_loop_objects():
     setup_up_cross_loop_dependencies()
     setup_up_inital_dependencies()
     cache_magnitudes()
+
+
+
 
 
 def cache_magnitudes():
@@ -116,10 +127,6 @@ def cache_magnitudes():
 
 
 
-
-
-
-
 def setup_up_prior_loop_dependencies():
     all_task_loop_objects = TaskLoop.objects.all()
 
@@ -133,6 +140,12 @@ def setup_up_prior_loop_dependencies():
                 for task_loop_set_object_compare in task_loop_set_list:
                     if task_loop_set_object_compare.loop_index == index:
                         # print(f"    -This should be added: {task_loop_set_object_compare}")
+                        ActivityLog.objects.create(
+                            task_loop=task_loop,
+                            type="setup_up_dependencies_taskloop",
+                            title="1️⃣ Prior Loop Dependencies",
+                            message=f"Dependency {task_loop_set_object_compare} was added"
+                        )
                         task_loop.prior_loop_dependencies.add(task_loop_set_object_compare)
                         task_loop.save()
 
@@ -153,6 +166,12 @@ def setup_up_cross_loop_dependencies():
 
                 for poss_cross_loop_loop in poss_cross_loop_loop_objects:
                     if poss_cross_loop_loop.loop_index < task_loop.loop_index:
+                        ActivityLog.objects.create(
+                            task_loop=task_loop,
+                            type="setup_up_dependencies_taskloop",
+                            title="2️⃣ Cross Loop Dependencies",
+                            message=f"Dependency {poss_cross_loop_loop} was added"
+                        )
                         task_loop.cross_loop_dependencies.add(poss_cross_loop_loop)
                         # print(f"                    🌀 {poss_cross_loop_loop}")
 
@@ -169,6 +188,14 @@ def setup_up_inital_dependencies():
         for init_dep in initial_dependencies:
             dep_to_add = init_dep.taskloop_set.first()
             print(f"         - {dep_to_add}")
+            ActivityLog.objects.create(
+                task_loop=task_loop,
+                type="setup_up_dependencies_taskloop",
+                title="3️⃣ Cross Loop Dependencies",
+                message=f"Dependency {dep_to_add} was added"
+            )
+
+
             task_loop.defined_dependencies.add(dep_to_add)
 
         # task_loop.defined_dependencies.add(initial_dependencies)

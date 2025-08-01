@@ -161,3 +161,4 @@ class ActivityLog(models.Model):
 class Project(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
+    order_counter = models.IntegerField(default=0)

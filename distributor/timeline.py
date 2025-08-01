@@ -60,6 +60,11 @@ def plan_order_of_task_loops():
             task_loop.task.team.schedule_flag = True
             task_loop.task.team.save()
 
+    project = Project.objects.first()
+    if project:
+        project.order_counter = order_counter
+        project.save()
+
     return order_counter
 
 

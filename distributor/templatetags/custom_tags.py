@@ -132,7 +132,20 @@ def todo_component(task):
     }
 
 
+@register.inclusion_tag('components/display_schedule_log.html')
+def display_schedule_log(taskloop):
+    schedule_log_messages = taskloop.activitylog_set.filter(type='schedule_log')
+
+    return {'schedule_log_messages': schedule_log_messages}
+
+
+@register.inclusion_tag('components/display_dep_log_task_loop.html')
+def display_dep_log_task_loop(task_loop):
+    dep_log_messages = task_loop.activitylog_set.filter(type='setup_up_dependencies_taskloop')
+    return {'dep_log_messages': dep_log_messages}
 
 
 
-
+@register.inclusion_tag('components/display_reload_buttons.html')
+def display_reload_buttons():
+    return {}

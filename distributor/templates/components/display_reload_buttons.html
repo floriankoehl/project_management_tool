@@ -1,0 +1,22 @@
+<div class="reload_buttons_container">
+        <div class="specific_reload_buttons">
+            <form method="POST" action="{% url 'reload_tasks' %}">
+                {% csrf_token %}
+                <button type="submit">Reload Tasks</button>
+            </form>
+
+
+            <form method="POST" action="{% url 'reload_timeline' %}">
+                {% csrf_token %}
+                <button type="submit">Reload Timeline</button>
+            </form>
+
+
+
+
+        <form method="POST" action="{% url 'reload_all' %}">
+            {% csrf_token %}
+            <button style="background-color: #ff4f4f" type="submit">ALL</button>
+        </form>
+            </div>
+</div>

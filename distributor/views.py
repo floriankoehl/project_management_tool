@@ -86,7 +86,6 @@ def team_update_color(request, id):
 def tasks(request):
     all_tasks = Task.objects.all().order_by('team')
     task_form = TaskCreationForm()
-    create_task_loop_objects()
     context = {
         'all_tasks': all_tasks,
         'task_form': task_form,
@@ -94,6 +93,33 @@ def tasks(request):
     }
 
     return render(request, 'distributor/tasks.html', context)
+
+
+
+
+def reload_tasks(request):
+    create_task_loop_objects()
+
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
+    return redirect('tasks')
+
+
+
+
+def reload_all(request):
+    create_task_loop_objects()
+    plan_order_of_task_loops()
+
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
+    return redirect('home')
+
+
+
+
 
 
 def create_task_page(request):
@@ -339,7 +365,11 @@ def change_project_page(request):
 
 
 def timeline(request):
-    order_counter = plan_order_of_task_loops()   # this returns the max value assigned
+
+    project = Project.objects.first()
+    order_counter = project.order_counter  # this returns the max value assigned
+    print(order_counter)
+
     order_range = range(order_counter + 1)       # ✅ include all possible values
 
     all_task_loops = TaskLoop.objects.all().order_by('task__team')
@@ -349,7 +379,55 @@ def timeline(request):
         'order_range': order_range,
     }
 
+    for loop in all_task_loops:
+        print(loop, loop.order_number)
+
     return render(request, 'distributor/timeline.html', context)
+
+
+
+
+def reload_timeline(request):
+    plan_order_of_task_loops()
+
+
+    # from distributor.models import TaskLoop
+    # for loop in TaskLoop.objects.all():
+    #     print(loop, loop.order_number)
+
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        redirect(referer)
+    return redirect("timeline")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def add_todo(request, id):

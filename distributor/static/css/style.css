@@ -406,6 +406,48 @@ body {
 
 
 
+.reload_buttons_container {
+    background-color: #495d8e;
+    width: 130px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /*align-items: center;*/
+    border-radius: 5px;
+    margin: 10px;
+}
+
+
+
+.specific_reload_buttons  {
+    display: flex;
+    gap: 10px;
+    margin: 5px;
+    flex-direction: column;
+
+}
+
+/*.all_reload_buttons {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    flex-direction: column;*/
+
+/*}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

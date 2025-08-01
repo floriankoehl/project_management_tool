@@ -28,7 +28,10 @@ urlpatterns = [
     path('task_difficulty_update/<int:id>/', views.task_difficulty_update, name='task_difficulty_update'),
     path('timeline', views.timeline, name='timeline'),
     path('add_todo/<int:id>/', views.add_todo, name="add_todo"),
-    path('todo_done_update/<int:id>/', views.todo_done_update, name="todo_done_update")
+    path('todo_done_update/<int:id>/', views.todo_done_update, name="todo_done_update"),
+    path('reload_timeline', views.reload_timeline, name="reload_timeline"),
+    path('reload_tasks', views.reload_tasks, name="reload_tasks"),
+    path('reload_all', views.reload_all, name="reload_all"),
     # path('edit_task/<int:id>/', views.edit_task, name='edit_task'),
 
 ]
