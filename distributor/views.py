@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
-from .forms import TeamCreationForm, TaskCreationForm, ProjectTimeframeForm, TaskTeamUpdateForm, TaskLoopUpdateForm, TaskNameUpdateForm, TeamUpdateNameForm, TeamUpdateColorForm, TaskPriorityUpdateForm, TaskDifficultyUpdateForm, TaskApprovalRequiredUpdateForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import TeamCreationForm, TaskCreationForm, ProjectTimeframeForm, TaskTeamUpdateForm, TaskLoopUpdateForm, \
+    TaskNameUpdateForm, TeamUpdateNameForm, TeamUpdateColorForm, TaskPriorityUpdateForm, TaskDifficultyUpdateForm, \
+    TaskApprovalRequiredUpdateForm, TodoCreateForm, TodoDoneForm
 
-from .models import Team, Task, Project, TaskLoop
+from .models import Team, Task, Project, TaskLoop, Todo
 from .timeline import plan_order_of_task_loops
 from .utils import get_valid_possible_dependencies, create_task_loop_objects
 
@@ -129,6 +131,8 @@ def edit_task_page(request, id):
     task_priorty_update_form = TaskPriorityUpdateForm(instance=task)
     task_difficulty_update_form = TaskDifficultyUpdateForm(instance=task)
     task_approval_required_update_form = TaskApprovalRequiredUpdateForm(instance=task)
+    todo_form = TodoCreateForm()
+    todo_done_form = TodoDoneForm()
 
     context = {
         'task': task,
@@ -137,7 +141,9 @@ def edit_task_page(request, id):
         'task_loop_update_form': task_loop_update_form,
         'task_priorty_update_form': task_priorty_update_form,
         'task_difficulty_update_form': task_difficulty_update_form,
-        'task_approval_required_update_form': task_approval_required_update_form
+        'task_approval_required_update_form': task_approval_required_update_form,
+        'todo_form': todo_form,
+        'todo_done_form': todo_done_form,
     }
     return render(request, 'distributor/edit_task_page.html', context)
 
@@ -344,6 +350,38 @@ def timeline(request):
     }
 
     return render(request, 'distributor/timeline.html', context)
+
+
+def add_todo(request, id):
+    task = Task.objects.get(pk=id)
+    if request.method == "POST":
+        form = TodoCreateForm(request.POST)
+        if form.is_valid():
+            todo = form.save(commit=False)
+            todo.task = task
+            todo.save()
+
+            # Redirect back to the previous page
+            return redirect(request.META.get('HTTP_REFERER', '/'))  # fallback to '/' if no referrer
+    else:
+        form = TodoCreateForm()
+
+    return render(request, 'your_template.html', {'form': form})
+
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import Todo
+from .forms import TodoDoneForm
+
+def todo_done_update(request, id):
+    todo = get_object_or_404(Todo, pk=id)
+
+    if request.method == "POST":
+        form = TodoDoneForm(request.POST, instance=todo)
+        if form.is_valid():
+            form.save()
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
 

@@ -12,7 +12,7 @@
             <th class="scheduled_task_details_cells">Team</th>
             <th class="scheduled_task_details_cells">Task</th>
             <th class="edit_task_button_timeline"></th>
-            <th class="edit_task_button_timeline">Prio.</th>
+{#            <th class="edit_task_button_timeline">Prio.</th>#}
             <th class="edit_task_button_timeline">Magn.</th>
 
             {% for order in order_range %}
@@ -22,7 +22,13 @@
         {% for taskloop in all_task_loops %}
             <tr>
                 <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.task.team }}</td>
-                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop }}</td>
+                <td class="task-todo-hover-container" style="background-color: {{ taskloop.task.team.color }}">
+    {{ taskloop }}
+    <div class="task-todo-popup">
+        {% todo_component taskloop.task %}
+    </div>
+</td>
+
                 <td class="dependency-hover-container">
                     <form method="POST" action="{% url 'edit_task_page' taskloop.task.id %}">
                         {% csrf_token %}
@@ -47,8 +53,11 @@
                         </div>
                     </form>
                 </td>
-                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.priority }}</td>
-                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.magnitude }}</td>
+{#                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.priority }}</td>#}
+                <td style="background-color: {{ taskloop.magnitude|heat_color:'0,100,50;100,100,100' }}">
+                    {{ taskloop.magnitude }}
+                </td>
+
 
                 {% for order in order_range %}
                     {% if taskloop.order_number == order %}

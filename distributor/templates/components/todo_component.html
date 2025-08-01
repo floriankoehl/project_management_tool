@@ -1,0 +1,30 @@
+<div class="todo_container">
+
+        <h2>Todo</h2>
+
+        <!-- Add new todo -->
+        <form method="POST" action="{% url 'add_todo' task.id %}" style="margin-bottom: 20px;">
+            {% csrf_token %}
+            {{ todo_form.description.label_tag }} {{ todo_form.description }}
+
+            <button type="submit">Save</button>
+        </form>
+
+        <!-- Display existing todos -->
+        <ul style="list-style: none; padding-left: 0;">
+            {% for todo in task.todo_set.all %}
+                <li style="margin-bottom: 8px;">
+                    <form method="POST" action="{% url 'todo_done_update' todo.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="checkbox" name="done" {% if todo.done %}checked{% endif %}
+                               onchange="this.form.submit()" class="form-check-input"/>
+                    </form>
+                    <span style="{% if todo.done %}text-decoration: line-through; color: gray;{% endif %} margin-left: 8px;">
+                {{ todo.description }}
+            </span>
+                </li>
+            {% empty %}
+                <li><em>No todos yet</em></li>
+            {% endfor %}
+        </ul>
+    </div>

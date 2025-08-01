@@ -84,3 +84,55 @@ def comp_show_all_task_loop_objects_of_one_task_loop(task_id):
 @register.filter
 def dict_get(d, key):
     return d.get(key)
+
+
+@register.filter
+def heat_color(magnitude, params="240,100,50;120,100,50"):
+    """
+    Converts a magnitude (0–100) into an HSL color that transitions from a high color to a low color.
+
+    Format:
+        "hue_high,sat_high,light_high;hue_low,sat_low,light_low"
+
+    Example:
+        "0,100,50;60,100,90" → Red (high) to Yellow (low)
+        "240,100,50;120,80,70" → Blue (high) to Green (low)
+        "0,100,50;0,0,100" → Red to White
+
+    Usage:
+        {{ taskloop.magnitude|heat_color:"240,100,50;120,100,50" }}
+    """
+    try:
+        mag = float(magnitude)
+        mag = max(0, min(100, mag)) / 100  # normalize to 0.0 – 1.0
+
+        # Split the parameters into high and low
+        high_part, low_part = params.split(";")
+        hue_high, sat_high, light_high = map(float, high_part.split(","))
+        hue_low, sat_low, light_low = map(float, low_part.split(","))
+
+        # Interpolate each component
+        hue = hue_low + (hue_high - hue_low) * mag
+        sat = sat_low + (sat_high - sat_low) * mag
+        light = light_low + (light_high - light_low) * mag
+
+        return f"hsl({hue:.0f}, {sat:.0f}%, {light:.0f}%)"
+    except Exception as e:
+        return "white"
+
+
+from ..forms import TodoDoneForm, TodoCreateForm
+
+@register.inclusion_tag('components/todo_component.html')
+def todo_component(task):
+    return {
+        'task': task,
+        'todo_form': TodoCreateForm,
+        'todo_done_update': TodoDoneForm,
+    }
+
+
+
+
+
+

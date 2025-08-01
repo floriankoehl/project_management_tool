@@ -58,11 +58,8 @@ def create_task_loop_objects():
     cache_magnitudes()
 
 
-
-
 def cache_magnitudes():
-    loop_magnitudes = {}
-    total = 0
+    magnitude_list = []
 
     for loop in TaskLoop.objects.all():
         visited = set()
@@ -77,14 +74,44 @@ def cache_magnitudes():
             return total_val
 
         mag = dfs(loop)
-        loop_magnitudes[loop.pk] = mag
-        total += mag
+        magnitude_list.append((loop, mag))
 
-    for loop in TaskLoop.objects.all():
-        standardized = loop_magnitudes[loop.pk] / total if total else 0
-        percentage = standardized * 100
-        loop.magnitude = round(percentage, 2)
+    # Sort by raw magnitude
+    sorted_by_mag = sorted(magnitude_list, key=lambda x: x[1], reverse=True)
+
+    # Assign a percentile score
+    total_loops = len(sorted_by_mag)
+    for idx, (loop, raw_mag) in enumerate(sorted_by_mag):
+        percentile = 100 * (1 - idx / (total_loops - 1)) if total_loops > 1 else 100
+        loop.magnitude = round(percentile, 2)
         loop.save()
+
+
+# def cache_magnitudes():
+#     loop_magnitudes = {}
+#     total = 0
+#
+#     for loop in TaskLoop.objects.all():
+#         visited = set()
+#
+#         def dfs(tl):
+#             if tl.pk in visited:
+#                 return 0
+#             visited.add(tl.pk)
+#             total_val = 0 if tl.task_id == loop.task_id and tl != loop else tl.priority
+#             for dep in tl.all_required_by:
+#                 total_val += dfs(dep)
+#             return total_val
+#
+#         mag = dfs(loop)
+#         loop_magnitudes[loop.pk] = mag
+#         total += mag
+#
+#     for loop in TaskLoop.objects.all():
+#         standardized = loop_magnitudes[loop.pk] / total if total else 0
+#         percentage = standardized * 100
+#         loop.magnitude = round(percentage, 2)
+#         loop.save()
 
 
 

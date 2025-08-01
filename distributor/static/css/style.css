@@ -199,23 +199,35 @@ body {
 
 .dependency-hover-container {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
-
+.dependency-hover-container button {
+    min-width: 40px;
+    border: none;
+}
 
 .dependency-popup {
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
-    z-index: 100;
-    background-color: #fff;
-    color: #000;
+    transform: translate(25%, -20%);
+    background: rgba(255, 255, 255, 0.93);
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     padding: 8px;
-    font-size: 14px;
-    width: 200px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    white-space: normal;
+    z-index: 10;
+    max-width: 500px;         /* ✅ Maximum width */
+    width: max-content;       /* ✅ Shrinks to fit content */
+    font-size: 0.8em;
+    box-shadow: 0px 0px 6px rgba(0,0,0,0.2);
+    white-space: normal;      /* ✅ Allows wrapping */
+    overflow-wrap: break-word;/* ✅ Ensures long text wraps */
 }
 
 
@@ -290,7 +302,7 @@ body {
 }
 
 .edit_task_button_timeline {
-
+    min-width: 40px;
 }
 
 
@@ -365,17 +377,21 @@ body {
     position: absolute;
     top: 100%;
     left: 0;
-    transform: translate(-45%, -0%);
-    background: rgba(255, 255, 255, 0.89);
+    transform: translate(-45%, 0%);
+    background: rgba(255, 255, 255, 0.93);
     color: black;
     border: 1px solid #ccc;
+    border-radius: 5px;
     padding: 8px;
     z-index: 10;
-    min-width: 400px;
-    max-width: 800px;
+    max-width: 500px;         /* ✅ Maximum width */
+    width: max-content;       /* ✅ Shrinks to fit content */
     font-size: 0.8em;
     box-shadow: 0px 0px 6px rgba(0,0,0,0.2);
+    white-space: normal;      /* ✅ Allows wrapping */
+    overflow-wrap: break-word;/* ✅ Ensures long text wraps */
 }
+
 
 .activity-hover-container:hover .activity-popup {
     display: block;
@@ -394,7 +410,40 @@ body {
 
 
 
+.task-todo-hover-container {
+    position: relative;
+}
 
+.task-todo-popup {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    transform: translate(-5%, 0%);
+    background: rgba(255, 255, 255, 0.95);
+    color: black;
+    border: 1px solid #ccc;
+    padding: 8px;
+    z-index: 10;
+    min-width: 200px;
+    max-width: 400px !important;
+    font-size: 0.85em;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.task-todo-hover-container:hover .task-todo-popup {
+    display: block;
+}
+
+.todo_container {
+    background-color: #fff8a2;
+
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+}
 
 
 

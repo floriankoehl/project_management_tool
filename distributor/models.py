@@ -20,6 +20,7 @@ class Task(models.Model):
     difficulty = models.IntegerField(default=0)
     approval_required = models.BooleanField(default=False)
 
+
     initial_dependencies = models.ManyToManyField("self",
                                                   symmetrical=False,
                                                   blank=True,
@@ -27,6 +28,16 @@ class Task(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+class Todo(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
+    description = models.TextField()
+    done = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.description
 
 
 class TaskLoop(models.Model):

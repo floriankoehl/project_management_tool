@@ -1,5 +1,5 @@
 from django import forms
-from .models import Team, Task, Project
+from .models import Team, Task, Project, Todo
 
 class TeamCreationForm(forms.ModelForm):
     class Meta:
@@ -136,6 +136,50 @@ class ProjectTimeframeForm(forms.ModelForm):
             'start_date': forms.DateInput(attrs={'id': 'start_date_input_project', 'placeholder': 'Start Date', 'type': 'date'}),
             'end_date': forms.DateInput(attrs={'id': 'end_date_input_project', 'placeholder': 'End Date', 'type': 'date'})
         }
+
+
+
+
+
+
+
+class TodoCreateForm(forms.ModelForm):
+    class Meta:
+        model = Todo
+        fields = ['description', 'done']
+        widgets = {
+            'description': forms.TextInput(attrs={
+                'placeholder': 'What needs to be done?',
+                'class': 'form-control',
+            }),
+            'done': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+            }),
+        }
+
+
+class TodoDoneForm(forms.ModelForm):
+    class Meta:
+        model = Todo
+        fields = ["done"]
+        widgets = {
+            'done': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+                'onchange': 'this.form.submit()'  # ✅ Submit form on checkbox toggle
+            })
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

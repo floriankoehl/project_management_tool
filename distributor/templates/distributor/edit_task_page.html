@@ -11,8 +11,13 @@
 {#    <h2>Difficulty: {{ task.difficulty }}</h2>#}
 {#    <h2>Approval Required: {{ task.approval_required }}</h2>#}
 {#    <h2>Loops: {{ task.loops }}</h2>#}
+ <h1 style="margin: 10px; ">{{ task }}</h1>
 
-    {% comp_show_all_task_loop_objects_of_one_task_loop task.id %}
+
+    {% todo_component task %}
+
+
+
 
     <div class="edit_task_form_temp">
     {% view_task task.id %}
@@ -23,6 +28,7 @@
 
     {% update_dependencies task.id %}
 
+        {% comp_show_all_task_loop_objects_of_one_task_loop task.id %}
 
 
 
