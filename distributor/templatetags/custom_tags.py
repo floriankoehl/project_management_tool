@@ -44,10 +44,41 @@ def all_task_loop_objects():
     all_task_loop_objects = TaskLoop.objects.all()
     return {'task_loop_objects': all_task_loop_objects}
 
+from distributor.models import TaskLoop, TaskLoopDependency
+
 @register.inclusion_tag('components/comp_display_task_loop_object.html')
 def comp_display_task_loop_object(task_loop_id):
     task_loop_object = TaskLoop.objects.get(pk=task_loop_id)
-    return {'task_loop_object': task_loop_object}
+
+    # Get all dependencies where this TaskLoop is the dependent
+    all_deps = TaskLoopDependency.objects.filter(
+        dependent_task_loop=task_loop_object
+    ).select_related("master_task_loop")
+
+    # Group by type
+    dependencies_by_type = {
+        "defined": [],
+        "prior_loop": [],
+        "cross_loop": [],
+    }
+
+    for dep in all_deps:
+        dependencies_by_type[dep.type].append(dep.master_task_loop)
+
+    # Get reverse dependencies too (for "Required by" list)
+    required_by = TaskLoopDependency.objects.filter(
+        master_task_loop=task_loop_object
+    ).select_related("dependent_task_loop")
+
+    return {
+        "task_loop_object": task_loop_object,
+        "initial_dependencies": task_loop_object.task.initial_dependencies.all(),
+        "defined_deps": dependencies_by_type["defined"],
+        "prior_loop_deps": dependencies_by_type["prior_loop"],
+        "cross_loop_deps": dependencies_by_type["cross_loop"],
+        "required_by": [dep.dependent_task_loop for dep in required_by],
+    }
+
 
 @register.inclusion_tag('components/edit_task_comp.html')
 def edit_task_comp(task_id):

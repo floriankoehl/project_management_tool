@@ -9,35 +9,48 @@
 
 <h2 style="font-weight: bold">Required by</h2>
 <ul>
-    {% for required_by in task_loop_object.all_required_by %}
-        <li>{{ required_by }}</li>
-
+    {% for item in required_by %}
+        <li>{{ item }}</li>
+    {% empty %}
+        <li><i>None</i></li>
     {% endfor %}
 </ul>
 
 <h2 style="font-weight: bold">Dependencies</h2>
+
 <h3>Initial Dependencies:</h3>
 <ul>
-    {% for init_dep in task_loop_object.task.initial_dependencies.all %}
-        <li>{{ init_dep }}</li>
+    {% for item in initial_dependencies %}
+        <li>{{ item }}</li>
+    {% empty %}
+        <li><i>None</i></li>
     {% endfor %}
 </ul>
+
 <h3>Defined Dependencies:</h3>
 <ul>
-    {% for init_dep in task_loop_object.defined_dependencies.all %}
-        <li>{{ init_dep }}</li>
+    {% for item in defined_deps %}
+        <li>{{ item }}</li>
+    {% empty %}
+        <li><i>None</i></li>
     {% endfor %}
 </ul>
+
 <h3>Prior Loop Dependencies:</h3>
 <ul>
-    {% for init_dep in task_loop_object.prior_loop_dependencies.all %}
-        <li>{{ init_dep }}</li>
+    {% for item in prior_loop_deps %}
+        <li>{{ item }}</li>
+    {% empty %}
+        <li><i>None</i></li>
     {% endfor %}
 </ul>
+
 <h3>Cross Loop Dependencies:</h3>
 <ul>
-    {% for init_dep in task_loop_object.cross_loop_dependencies.all %}
-        <li>{{ init_dep }}</li>
+    {% for item in cross_loop_deps %}
+        <li>{{ item }}</li>
+    {% empty %}
+        <li><i>None</i></li>
     {% endfor %}
 </ul>
 

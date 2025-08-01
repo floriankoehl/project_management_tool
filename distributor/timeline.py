@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime
 
-from .models import Project, TaskLoop, Team, ActivityLog
+from .models import Project, TaskLoop, Team, ActivityLog, TaskLoopDependency
 
 
 def plan_order_of_task_loops():
@@ -96,22 +96,25 @@ def check_if_team_has_already_scheduled_task_on_same_order_counter(task_loop, cu
 
 
 def check_if_dependencies_are_met(task_loop, order_counter):
-    dependencies = task_loop.all_dependencies
+    dependencies = TaskLoopDependency.objects.filter(
+        dependent_task_loop=task_loop
+    ).select_related("master_task_loop")
 
     for dep in dependencies:
-        if dep.order_number is None:
+
+        master_task = dep.master_task_loop
+        if master_task.order_number is None:
             ActivityLog.objects.create(task_loop=task_loop, type="schedule_log",
                                        title="⛔️ [SKIP] ",
-                                       message=f"dependency '{dep}' not met",
+                                       message=f"dependency '{master_task}' not met",
                                        order_number=order_counter)
             return False
 
-        if dep.order_number >= order_counter:
+        if master_task.order_number >= order_counter:
             ActivityLog.objects.create(task_loop=task_loop, type="schedule_log",
                                        title="⛔️ [SKIP] ",
-                                       message=f"dependency '{dep}' scheduled on same day {order_counter}",
+                                       message=f"dependency '{master_task}' scheduled on same day {order_counter}",
                                        order_number=order_counter)
-            return False
             return False
 
     return True

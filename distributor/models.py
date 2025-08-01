@@ -44,9 +44,9 @@ class TaskLoop(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     loop_index = models.IntegerField(default=1)
     scheduled_date = models.DateField(null=True, blank=True)
-    defined_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="defined_dependencies_set")
-    prior_loop_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="generated_dependencies_set")
-    cross_loop_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="cross_loop_dependencies_set")
+    # defined_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="defined_dependencies_set")
+    # prior_loop_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="generated_dependencies_set")
+    # cross_loop_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="cross_loop_dependencies_set")
 
     priority = models.IntegerField(default=0)
     difficulty = models.IntegerField(default=0)
@@ -60,29 +60,29 @@ class TaskLoop(models.Model):
     def __str__(self):
         return f"{self.task} - {self.loop_index}"
 
-    @property
-    def all_dependencies(self):
-        """
-        Returns a combined queryset of all dependencies for this TaskLoop,
-        including prior_loop_dependencies and cross_loop_dependencies.
-        """
-        return (
-                self.prior_loop_dependencies.all() |
-                self.cross_loop_dependencies.all() |
-                self.defined_dependencies.all()
-        ).distinct().order_by('task__team__name')
-
-    @property
-    def all_required_by(self):
-        """
-        Returns a combined queryset of all TaskLoops that depend on this TaskLoop,
-        whether through defined, prior_loop, or cross_loop dependencies.
-        """
-        return (
-                self.defined_dependencies_set.all() |
-                self.generated_dependencies_set.all() |
-                self.cross_loop_dependencies_set.all()
-        ).distinct().order_by("task__team__name")
+    # @property
+    # def all_dependencies(self):
+    #     """
+    #     Returns a combined queryset of all dependencies for this TaskLoop,
+    #     including prior_loop_dependencies and cross_loop_dependencies.
+    #     """
+    #     return (
+    #             self.prior_loop_dependencies.all() |
+    #             self.cross_loop_dependencies.all() |
+    #             self.defined_dependencies.all()
+    #     ).distinct().order_by('task__team__name')
+    #
+    # @property
+    # def all_required_by(self):
+    #     """
+    #     Returns a combined queryset of all TaskLoops that depend on this TaskLoop,
+    #     whether through defined, prior_loop, or cross_loop dependencies.
+    #     """
+    #     return (
+    #             self.defined_dependencies_set.all() |
+    #             self.generated_dependencies_set.all() |
+    #             self.cross_loop_dependencies_set.all()
+    #     ).distinct().order_by("task__team__name")
 
     # @property
     # def magnitude(self):
@@ -114,6 +114,53 @@ class TaskLoop(models.Model):
     #     return own_magnitude / total_magnitude
 
 
+
+
+
+class TaskLoopDependency(models.Model):
+    master_task_loop = models.ForeignKey("TaskLoop",
+                                         related_name="required_by",
+                                         on_delete=models.CASCADE)
+
+    dependent_task_loop = models.ForeignKey('TaskLoop',
+                                            related_name="dependencies",
+                                            on_delete=models.CASCADE)
+
+    type=models.CharField(max_length=50,
+                          choices=[
+                              ("defined", "Defined"),
+                              ("prior_loop", "Prior Loop"),
+                              ("cross_loop", "Cross Loop"),
+                          ]
+                          )
+
+    weight = models.FloatField(default=0)
+
+    class Meta:
+        unique_together = (("master_task_loop", "dependent_task_loop"),)
+
+    def __str__(self):
+        return f"[{self.type}]: Master Task Loop: {self.master_task_loop} ➝ Dependent Task Loop{self.dependent_task_loop}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class ActivityLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
@@ -126,6 +173,23 @@ class ActivityLog(models.Model):
 
     title = models.CharField(max_length=100, null=True, blank=True)
     message = models.CharField(max_length=500)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
