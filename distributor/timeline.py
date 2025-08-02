@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime
 
-from .models import Project, TaskLoop, Team, ActivityLog, TaskLoopDependency
+from .models import Project, TaskLoop, ActivityLog, TaskLoopDependency
 
 
 def plan_order_of_task_loops():

@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import TeamCreationForm, TaskCreationForm, ProjectTimeframeForm, TaskTeamUpdateForm, TaskLoopUpdateForm, \
-    TaskNameUpdateForm, TeamUpdateNameForm, TeamUpdateColorForm, TaskPriorityUpdateForm, TaskDifficultyUpdateForm, \
-    TaskApprovalRequiredUpdateForm, TodoCreateForm, TodoDoneForm
+from .forms import *
 
-from .models import Team, Task, Project, TaskLoop, Todo
+from .models import Task, Project, TaskLoop, Todo
 from .timeline import plan_order_of_task_loops
 from .utils import get_valid_possible_dependencies, create_task_loop_objects
 
@@ -15,72 +13,15 @@ def home(request):
 
 
 
-def teams(request):
-    all_teams = Team.objects.all()
-
-
-    team_form = TeamCreationForm()
-    context = {
-        'team_form': team_form,
-        'all_teams': all_teams
-    }
-    return render(request, 'distributor/teams.html', context)
-
-def create_team(request):
-    if request.method == "POST":
-        form = TeamCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('teams')
-        else:
-            form = TeamCreationForm()
-
-        return render(request, 'distributor/teams.html', {'form': form})
-
-def delete_team(request, id):
-    if request.method == "POST":
-        team = Team.objects.get(pk=id)
-        team.delete()
-        return redirect('teams')
 
 
 
-def edit_team_page(request, id):
-    team = Team.objects.get(pk=id)
-    team_update_name_form = TeamUpdateNameForm(instance=team)
-    team_update_color_form = TeamUpdateColorForm(instance=team)
-    context = {
-        'team': team,
-        'team_update_name_form': team_update_name_form,
-        'team_update_color_form': team_update_color_form
-    }
-    return render(request, 'distributor/edit_team_page.html', context)
 
 
-def team_update_name(request, id):
-    team = Team.objects.get(pk=id)
-    if request.method == "POST":
-        form = TeamUpdateNameForm(request.POST, instance=team)
-        if form.is_valid():
-            form.save()
-            return redirect('edit_team_page', id)
-    else:
-        form = TeamUpdateNameForm(instance=team)
-
-    return render(request, 'edit_team_page', {'form': form, 'team': team})
 
 
-def team_update_color(request, id):
-    team = Team.objects.get(pk=id)
-    if request.method == "POST":
-        form = TeamUpdateColorForm(request.POST, instance=team)
-        if form.is_valid():
-            form.save()
-            return redirect('edit_team_page', id)
-    else:
-        form = TeamUpdateColorForm(instance=team)
 
-    return render(request, 'edit_team_page', {'form': form, 'team': team})
+
 
 
 def tasks(request):
@@ -188,7 +129,7 @@ def task_priority_update(request, id):
     else:
         form = TaskPriorityUpdateForm(instance=task)
 
-    return render(request, 'edit_task_pages.html', {'TaskTeamUpdateForm': form, 'task': task})
+    return render(request, 'distributor/edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
 
 
 def task_difficulty_update(request, id):
@@ -204,7 +145,7 @@ def task_difficulty_update(request, id):
     else:
         form = TaskDifficultyUpdateForm(instance=task)
 
-    return render(request, 'edit_task_pages.html', {'TaskTeamUpdateForm': form, 'task': task})
+    return render(request, 'distributor/edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
 
 
 
@@ -221,7 +162,7 @@ def task_approval_required_update(request, id):
     else:
         form = TaskApprovalRequiredUpdateForm(instance=task)
 
-    return render(request, 'edit_task_pages.html', {'TaskTeamUpdateForm': form, 'task': task})
+    return render(request, 'distributor/edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
 
 
 
@@ -240,7 +181,7 @@ def task_name_update(request, id):
     else:
         form = TaskNameUpdateForm(instance=task)
 
-    return render(request, 'edit_task_pages.html', {'TaskTeamUpdateForm': form, 'task': task})
+    return render(request, 'distributor/edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
 
 def task_team_update(request, id):
     task = Task.objects.get(pk=id)
@@ -255,7 +196,7 @@ def task_team_update(request, id):
     else:
         form = TaskTeamUpdateForm(instance=task)
 
-    return render(request, 'edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
+    return render(request, 'distributor/edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
 
 def task_loops_update(request, id):
     task = Task.objects.get(pk=id)
@@ -270,7 +211,7 @@ def task_loops_update(request, id):
     else:
         form = TaskLoopUpdateForm(instance=task)
 
-    return render(request, 'edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
+    return render(request, 'distributor/edit_task_page.html', {'TaskTeamUpdateForm': form, 'task': task})
 
 
 # def edit_task_page(request, id):
@@ -397,34 +338,8 @@ def reload_timeline(request):
 
     referer = request.META.get('HTTP_REFERER')
     if referer:
-        redirect(referer)
+        return redirect(referer)
     return redirect("timeline")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

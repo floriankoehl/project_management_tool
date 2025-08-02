@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load team_tags %}
+
+
+{% block title %}All Teams{% endblock %}
+
+{% block content %}
+    <h1>Teams</h1>
+    <form method="POST" action="{% url 'create_team' %}">
+        {% csrf_token %}
+        {{ team_form.as_p }}
+        <button type="submit">Create Team</button>
+    </form>
+    
+{#    <div class="all_teams">#}
+{#        {% for team in all_teams %}#}
+{#            <div class="team_listing">#}
+{#                <h2>{{ team.name }}</h2>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    </div>#}
+
+
+<h2>All Teams</h2>
+    {% show_all_teams %}
+
+
+{% endblock %}

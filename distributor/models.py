@@ -1,15 +1,9 @@
 from django.db import models
 
 # Create your models here.
+from users.models import Team
 
-
-class Team(models.Model):
-    name = models.CharField(max_length=100)
-    color = models.CharField(max_length=7, default="#FFFFFF")
-    schedule_flag = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
+#Here was the team but now its in users/models.py
 
 
 class Task(models.Model):
