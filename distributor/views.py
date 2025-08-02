@@ -7,10 +7,6 @@ from .utils import get_valid_possible_dependencies, create_task_loop_objects
 
 
 # Create your views here.
-def home(request):
-    return render(request, 'distributor/home.html')
-
-
 
 
 

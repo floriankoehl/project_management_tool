@@ -14,7 +14,7 @@
 <header>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href='{% url 'home' %}'>Home</a>
+
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,24 +22,54 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li>
-                        <p class="nav-link">Start date: {{ global_project_timeframe.start_date }}</p>
-                    </li>
-                    <li>
-                        <p class="nav-link">End date: {{ global_project_timeframe.end_date }}</p>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="{% url 'change_project_page' %}">Change Timeframe</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'teams' %}">Teams</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tasks' %}">Tasks</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'timeline' %}">Timeline</a>
-                    </li>
+                    <div class="internal_navbar_container">
+                        <div class="common_links_base_navbar">
+                            <li>
+                                <a class="nav-link" href='{% url 'home' %}'>Home</a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'teams' %}">Teams</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'tasks' %}">Tasks</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'timeline' %}">Timeline</a>
+                            </li>
+
+                            <div class="timeframe_information_navbar">
+                            <li>
+                                <p id="hide_on_navbar_media_query" class="nav-link">|</p>
+                            </li>
+                            <li>
+                                <p class="nav-link">Project</p>
+                            </li>
+                            <li>
+                                <p class="nav-link">From: {{ global_project_timeframe.start_date }}</p>
+                            </li>
+                            <li>
+                                <p class="nav-link">To: {{ global_project_timeframe.end_date }}</p>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="{% url 'change_project_page' %}">Change Timeframe</a>
+                            </li>
+                            </div>
+
+
+                        </div>
+                        <div class="user_view">
+                            {% if user.is_authenticated %}
+                                <a class="nav-link" href="">Logout</a>
+                            {% else %}
+                                <a class="nav-link" href="{% url 'login_view' %}">Login</a>
+                                <a class="nav-link" href="{% url 'register_view' %}">Register</a>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
                 </ul>
             </div>
         </div>

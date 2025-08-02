@@ -14,6 +14,22 @@ class CustomUser(AbstractUser):
         return self.username
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Team(models.Model):
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=7, default="#FFFFFF")

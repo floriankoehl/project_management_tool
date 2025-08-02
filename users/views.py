@@ -1,7 +1,93 @@
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from .models import Team
-from .forms import TeamCreationForm, TeamUpdateNameForm, TeamUpdateColorForm
+from .forms import TeamCreationForm, TeamUpdateNameForm, TeamUpdateColorForm, CustomUserCreationForm
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
+
+
+def register_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = CustomUserCreationForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, "users/register.html", context)
+
+
+def register_user(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login_view')
+    else:
+        form = CustomUserCreationForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, "users/register.html", context)
+
+
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = AuthenticationForm()
+
+    context = {
+        "form": form,
+    }
+    return render(request, 'users/login_view.html', context)
+
+
+
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Create your views here.
 def teams(request):
