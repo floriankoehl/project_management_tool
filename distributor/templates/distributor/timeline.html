@@ -26,7 +26,7 @@
         </tr>
         {% for taskloop in all_task_loops %}
             <tr>
-                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.task.team }}</td>
+                <td class="nowrap_selfdefined" style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.task.team }}</td>
                 <td class="task-todo-hover-container" style="background-color: {{ taskloop.task.team.color }}">
     {{ taskloop }}
     <div class="task-todo-popup">

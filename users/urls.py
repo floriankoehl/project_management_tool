@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('teams', views.teams, name='teams'),
+    path('', views.users, name='users'),
     path('create_team', views.create_team, name='create_team'),
     path('delete_team/<int:id>/', views.delete_team, name='delete_team'),
     path('edit_team_page/<int:id>/', views.edit_team_page, name='edit_team_page'),
@@ -12,4 +13,6 @@ urlpatterns = [
     path('register_user', views.register_user, name='register_user'),
     path('login_view', views.login_view, name='login_view'),
     path('logout_view', views.logout_view, name='logout_view'),
+    path('join_team_by_button/<int:id>', views.join_team_by_button, name='join_team_by_button'),
+    path('remove_user_from_team/<int:team_id>/<int:user_id>', views.remove_user_from_team, name='remove_user_from_team'),
 ]

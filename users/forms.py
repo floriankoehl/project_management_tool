@@ -1,9 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Team, CustomUser
-
-
+from .models import Team, CustomUser, TeamMembership
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
@@ -16,8 +14,10 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 
-
-
+# class CreateTeamMembershipForm(forms.ModelForm):
+#     class Meta:
+#         model = TeamMembership
+#         fields = ''
 
 
 

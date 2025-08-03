@@ -6,7 +6,11 @@
     {% endfor %}
 </div>
 
-
+<div class="all_teams_medium">
+    {% for team in teams %}
+        {% comp_display_single_team_medium team.id %}
+    {% endfor %}
+</div>
 
 
 

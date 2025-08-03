@@ -1,0 +1,64 @@
+
+
+
+
+<div style="background-color: #f4f4f4;" class="display_team_medium">
+
+    <div class="team_content">
+        <div class="team_content_upper_part">
+            <div class="team_content_header">
+                <h1>{{ user.username }}</h1>
+                <div class="team_essential_buttons_container">
+                    <form method="POST" action="">
+{#                        {% url 'delete_user' user.id %}#}
+                        {% csrf_token %}
+                        <button class="task_essential_button" type="submit">Delete</button>
+                    </form>
+                    <form method="GET" action="">
+{#                        {% url 'edit_user_page' user.id %}#}
+                        <button class="task_essential_button" type="submit">Edit</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="team_content_memberships_and_tasks">
+                <h3>Role:</h3>
+                <p>{{ user.role|title }}</p>
+
+                <h3>Teams</h3>
+                <ul>
+                    {% for membership in user.teammembership_set.all %}
+                        <li>
+                            {{ membership.team.name }}
+                            <form method="POST" action="">
+{#                                {% url 'remove_user_from_team' membership.team.id user.id %}#}
+                                {% csrf_token %}
+                                <button type="submit">Leave</button>
+                            </form>
+                        </li>
+                    {% empty %}
+                        <li>No teams yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="team_join_form_container">
+            <form method="POST" action="">
+{#                {% url 'join_random_team' user.id %}#}
+                {% csrf_token %}
+                <button class="join_team_button">Join Random Team</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+{#path('user/<int:user_id>/delete/', views.delete_user, name='delete_user')#}
+{#path('user/<int:user_id>/edit/', views.edit_user_page, name='edit_user_page')#}
+{#path('team/<int:team_id>/user/<int:user_id>/remove/', views.remove_user_from_team, name='remove_user_from_team')#}
+{#path('user/<int:user_id>/join_random/', views.join_random_team, name='join_random_team')#}

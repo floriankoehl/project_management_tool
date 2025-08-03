@@ -1,0 +1,71 @@
+
+<style>
+
+{#.display_team_small {#}
+{#    background-color: {{ team.color }};#}
+{#}#}
+</style>
+
+<div style="background-color: {{ team.color }}" class="display_team_medium">
+
+
+
+    <div class="team_content">
+        <div class="team_content_upper_part">
+            <div class="team_content_header">
+                <h1>{{ team.name }}</h1>
+                <div class="team_essential_buttons_container">
+                    <form method="POST" action="{% url 'delete_team' team.id %}">
+                        {% csrf_token %}
+                        <button class="task_essential_button" type="submit">Delete</button>
+                    </form>
+                    <form method="POST" action="{% url 'edit_team_page' team.id %}">
+                        {% csrf_token %}
+                        <button class="task_essential_button" type="submit">Edit</button>
+                    </form>
+                </div>
+            </div>
+            <div class="team_content_memberships_and_tasks">
+                <h3>memberships</h3>
+                <ul>
+                    {% for membership in memberships %}
+                        <li>{{ membership.user.username }}
+                            <form method="POST" action="{% url 'remove_user_from_team' team.id membership.user.id %}">
+                                {% csrf_token %}
+                                <button type="submit">remove</button>
+                            </form>
+
+                        </li>
+                    {% endfor %}
+                </ul>
+                <h3>Tasks</h3>
+                <ul>
+                    {% for tasks in team.task_set.all %}
+                        <li>{{ tasks }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+
+
+        </div>
+        <div class="team_join_form_container">
+            <form method="POST" action="{% url 'join_team_by_button' team.id %}">
+                {% csrf_token %}
+                <button class="join_team_button">Join Team</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+

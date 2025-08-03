@@ -1,7 +1,8 @@
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from .models import Team
+from .models import Team, TeamMembership, CustomUser
 from .forms import TeamCreationForm, TeamUpdateNameForm, TeamUpdateColorForm, CustomUserCreationForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -78,11 +79,9 @@ def logout_view(request):
 
 
 
-
-
-
-
-
+def users(request):
+    all_users = CustomUser.objects.all()
+    return render(request, 'users/view_all_users_page.html', {"users": all_users})
 
 
 
@@ -159,3 +158,64 @@ def team_update_color(request, id):
         form = TeamUpdateColorForm(instance=team)
 
     return render(request, 'users/edit_team_page.html', {'form': form, 'team': team})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def join_team_by_button(request, id):
+    team = get_object_or_404(Team, pk=id)
+    if request.method == "POST":
+        TeamMembership.objects.get_or_create(team=team, user=request.user)
+
+        referer = request.META.get('HTTP_REFERER')
+        return redirect(referer)
+
+
+
+def remove_user_from_team(request, team_id, user_id):
+    team = get_object_or_404(Team, pk=team_id)
+    user = get_object_or_404(CustomUser, pk=user_id)  # <- use your model here
+
+    membership = TeamMembership.objects.filter(team=team, user=user).first()
+
+    if request.method == "POST":
+        membership.delete()
+
+    referer = request.META.get('HTTP_REFERER')
+    return redirect(referer)
+
+
+
+
+
+
+
+
+
+
+
+
+

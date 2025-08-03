@@ -1,0 +1,15 @@
+{% extends 'users/base.html' %}
+{% load team_tags %}
+
+{% block title %}Profile {{ user.username }}{% endblock %}
+
+
+
+{% block content %}
+
+
+<h1>Right parent file</h1>
+{% display_all_users %}
+
+
+{% endblock %}

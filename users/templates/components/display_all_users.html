@@ -1,0 +1,10 @@
+{% load team_tags %}
+
+
+<div class="all_users">
+    {% for user in users %}
+        <div class="user_listing">
+            {% display_single_user user.id %}
+        </div>
+    {% endfor %}
+</div>
