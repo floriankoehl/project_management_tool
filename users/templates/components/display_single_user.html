@@ -2,26 +2,26 @@
 
 
 
-<div style="background-color: #f4f4f4;" class="display_team_medium">
+<div style="background-color: #f4f4f4;" class="display_user_medium">
 
-    <div class="team_content">
-        <div class="team_content_upper_part">
-            <div class="team_content_header">
+    <div class="user_content">
+        <div class="user_content_upper_part">
+            <div class="user_content_header">
                 <h1>{{ user.username }}</h1>
-                <div class="team_essential_buttons_container">
+                <div class="user_essential_buttons_container">
                     <form method="POST" action="">
 {#                        {% url 'delete_user' user.id %}#}
                         {% csrf_token %}
-                        <button class="task_essential_button" type="submit">Delete</button>
+                        <button class="user_essential_button" type="submit">Delete</button>
                     </form>
                     <form method="GET" action="">
 {#                        {% url 'edit_user_page' user.id %}#}
-                        <button class="task_essential_button" type="submit">Edit</button>
+                        <button class="user_essential_button" type="submit">Edit</button>
                     </form>
                 </div>
             </div>
 
-            <div class="team_content_memberships_and_tasks">
+            <div class="user_content_memberships_and_tasks">
                 <h3>Role:</h3>
                 <p>{{ user.role|title }}</p>
 
@@ -43,13 +43,13 @@
             </div>
         </div>
 
-        <div class="team_join_form_container">
-            <form method="POST" action="">
+{#        <div class="user_join_form_container">#}
+{#            <form method="POST" action="">#}
 {#                {% url 'join_random_team' user.id %}#}
-                {% csrf_token %}
-                <button class="join_team_button">Join Random Team</button>
-            </form>
-        </div>
+{#                {% csrf_token %}#}
+{#                <button class="join_team_button_user">Join Random Team</button>#}
+{#            </form>#}
+{#        </div>#}
     </div>
 
 </div>

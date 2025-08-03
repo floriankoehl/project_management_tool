@@ -1,0 +1,53 @@
+{% extends 'users/base.html' %}
+{% load team_tags %}
+
+{% block title %}User Page{% endblock %}
+
+{% block content %}
+
+
+
+    <div class="profile_page_container">
+        <div class="profile_page_content">
+
+            <div class="profile_page_hardfacts">
+                <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                <div class="user_page_role_container">
+                    <h3>Role: {{ user.role }}</h3>
+
+                </div>
+
+                {% if not task_assignment_team_member_mismatch_bool %}
+                    <div class="missmatch_alert">
+                        <strong>Person is assinged to a task of a team where he is no member of</strong>
+                    </div>
+                {% endif %}
+
+
+            </div>
+
+            <div class="profile_page_tasks">
+                {% user_page_task_overview user %}
+            </div>
+
+            <div class="profile_page_teams">
+                <h2>Teams</h2>
+                {% user_page_team_overview user%}
+            </div>
+
+            <div class="profile_page_overview">
+                <h2>Next Steps</h2>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}
+
+
+
+

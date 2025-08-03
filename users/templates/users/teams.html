@@ -5,6 +5,16 @@
 {% block title %}All Teams{% endblock %}
 
 {% block content %}
+
+
+<p>user: {{ user }}</p>
+<p>is_authenticated: {{ user.is_authenticated }}</p>
+
+{% if user.is_authenticated %}
+    <p>✅ I'm logged in and this block is rendered!</p>
+{% endif %}
+
+
     <h1>Teams</h1>
     <form method="POST" action="{% url 'create_team' %}">
         {% csrf_token %}

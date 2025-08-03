@@ -1,0 +1,58 @@
+{% load custom_tags %}
+
+<h2>Tasks</h2>
+<div class="user_page_task_overview_container">
+    <div class="user_page_task_overview_all_tasks">
+        {% for taskassignment in task_assignments %}
+            <div style="background-color: {{ taskassignment.task.team.color }}" class="user_page_task_listing">
+                <div class="user_page_task_listing_headlinie">
+                    <form method="POST" action="{% url 'edit_task_page' taskassignment.task.id %}">
+                        {% csrf_token %}
+                        <button>🔎</button>
+                    </form>
+                    <h3>{{ taskassignment.task }}</h3>
+
+                </div>
+            <h3>{{ taskassignment.task.team }}</h3>
+                <div class="user_page_task_listing_content">
+                    {% for todo in taskassignment.task.todo_set.all %}
+
+                            <form method="POST" action="{% url 'todo_done_update' todo.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="checkbox" name="done" {% if todo.done %}checked{% endif %}
+                                       onchange="this.form.submit()" class="form-check-input"/>
+                            </form>
+                            <span style="{% if todo.done %}text-decoration: line-through; color: gray;{% endif %} margin-left: 8px;">
+                {{ todo.description }}
+            </span>
+
+                    {% empty %}
+                        <em>No todos yet</em>
+                    {% endfor %}
+                </div>
+
+
+{#                <form method="POST" action="{% url 'delete_task_assignment' taskassignment.id %}">#}
+{#                    {% csrf_token %}#}
+{#                    <button class="user_page_team_overview_join_team_form_button" type="submit">Unassign</button>#}
+{#                </form>#}
+                <form  method="POST" action="{% url 'delete_task_assignment' taskassignment.id %}">
+                    {% csrf_token %}
+                    <button class="user_page_unassign_task_button">❌</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

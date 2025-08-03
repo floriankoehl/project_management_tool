@@ -11,31 +11,34 @@ register = template.Library()
 
 
 
-@register.inclusion_tag('components/comp_display_single_team.html')
-def comp_display_single_team(team_id):
+@register.inclusion_tag('components/comp_display_single_team.html', takes_context=True)
+def comp_display_single_team(context, team):
+    user = context.get("user", None)
+    memberships = TeamMembership.objects.filter(team=team)
+
+    for membership in memberships:
+        print(membership.user)
+
+    return {'team': team, 'memberships': memberships, 'user': user}
+
+@register.inclusion_tag('components/comp_display_single_team_medium.html', takes_context=True)
+def comp_display_single_team_medium(context, team_id):
+    user = context.get("user", None)
     team = Team.objects.get(pk=team_id)
     memberships = TeamMembership.objects.filter(team=team)
 
     for membership in memberships:
         print(membership.user)
 
-    return {'team': team, 'memberships': memberships}
-
-@register.inclusion_tag('components/comp_display_single_team_medium.html')
-def comp_display_single_team_medium(team_id):
-    team = Team.objects.get(pk=team_id)
-    memberships = TeamMembership.objects.filter(team=team)
-
-    for membership in memberships:
-        print(membership.user)
-
-    return {'team': team, 'memberships': memberships}
+    return {'team': team, 'memberships': memberships, 'user': user}
 
 
-@register.inclusion_tag('components/all_teams.html')
-def show_all_teams():
+@register.inclusion_tag('components/all_teams.html', takes_context=True)
+def show_all_teams(context):
+    user = context.get("user", None)
     teams = Team.objects.all()
-    return {'teams': teams}
+    return {'teams': teams, 'user': user}
+
 
 
 @register.inclusion_tag("components/display_single_user.html")
@@ -49,6 +52,56 @@ def display_single_user(user_id):
 def display_all_users():
     users = User.objects.all()
     return {'users': users}
+
+
+
+
+
+
+
+
+
+
+
+
+@register.inclusion_tag("components/user_page_team_overview.html")
+def user_page_team_overview(user):
+    memberships = TeamMembership.objects.filter(user=user)
+    join_team_form = JoinTeamForm(user=user)
+    context = {
+        'memberships': memberships,
+        'user': user,
+        'join_team_form': join_team_form
+    }
+
+    return context
+
+
+
+@register.inclusion_tag("components/user_page_task_overview.html")
+def user_page_task_overview(user):
+    task_assignments = TaskAssignment.objects.filter(user=user).order_by('task__team')
+    context = {
+        'task_assignments': task_assignments,
+    }
+
+    return context
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -6,7 +6,12 @@
 
 
 {% block content %}
+<p>user: {{ user }}</p>
+<p>is_authenticated: {{ user.is_authenticated }}</p>
 
+{% if user.is_authenticated %}
+    <p>✅ I'm logged in and this block is rendered!</p>
+{% endif %}
 
 <h1>Right parent file</h1>
 {% display_all_users %}

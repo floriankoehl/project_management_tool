@@ -6,19 +6,24 @@ from distributor.utils import get_valid_possible_dependencies
 from ..forms import *
 
 register = template.Library()
+from users.forms import AssignUserToTaskForm
 
 
 
-
-@register.inclusion_tag('components/all_tasks.html')
-def show_all_tasks():
+@register.inclusion_tag('components/all_tasks.html', takes_context=True)
+def show_all_tasks(context):
+    user = context['user']
     tasks = Task.objects.all().order_by('team')
-    return {'all_tasks': tasks}
+    return {'all_tasks': tasks, 'user': user}
 
-@register.inclusion_tag('components/view_task.html')
-def view_task(task_id):
+@register.inclusion_tag('components/view_task.html', takes_context=True)
+def view_task(context, task_id):
+    user = context['user']
+
     task = Task.objects.get(pk=task_id)
-    return {'task': task}
+
+    assign_user_to_task_form = AssignUserToTaskForm(user=user, task=task)
+    return {'task': task, 'user': user, "assign_user_to_task_form": assign_user_to_task_form}
 
 
 
@@ -174,3 +179,26 @@ def display_dep_log_task_loop(task_loop):
 @register.inclusion_tag('components/display_reload_buttons.html')
 def display_reload_buttons():
     return {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

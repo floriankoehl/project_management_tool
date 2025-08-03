@@ -1,0 +1,92 @@
+
+{#{% load team_tags %}#}
+
+
+{#<style>#}
+{##}
+{#.user_page_team_listing {#}
+{#    background-color: {{  }};#}
+{#}#}
+{#</style>#}
+
+
+
+
+<div class="team_overview_container">
+    <div class="user_page_team_overview_join_team_form">
+        <form method="POST">
+            {% csrf_token %}
+{#            {{ join_team_form.as_p }}#}
+            {{ join_team_form.team }}
+
+            <button class="user_page_team_overview_join_team_form_button" type="submit">Join</button>
+        </form>
+    </div>
+
+
+    <div class="user_page_team_overview_all_teams">
+    {% for membership in memberships %}
+        <div style="background-color: {{ membership.team.color }}" class="user_page_team_listing">
+            <div class="user_page_team_listing_name">
+                {{ membership.team }}
+            </div>
+            <div class="user_page_team_listing_buttons">
+
+
+                <form method="POST" action="{% url 'remove_user_from_team' membership.team.id user.id %}">
+                    {% csrf_token %}
+                    <button>❌</button>
+                </form>
+
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <button>🔎</button>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

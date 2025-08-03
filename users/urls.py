@@ -15,4 +15,7 @@ urlpatterns = [
     path('logout_view', views.logout_view, name='logout_view'),
     path('join_team_by_button/<int:id>', views.join_team_by_button, name='join_team_by_button'),
     path('remove_user_from_team/<int:team_id>/<int:user_id>', views.remove_user_from_team, name='remove_user_from_team'),
+    path('profile_page/<int:user_id>', views.profile_page, name='profile_page'),
+    path('assign_user_to_task/<int:task_id>', views.assign_user_to_task, name='assign_user_to_task'),
+    path("delete_task_assignment/<int:task_assignment_id>", views.delete_task_assignment, name='delete_task_assignment'),
 ]

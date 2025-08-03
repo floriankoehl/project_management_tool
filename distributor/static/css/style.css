@@ -939,14 +939,6 @@ body {
 
 }
 
-.join_team_button {
-    height: 40px;
-    width: 120px;
-    background-color: black;
-    color: white;
-    border-radius: 5px;
-    border: none;
-}
 
 
 .team_content_memberships_and_tasks {
@@ -968,6 +960,117 @@ body {
 
 
 
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+/*_______________________USERS____________________________*/
+
+
+
+
+.all_users_medium {
+    background-color: #274a68;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.user_listing_medium {
+
+}
+
+.display_user_medium {
+    height: 800px;
+    width: 500px;
+    background-color: white;
+    /*border-radius: 5px;*/
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+.user_content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 15px;
+}
+
+.user_content * {
+    font-size: 15px;
+}
+
+.user_content h1 {
+    font-size: 25px !important;
+}
+
+.user_content_upper_part {
+
+}
+
+.user_content_header {
+
+}
+
+
+
+
+
+.user_essential_buttons_container {
+    display: flex;
+    gap: 5px;
+}
+
+.user_essential_button {
+
+}
+
+.user_essential_button:hover {
+    background-color: black;
+    color: white
+}
+
+
+.user_content_memberships_and_tasks {
+
+}
+
+.user_join_form_container {
+
+}
+
+
+.join_team_button {
+    height: 50px;
+    width: 150px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    border: none;
+}
 
 
 
@@ -982,6 +1085,54 @@ body {
 
 
 
+
+
+
+
+
+
+
+
+.team_content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 15px;
+}
+
+.team_content * {
+    font-size: 15px;
+}
+
+.team_content h1 {
+    font-size: 25px !important;
+}
+
+.team_essential_buttons_container {
+    display: flex;
+    gap: 5px;
+}
+
+.team_join_form_container {
+    display: flex;
+    justify-content: center;
+
+}
+
+.join_team_button {
+    height: 40px;
+    width: 120px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    border: none;
+}
+
+
+.team_content_memberships_and_tasks {
+    margin-top: 10px;
+}
 
 
 
@@ -1024,8 +1175,9 @@ body {
     height: 800px;
     width: 500px;
     background-color: white;
-    padding: 5px;
+    padding: 10px;
     flex-shrink: 0;
+    /*marign: 10px;*/
 }
 
 /* Shared layout styles for content inside the card */
@@ -1068,15 +1220,15 @@ body {
     justify-content: center;
 }
 
-.join_user_button {
-    height: 40px;
-    width: 120px;
-    background-color: black;
-    color: white;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-}
+/*.join_user_button {*/
+/*    height: 40px;*/
+/*    width: 120px;*/
+/*    background-color: black;*/
+/*    color: white;*/
+/*    border-radius: 5px;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*}*/
 
 /* Section for teams and roles */
 .user_content_roles_and_teams {
@@ -1099,6 +1251,21 @@ body {
     align-items: center;
 }
 
+.join_team_button_user {
+    height: 50px;
+    width: 150px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    border: none;
+}
+
+
+
+
+
+
+
 
 
 
@@ -1114,13 +1281,456 @@ body {
 }
 
 .user_listing {
-    height: 400px;
-    width: 250px;
+    height: 800px;
+    width: 500px;
     background-color: white;
     padding: 5px;
     flex-shrink: 0;
     overflow-y: auto;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+/*_________________________________PROFILE_PAGE_________________________________*/
+
+
+
+
+.profile_page_container {
+    height: 90vh;
+    width: 90vw;
+    justify-self: center;
+
+}
+
+
+.profile_page_content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+.profile_page_content > * {
+        padding: 10px;
+}
+
+.profile_page_content > * {
+    margin: 5px;
+    background-color: #7affe7;
+    border-radius: 2px;
+}
+
+.profile_page_hardfacts { grid-area: 1 / 1 / 2 / 2; }
+.profile_page_tasks { grid-area: 1 / 2 / 2 / 6; }
+.profile_page_teams { grid-area: 2 / 1 / 6 / 2; }
+.profile_page_overview { grid-area: 2 / 2 / 6 / 5; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.user_page_task_listing_headlinie {
+    display: flex;
+    gap: 5px;
+
+}
+
+/*.user_page_team_listing_buttons {*/
+/*    display: flex;*/
+/*    gap: 5px;*/
+/*}*/
+
+
+.user_page_task_listing_headlinie h3 {
+    font-size: 20px !important;
+    align-self: center
+}
+
+.user_page_task_listing_headlinie button {
+    height: 35px;
+    width: 30px;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+}
+
+
+.user_page_unassign_task_button {
+    height: 35px;
+    width: 30px;
+    border: none;
+    background-color: #ffffff;
+    border-radius: 2px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+
+
+
+
+
+
+
+.user_page_task_overview_container {
+    background-color: white;
+    padding: 10px;
+    height: 80%;
+    border-radius: 3px;
+}
+
+.user_page_task_overview_all_tasks {
+    display: flex;
+    height: 100%;
+    overflow-x: auto;
+}
+
+.user_page_task_listing {
+    background-color: #353535;
+    margin-right: 10px;
+    flex: 0 0 200px;
+    padding: 10px;
+    border-radius: 2px;
+    position: relative;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.team_overview_container {
+    height: 90%;
+    background: white;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.team_overview_container > * {
+    margin-bottom: 20px;
+    /*border: 1px solid black*/
+}
+
+.user_page_team_overview_join_team_form {
+    height: 80px;
+}
+
+.user_page_team_overview_all_teams {
+    height: auto;
+}
+
+
+
+
+
+
+
+
+.user_page_team_overview_join_team_form {
+
+}
+
+.user_page_team_overview_join_team_form_button {
+    margin-top: 10px;
+    background: #323232;
+    color: white;
+    border-radius: 3px;
+    width: 70px;
+    height: 30px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.user_page_team_listing {
+    height: 50px;
+    /*background: #7aff7a;*/
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 5px 0 5px;
+    border-radius: 2px;
+}
+
+.user_page_team_listing_buttons {
+    display: flex;
+    gap: 5px;
+}
+
+
+.user_page_team_listing_buttons button {
+    height: 35px;
+    width: 30px;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+}
+
+
+.user_page_team_listing_buttons button:hover {
+    background-color: #d3d3d3;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.profile_page_hardfacts {
+    font-size: 15px;
+
+}
+
+
+.missmatch_alert {
+    background-color: #ff1717;
+    /*margin: 10px 10px 10px  0;*/
+    padding: 5px;
+    color: white;
+    border-radius: 3px;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.user_page_role_container {
+
+    background-color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

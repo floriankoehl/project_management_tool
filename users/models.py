@@ -47,6 +47,17 @@ class TeamMembership(models.Model):
         return f"{self.user.username} in {self.team.name} ({self.role_in_team})"
 
 
+class TaskAssignment(models.Model):
+    task = models.ForeignKey('distributor.Task', on_delete=models.CASCADE)
+    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    role = models.CharField(max_length=50, blank=True)  # e.g. "Assignee", "Reviewer"
+    assigned_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('task', 'user')  # Prevent duplicate assignments
+
+    def __str__(self):
+        return f"{self.user.username} assigned to {self.task.name}"
 
 
 

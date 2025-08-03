@@ -49,12 +49,15 @@
 
 
         </div>
+
+        {% if user.is_authenticated %}
         <div class="team_join_form_container">
             <form method="POST" action="{% url 'join_team_by_button' team.id %}">
                 {% csrf_token %}
                 <button class="join_team_button">Join Team</button>
             </form>
         </div>
+    {% endif %}
     </div>
 
 

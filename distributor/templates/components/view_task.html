@@ -26,6 +26,12 @@
             {% csrf_token %}
             <button class="task_essential_button" type="submit">Edit</button>
         </form>
+        <form method="POST" action="{% url 'assign_user_to_task' task.id %}">
+            {% csrf_token %}
+            {{ assign_user_to_task_form.user.as_hidden }}
+            <button type="submit">Join Task</button>
+        </form>
+
     </div>
 </div>
 
