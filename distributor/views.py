@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 
 from .models import Task, Project, TaskLoop, Todo
-from .timeline import plan_order_of_task_loops
-from .utils import get_valid_possible_dependencies, create_task_loop_objects
+from .timeline import plan_order_of_task_loops, compare_max_order_number_to_timeframe
+from .utils import get_valid_possible_dependencies, create_task_loop_objects, get_days_in_timeframe
 
 
 # Create your views here.
@@ -47,7 +47,9 @@ def reload_tasks(request):
 
 def reload_all(request):
     create_task_loop_objects()
-    plan_order_of_task_loops()
+    num_days = len(get_days_in_timeframe())
+
+    compare_max_order_number_to_timeframe(num_days)
 
     referer = request.META.get('HTTP_REFERER')
     if referer:
@@ -300,24 +302,43 @@ def change_project_page(request):
 
 
 
-
+from users.models import Team
 def timeline(request):
-
+    team_id = request.GET.get("team")
     project = Project.objects.first()
     order_counter = project.order_counter  # this returns the max value assigned
-    print(order_counter)
+    day_list = get_days_in_timeframe()
+    all_teams = Team.objects.all()
+    rest_render_days_number_range = len(day_list) - order_counter -1
+
+    # print(order_counter)
 
     order_range = range(order_counter + 1)       # ✅ include all possible values
 
     all_task_loops = TaskLoop.objects.all().order_by('task__team')
 
+    # In your view
+    # for taskloop in all_task_loops:
+    #     taskloop.order_end = taskloop.order_number + taskloop.duration
+    #     taskloop.save()
+
+    if team_id:
+        all_task_loops = TaskLoop.objects.filter(task__team_id=team_id)
+    else:
+        all_task_loops = TaskLoop.objects.all().order_by('task__team')
+
     context = {
         'all_task_loops': all_task_loops,
+        'all_teams': all_teams,
         'order_range': order_range,
+        'day_list': day_list,
+        "request": request,
+        "rest_render_days_number_range": range(rest_render_days_number_range),
     }
 
-    for loop in all_task_loops:
-        print(loop, loop.order_number)
+    # parent_function(TaskLoop.objects.all().order_by('order_number'))
+    # for loop in all_task_loops:
+    #     print(loop, loop.order_number)
 
     return render(request, 'distributor/timeline.html', context)
 
@@ -325,8 +346,9 @@ def timeline(request):
 
 
 def reload_timeline(request):
-    plan_order_of_task_loops()
+    num_days = len(get_days_in_timeframe())
 
+    compare_max_order_number_to_timeframe(num_days)
 
     # from distributor.models import TaskLoop
     # for loop in TaskLoop.objects.all():

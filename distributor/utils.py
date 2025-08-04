@@ -1,3 +1,6 @@
+from datetime import timedelta
+from turtledemo.penrose import start
+
 from .models import *
 
 
@@ -33,6 +36,8 @@ def get_valid_possible_dependencies(main_task):
             valid_candidates.append(task)
 
     return valid_candidates
+
+
 
 
 
@@ -324,3 +329,147 @@ def setup_up_inital_dependencies():
 #             task_loop.defined_dependencies.add(dep_to_add)
 #
 #         # task_loop.defined_dependencies.add(initial_dependencies)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+#
+#
+# def parent_function(all_task_loops):
+#     # print("\n\n\n")
+#     # print("____________________\n"*20)
+#     # print("parent function called: ")
+#     # print("\n")
+#     get_days_in_timeframe()
+#     map_taskloops_to_date(all_task_loops)
+#
+#
+#
+#
+#
+#
+def get_days_in_timeframe():
+    # print("\n\n\n")
+    # print("get_days_in_timeframe() called")
+    # print("\n")
+    project = Project.objects.first()
+    order_counter = project.order_counter
+    # print(f"order_counter: {order_counter}")
+    # print(f"Start date: {project.start_date}")
+    # print(f"End date: {project.end_date}")
+
+    difference_days = project.end_date - project.start_date
+
+    # print(difference_days)
+    day_list = []
+
+    for day_number in range(difference_days.days + 1):
+        day = project.start_date + timedelta(days=day_number)
+        # print(day)
+        day_list.append(day)
+
+    return day_list
+#
+#
+#
+# def map_taskloops_to_date(all_task_loops):
+#     print("\n\n\n")
+#     print("map_taskloops_to_date() called")
+#     print("\n")
+#     all_task_loop_objects = all_task_loops
+#     for task_loop in all_task_loop_objects:
+#         print(f"Dif: {task_loop.difficulty} of {task_loop}: {task_loop.order_number}")
+#
+#
+#     safety_count = 0
+#
+#     # print("starting while loop")
+#     # while not valid_schema_found(all_task_loop_objects) and safety_count< 500:
+#     #     safety_count += 1
+#     #     print("in while loop", safety_count)
+#
+#     start_date = Project.objects.first().start_date
+#     end_date = Project.objects.first().end_date
+#     print("start_date: ", start_date)
+#     print("end_date: ", end_date)
+#
+#     mininmum_dates_break_dict = {}
+#     order_counter = Project.objects.first().order_counter
+#
+#     for order_number in range(order_counter):
+#         relevant_loops = filter(lambda x: x.order_number == order_number, all_task_loop_objects)
+#         try:
+#             mininmum_dates_break_dict[order_number] = max(relevant_loops, key=lambda x: x.duration).duration
+#         except ValueError:
+#             mininmum_dates_break_dict[order_number] = None
+#
+#
+#     for key, value in mininmum_dates_break_dict.items():
+#         print(f"ordernumber: {key}: max value {value}")
+#
+#
+#     for task_loop in all_task_loop_objects:
+#         # coefficient = 1
+#         # if task_loop.task.approval_required:
+#         #     coefficient = 3
+#         #
+#         # ideal_break_days = task_loop.difficulty + coefficient
+#
+#         print("")
+#         print(f"    Task Loop:  {task_loop}")
+#         print(f"    Order Number: {task_loop.order_number}")
+#         print(f"    Difficulty: {task_loop.difficulty}")
+#         # print(f"    Value calulated: {ideal_break_days}")
+#         scheduled_date = start_date + timedelta(days=task_loop.order_number)
+#         ideal_pause_till = start_date + timedelta(days=task_loop.difficulty)
+#         print(f"    Scheduled at:     {scheduled_date}")
+#         print(f"    Ideal pause till: {ideal_pause_till}")
+#
+#
+#
+#
+# def valid_schema_found(all_task_loop_objects):
+#     for task_loop in all_task_loop_objects:
+#         if task_loop.scheduled_date is None:
+#             return False
+#
+#
+#
+#
+#
+#
+#
+#
+
+
+
+
+
+
+
+

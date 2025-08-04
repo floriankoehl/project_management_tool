@@ -47,12 +47,34 @@ class TaskLoop(models.Model):
     approval_required = models.BooleanField(default=False)
 
     order_number = models.IntegerField(null=True, blank=True)
+    order_end = models.IntegerField(null=True, blank=True)
     is_scheduled = models.BooleanField(default=False)
 
     magnitude = models.FloatField(default=0)
 
     def __str__(self):
         return f"{self.task} - {self.loop_index}"
+
+    @property
+    def duration(self):
+        coefficient = 1
+        # print(self.task.approval_required, "lookldjslfkj")
+        if self.task.approval_required:
+            coefficient = 3
+
+        ideal_break_days = self.difficulty + coefficient
+        return ideal_break_days
+
+    @property
+    def time_frame_orders(self):
+        order_days = []
+        counter = 0
+        while self.order_number + counter < self.order_end and counter < 20:
+            counter += 1
+            order_days.append(counter + self.order_number)
+            print(f"append {counter} + {self.order_number}")
+
+        return order_days[:-1]
 
     # @property
     # def all_dependencies(self):

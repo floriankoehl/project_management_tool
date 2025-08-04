@@ -1,9 +1,68 @@
 from datetime import timedelta, datetime
 
+from florian_koehl import TOFLORIAN
 from .models import Project, TaskLoop, ActivityLog, TaskLoopDependency
 
 
-def plan_order_of_task_loops():
+
+
+
+
+def get_days_in_timeframe():
+    print("\n\n\n")
+    print("get_days_in_timeframe() called")
+    print("\n")
+    project = Project.objects.first()
+    order_counter = project.order_counter
+    print(f"order_counter: {order_counter}")
+    print(f"Start date: {project.start_date}")
+    print(f"End date: {project.end_date}")
+
+    difference_days = project.end_date - project.start_date
+
+    print(difference_days)
+    day_list = []
+
+    for day_number in range(difference_days.days + 1):
+        day = project.start_date + timedelta(days=day_number)
+        print(day)
+        day_list.append(day)
+
+    return day_list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# TODO MAKE ORDER END A DYNAMIC PROPERTY update the order end to a non static property, its just the calculation of taskloop.duration + taskloop.order_number
+
+def plan_order_of_task_loops(minus_days):
+    # day_list = get_days_in_timeframe()
     print(f"____________________________________\n" * 3)
     print("⏩⏩⏩⏩⏩ NEW RELOAD: ", datetime.now())
     print(f"____________________________________\n" * 3)
@@ -40,7 +99,7 @@ def plan_order_of_task_loops():
                 continue
 
             #Check if all dependencies are met and are not on the same order number
-            if not check_if_dependencies_are_met(task_loop, order_counter):
+            if not check_if_dependencies_are_met(task_loop, order_counter, minus_days):
                 continue
 
             #Check if inside the team of the Taskloop, every taskloop that has a lower taskloop index is already scheduled
@@ -56,6 +115,8 @@ def plan_order_of_task_loops():
                                        message=f"All conditions are met!",
                                        order_number=order_counter)
             task_loop.order_number = order_counter
+            # master_task.order_number + master_task.duration + 1
+            task_loop.order_end = task_loop.order_number + task_loop.duration + 1
             task_loop.save()
             task_loop.task.team.schedule_flag = True
             task_loop.task.team.save()
@@ -66,6 +127,46 @@ def plan_order_of_task_loops():
         project.save()
 
     return order_counter
+
+
+
+
+
+def compare_max_order_number_to_timeframe(days):
+    safety_counter = 0
+    print("order coutner initial: ", Project.objects.first().order_counter)
+    print("days initial: ", days)
+
+
+    while plan_order_of_task_loops(safety_counter) > (days-7) and safety_counter < 10:
+        safety_counter += 1
+        print("this one", safety_counter)
+        print(plan_order_of_task_loops(safety_counter))
+        print(days)
+
+
+    for task_loop in TaskLoop.objects.all():
+        task_loop.order_end -= safety_counter + 1
+        task_loop.save()
+
+    return safety_counter
+
+    print("sucesfully found possibility")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -95,7 +196,7 @@ def check_if_team_has_already_scheduled_task_on_same_order_counter(task_loop, cu
     return (match is not None, match)
 
 
-def check_if_dependencies_are_met(task_loop, order_counter):
+def check_if_dependencies_are_met(task_loop, order_counter, minus_days):
     dependencies = TaskLoopDependency.objects.filter(
         dependent_task_loop=task_loop
     ).select_related("master_task_loop")
@@ -109,6 +210,16 @@ def check_if_dependencies_are_met(task_loop, order_counter):
                                        message=f"dependency '{master_task}' not met",
                                        order_number=order_counter)
             return False
+
+
+        if (master_task.order_end - minus_days) > order_counter:
+            ActivityLog.objects.create(task_loop=task_loop, type="schedule_log",
+                                       title="⛔️ [SKIP] ",
+                                       message=f"dependency '{master_task}' not met",
+                                       order_number=order_counter)
+            return False
+
+
 
         if master_task.order_number >= order_counter:
             ActivityLog.objects.create(task_loop=task_loop, type="schedule_log",

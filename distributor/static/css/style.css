@@ -249,17 +249,37 @@ body {
 }
 
 .scheduled_cell {
-    background-color: #7aff7a !important;
-    font-weight: bold;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    border: none !important;
+   background: #8bff78;
 }
 
-.not_scheduled_cell, .scheduled_cell {
-    width: 50px;
+/*.not_scheduled_cell, .scheduled_cell {*/
+/*    width: 50px;*/
+/*}*/
+
+
+.scheduled_end_cell {
+    background: red;
 }
+
+.rest_cell {
+    background: #555555;
+}
+
+.scheduled_timeframe {
+    background: yellow;
+    /*border-left: 5px solid yellow;*/
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 .scheduled_task_details_cells {
@@ -517,6 +537,87 @@ body {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.actual_timeline {
+overflow-x: auto;
+
+}
+
+.actual_timeline_table {
+    border-collapse: collapse; /* important for Excel look */
+    width: max-content;
+    table-layout: auto;
+
+}
+
+.actual_timeline_table th,
+.actual_timeline_table td {
+    border: 1px solid #999;
+    padding: 8px 12px;
+    text-align: center;
+    vertical-align: middle;
+    min-width: 60px;
+}
+
+.actual_timeline_table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    /*height: 60px; !* increase this to fit longer day labels *!*/
+    white-space: nowrap;
+}
+
+
+
+
+
+/*.actual_timeline {*/
+/*    height: 200vh;*/
+/*    background: rgba(209, 209, 209, 0.33);*/
+
+/*}*/
+
+/*.timeline_table_container {*/
+/*    !*overflow-x: auto;*!*/
+/*    width: 100%;*/
+/*}*/
+
+/*.timeline_table {*/
+/*    width: max-content;  !* 👈 Ensures table expands beyond parent if needed *!*/
+/*    border-collapse: collapse;*/
+/*        overflow-x: auto; !* Optional: scroll entire section *!*/
+/*}*/
 
 
 
@@ -1387,7 +1488,7 @@ body {
 
 .profile_page_content > * {
     margin: 5px;
-    background-color: #7affe7;
+    background-color: rgba(232, 232, 232, 0.33);
     border-radius: 2px;
 }
 
