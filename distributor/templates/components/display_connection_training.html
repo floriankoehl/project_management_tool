@@ -1,0 +1,98 @@
+{% load static %}
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+
+<div id="task_graph_{{ task_loop.id }}" style="height: 450px; border: 1px solid #ccc; margin-top: 1rem;"></div>
+
+<script>
+  const container = document.getElementById("task_graph_{{ task_loop.id }}");
+
+  const nodes = new vis.DataSet([
+    // Central task_loop
+    {
+      id: "{{ task_loop.id }}",
+      label: "{{ task_loop.task.name|default:'(no name)'|escapejs }}",
+      color: "#ffcc00",
+      shape: "box",
+      font: { size: 16 },
+      widthConstraint: { minimum: 150 },
+      margin: 15
+    },
+
+    // Dependencies (pointing TO this task_loop)
+    {% for dep in dependencies %}
+      {
+        id: "dep_{{ dep.dependent_task_loop.id }}",
+        label: "{{ dep.dependent_task_loop.task.name|default:'(no name)'|escapejs }}",
+        color: "#ff6666",
+        shape: "box",
+        font: { size: 14 },
+        widthConstraint: { minimum: 150 },
+        margin: 15
+      },
+    {% endfor %}
+
+    // Required-by instances (pointing FROM this task_loop)
+    {% for req in required_by_instances %}
+      {
+        id: "req_{{ req.master_task_loop.id }}",
+        label: "{{ req.master_task_loop.task.name|default:'(no name)'|escapejs }}",
+        color: "#66ccff",
+        shape: "box",
+        font: { size: 14 },
+        widthConstraint: { minimum: 150 },
+        margin: 15
+      },
+    {% endfor %}
+  ]);
+
+  const edges = [
+    // Arrows FROM dependencies TO this task_loop
+    {% for dep in dependencies %}
+      {
+        from: "dep_{{ dep.dependent_task_loop.id }}",
+        to: "{{ task_loop.id }}",
+        label: "depends on",
+        arrows: "to",
+        font: { align: "middle", size: 12 }
+      },
+    {% endfor %}
+
+    // Arrows FROM this task_loop TO required-by instances
+    {% for req in required_by_instances %}
+      {
+        from: "{{ task_loop.id }}",
+        to: "req_{{ req.master_task_loop.id }}",
+        label: "required for",
+        arrows: "to",
+        font: { align: "middle", size: 12 }
+      },
+    {% endfor %}
+  ];
+
+  const data = { nodes, edges };
+
+  const options = {
+    layout: {
+      hierarchical: {
+        enabled: true,
+        direction: "LR",
+        levelSeparation: 200,
+        nodeSpacing: 150
+      }
+    },
+    nodes: {
+      shape: "box",
+      font: { size: 14, face: "arial" },
+      margin: 10
+    },
+    edges: {
+      arrows: "to",
+      font: { size: 12, align: "middle" },
+      color: { color: "#999", highlight: "#000", hover: "#000" }
+    },
+    physics: false
+  };
+
+  new vis.Network(container, data, options);
+</script>

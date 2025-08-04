@@ -310,6 +310,7 @@ def timeline(request):
     day_list = get_days_in_timeframe()
     all_teams = Team.objects.all()
     rest_render_days_number_range = len(day_list) - order_counter -1
+    all_tasks = Task.objects.all()
 
     # print(order_counter)
 
@@ -328,6 +329,7 @@ def timeline(request):
         all_task_loops = TaskLoop.objects.all().order_by('task__team')
 
     context = {
+        'all_tasks': all_tasks,
         'all_task_loops': all_task_loops,
         'all_teams': all_teams,
         'order_range': order_range,

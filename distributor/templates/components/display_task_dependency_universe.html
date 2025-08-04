@@ -1,0 +1,57 @@
+{% load static %}
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+<div id="task_dependency_universe" style="height: 700px; width: 100%; border: 1px solid #ccc; margin-top: 1rem;"></div>
+
+<script>
+  const nodes = new vis.DataSet([
+    {% for loop in taskloops %}
+      {
+        id: "{{ loop.id }}",
+        label: "{{ loop.task.name|escapejs }}",
+        color: "{{ loop.task.team.color|default:'#cccccc' }}",
+        shape: "box",
+        font: { size: 14 },
+        widthConstraint: { minimum: 140 }
+      },
+    {% endfor %}
+  ]);
+
+  const edges = [
+    {% for dep in dependencies %}
+      {
+        from: "{{ dep.dependent_task_loop.id }}",
+        to: "{{ dep.master_task_loop.id }}",
+        arrows: "to",
+        label: "{{ dep.type }}",
+        font: { align: "middle", size: 11 },
+        color: "#888"
+      },
+    {% endfor %}
+  ];
+
+  const container = document.getElementById("task_dependency_universe");
+  const data = { nodes, edges };
+  const options = {
+    layout: {
+      hierarchical: {
+        enabled: true,
+        direction: "LR",
+        levelSeparation: 180,
+        nodeSpacing: 150
+      }
+    },
+    nodes: {
+      shape: "box",
+      margin: 10
+    },
+    edges: {
+      arrows: "to",
+      font: { size: 12, align: "middle" },
+      color: "#999"
+    },
+    physics: false
+  };
+
+  new vis.Network(container, data, options);
+</script>

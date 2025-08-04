@@ -108,6 +108,54 @@ body {
 
 
 
+
+
+
+
+
+
+#mynetwork {
+    height: 100vh;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*.visualisation_div{*/
+/*    height: 70vh;*/
+/*}*/
+
+
+
+
+
+
+
+
 /*h1 {*/
 /*    font-size: 400px;*/
 /*}*/
@@ -180,24 +228,31 @@ body {
     position: absolute;
     top: 100%;
     left: 0;
-    transform: translate(25%, -20%);
+    transform: translate(0,0);
     background: rgba(255, 255, 255, 0.93);
     color: black;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 8px;
     z-index: 10;
-    max-width: 500px;         /* ✅ Maximum width */
-    width: max-content;       /* ✅ Shrinks to fit content */
+
+    /* ✅ Fix the sizing issue */
+    width: 520px;               /* Give enough room for graph */
+    height: auto;               /* Let content expand vertically */
+    max-width: 90vw;            /* Don’t go beyond screen */
+    overflow-x: auto;           /* Allow scrolling if needed */
+
     font-size: 0.8em;
     box-shadow: 0px 0px 6px rgba(0,0,0,0.2);
-    white-space: normal;      /* ✅ Allows wrapping */
-    overflow-wrap: break-word;/* ✅ Ensures long text wraps */
+    white-space: normal;
+    overflow-wrap: break-word;
 }
+
 
 
 .dependency-hover-container:hover .dependency-popup {
     display: block;
+    /*width: 500px;*/
 }
 
 

@@ -1,5 +1,6 @@
 {% extends 'distributor/base.html' %}
 {% load custom_tags %}
+{#{% load graph_tags %}#}
 
 {% block title %}Timeline{% endblock %}
 
@@ -11,6 +12,10 @@
 
 
 
+
+
+<h2>🪐 Full Task Dependency Universe</h2>
+{% display_task_dependency_universe %}
 
 
 
@@ -86,6 +91,73 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br>
+    <br>
+    <br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <table class="actual_timeline_table">
         <tr>
             <th class="scheduled_task_details_cells">Team</th>
@@ -107,7 +179,7 @@
     {{ taskloop }}
     <div class="task-todo-popup">
 {#        {% todo_component taskloop.task %}#}
-            {% display_dep_log_task_loop taskloop %}
+{#            {% display_connection_training taskloop.task %}#}
     </div>
 </td>
 
@@ -116,22 +188,7 @@
                         {% csrf_token %}
                         <button class="task_essential_button dependency-hover-trigger" type="submit">Edit</button>
                         <div class="dependency-popup">
-                            <strong>Dependencies:</strong>
-                            <ul>
-                                {% for dep in taskloop.all_dependencies %}
-                                    <li style="background-color: {{ dep.task.team.color }}">{{ dep }}</li>
-                                {% empty %}
-                                    <li><em>None</em></li>
-                                {% endfor %}
-                            </ul>
-                            <strong>Required by:</strong>
-                            <ul>
-                                {% for dep in taskloop.all_required_by %}
-                                    <li style="background-color: {{ dep.task.team.color }}">{{ dep }}</li>
-                                {% empty %}
-                                    <li><em>None</em></li>
-                                {% endfor %}
-                            </ul>
+                            {% display_connection_training taskloop.task %}
                         </div>
                     </form>
                 </td>
@@ -196,7 +253,67 @@
 
 
 
+    <table class="actual_timeline_table">
+        <tr>
+            <th class="scheduled_task_details_cells">Team</th>
+            <th class="scheduled_task_details_cells">Task</th>
+            <th class="edit_task_button_timeline"></th>
+{#            <th class="edit_task_button_timeline">Prio.</th>#}
 
+
+            {% for day in day_list %}
+                <th>{{ day|date:"d.m" }}</th>
+            {% endfor %}
+        </tr>
+        {% for task in all_tasks %}
+            <tr>
+                <td style="background-color: {{ task.team.color }}" class="nowrap_selfdefined">{{ task.team }}</td>
+
+
+
+
+
+                <td style="background-color: {{ task.team.color }}">{{ task }}</td>
+                <td class="dependency-hover-container">
+                    <form method="POST" action="{% url 'edit_task_page' task.id %}">
+                        {% csrf_token %}
+                        <button class="task_essential_button dependency-hover-trigger" type="submit">Edit</button>
+                    </form>
+                </td>
+{#                <td>{{ tasks }}</td>#}
+{#                 <td>{{ task }}</td>#}
+{#                <td style="background-color: {{ taskloop.magnitude|heat_color:'0,100,50;100,100,100' }}">#}
+{#                    {{ task }}#}
+{#                </td>#}
+
+
+                {% for order in order_range %}
+                    {% if order in task.order_numbers_of_tasks %}
+                        <td class="scheduled_cell activity-hover-container">
+                            X
+                        </td>
+{#                    {% elif time_frame_orders.timframe_days == order%}#}
+{#                        <td class="scheduled_end_cell">X</td>#}
+
+                    {% elif order in task.in_between_numbers_of_tasks %}
+                        <td class="scheduled_timeframe"></td>
+
+                    {% elif order in task.end_number_of_tasks %}
+                        <td class="scheduled_end_cell">X</td>
+
+                    {% else %}
+                        <td class="not_scheduled_cell"></td>
+                    {% endif %}
+
+                {% endfor %}
+            {% for rest in rest_render_days_number_range %}
+                <td class="rest_cell"></td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+
+
+    </table>
 
 
 

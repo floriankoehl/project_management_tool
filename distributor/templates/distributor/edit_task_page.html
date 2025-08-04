@@ -1,6 +1,8 @@
 {% extends "distributor/base.html" %}
 {% load custom_tags %}
 {% load team_tags %}
+{#{% load graph_tags %}#}
+
 
 {% block title %}Edit task {{ task.name }}{% endblock %}
 
@@ -13,6 +15,41 @@
 {#    <h2>Approval Required: {{ task.approval_required }}</h2>#}
 {#    <h2>Loops: {{ task.loops }}</h2>#}
  <h1 style="margin: 10px; ">{{ task }}</h1>
+
+    <div class="visualisation_div">
+        {% display_connection_training task %}
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     {% todo_component task %}

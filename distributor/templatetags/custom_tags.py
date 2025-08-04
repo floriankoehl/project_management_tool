@@ -182,6 +182,60 @@ def display_reload_buttons():
 
 
 
+@register.inclusion_tag('components/display_connection_training.html')
+def display_connection_training(task):
+    task_loop = task.taskloop_set.first()
+
+    # The task_loop depends on these (task_loop is the master → points to others)
+    dependencies = TaskLoopDependency.objects.filter(master_task_loop=task_loop)
+
+    # These depend on the task_loop (task_loop is the dependency → others point to it)
+    required_by_instances = TaskLoopDependency.objects.filter(dependent_task_loop=task_loop)
+
+    return {
+        'task_loop': task_loop,
+        'dependencies': dependencies,
+        'required_by_instances': required_by_instances,
+    }
+
+
+
+
+
+
+@register.inclusion_tag('components/display_task_dependency_universe.html')
+def display_task_dependency_universe():
+    # assuming each Task has exactly one TaskLoop
+    taskloops = TaskLoop.objects.select_related("task", "task__team")
+    dependencies = TaskLoopDependency.objects.select_related("master_task_loop__task", "dependent_task_loop__task")
+
+    return {
+        'taskloops': taskloops,
+        'dependencies': dependencies,
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

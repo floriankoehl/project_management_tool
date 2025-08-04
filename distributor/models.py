@@ -25,6 +25,51 @@ class Task(models.Model):
 
 
 
+    @property
+    def order_numbers_of_tasks(self):
+        order_numbers = []
+
+        all_taskloops = self.taskloop_set.all()
+        for taskloop in all_taskloops:
+            order_numbers.append(taskloop.order_number)
+
+        return order_numbers
+
+    @property
+    def end_number_of_tasks(self):
+        # print("not even in the same function ")
+        end_numbers = []
+
+        all_taskloops = self.taskloop_set.all()
+        # print(all_taskloops)
+        for taskloop in all_taskloops:
+            # print("in the for loop")
+            print(taskloop.order_end)
+            end_numbers.append(taskloop.order_end)
+            # print(f"End nUmebr: {taskloop.order_end}")
+
+        # print(end_numbers)     # print(end_numbers)
+        return end_numbers
+
+    @property
+    def in_between_numbers_of_tasks(self):
+        in_between_numbers = []
+
+        all_taskloops = self.taskloop_set.all()
+        for taskloop in all_taskloops:
+            for in_between_number in taskloop.time_frame_orders:
+                in_between_numbers.append(in_between_number)
+
+        return in_between_numbers
+
+
+
+
+
+
+
+
+
 class Todo(models.Model):
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField()
@@ -72,9 +117,11 @@ class TaskLoop(models.Model):
         while self.order_number + counter < self.order_end and counter < 20:
             counter += 1
             order_days.append(counter + self.order_number)
-            print(f"append {counter} + {self.order_number}")
+            # print(f"append {counter} + {self.order_number}")
 
         return order_days[:-1]
+
+
 
     # @property
     # def all_dependencies(self):

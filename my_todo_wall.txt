@@ -1,2 +1,85 @@
-[2025-08-04 01:40:39] distributor\timeline.py:62 (<module>) ➜ TODO: TODO MAKE ORDER END A DYNAMIC PROPERTY update the order end to a non static property, its just the calculation of taskloop.duration + taskloop.order_number
-[2025-08-04 01:41:01] distributor\timeline.py:67 (plan_order_of_task_loops) ➜ TODO: TODO MAKE ORDER END A DYNAMIC PROPERTY update the order end to a non static property, its just the calculation of taskloop.duration + taskloop.order_number
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#{% load static %}#}
+{##}
+{#<!-- Load vis-network library -->#}
+{#<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>#}
+{##}
+{#<div id="task_graph_{{ task_loop.id }}" style="height: 400px; border: 1px solid #ccc;"></div>#}
+{##}
+{#<script>#}
+{#  // Unique container per task_loop (if you render multiple)#}
+{#  const container = document.getElementById("task_graph_{{ task_loop.id }}");#}
+{##}
+{#  // Define nodes#}
+{#  const nodes = new vis.DataSet([#}
+{#    { id: "{{ task_loop.id }}", label: "{{ task_loop.task.name|escapejs }}", color: "#ffcc00" },  // center node#}
+{##}
+{#    {% for dep in dependencies %}#}
+{#      { id: "dep_{{ dep.id }}", label: "{{ dep.task.name|escapejs }}", color: "#ff6666" },#}
+{#    {% endfor %}#}
+{##}
+{#    {% for req in required_by_instances %}#}
+{#      { id: "req_{{ req.id }}", label: "{{ req.task.name|escapejs }}", color: "#66ccff" },#}
+{#    {% endfor %}#}
+{#  ]);#}
+{##}
+{#  // Define edges#}
+{#  const edges = [#}
+{#    {% for dep in dependencies %}#}
+{#      { from: "dep_{{ dep.id }}", to: "{{ task_loop.id }}" },#}
+{#    {% endfor %}#}
+{#    {% for req in required_by_instances %}#}
+{#      { from: "{{ task_loop.id }}", to: "req_{{ req.id }}" },#}
+{#    {% endfor %}#}
+{#  ];#}
+{##}
+{#  const data = { nodes, edges };#}
+{#  const options = {#}
+{#    nodes: { shape: "box", font: { size: 14 } },#}
+{#    edges: { arrows: "to" },#}
+{#    layout: { hierarchical: { enabled: true, direction: "LR" } }#}
+{#  };#}
+{##}
+{#  new vis.Network(container, data, options);#}
+{#</script>#}
