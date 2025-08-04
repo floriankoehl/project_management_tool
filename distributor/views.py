@@ -76,7 +76,15 @@ def create_task(request):
         if form.is_valid():
             new_task = form.save()
 
-            return redirect('edit_task_page', new_task.id)
+            source_page = request.POST.get("source", "")
+
+
+            if source_page == "create_task_page":
+                return redirect('edit_task_page', new_task.id)
+            else:
+                referer = request.META.get('HTTP_REFERER')
+                return redirect(referer)
+
         else:
             form = TaskCreationForm()
             return render(request, 'distributor/tasks.html', {'form': form})
@@ -254,6 +262,46 @@ def add_dependency(request, id):
         return redirect(referer or 'tasks')  # fallback if header is missing
 
 
+
+
+from django.views.decorators.http import require_POST
+
+@require_POST
+def add_dependency_training_page(request):
+    from_id = request.POST.get("from_id")
+    to_id = request.POST.get("to_id")
+    source = request.POST.get("source", "")
+
+    try:
+        from_task = Task.objects.get(id=from_id)
+        to_task = Task.objects.get(id=to_id)
+
+        to_task.initial_dependencies.add(from_task)
+
+        if source == "training_page":
+            return redirect("training_page")
+        else:
+            return redirect("edit_task_page", to_task.id)
+
+    except Task.DoesNotExist:
+        return redirect("training_page")  # fallback in case of invalid ID
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def delete_dependency(request, id):
     if request.method == "POST":
         task_to_be_modified = Task.objects.get(id=id)
@@ -398,3 +446,23 @@ def todo_done_update(request, id):
 
 
 
+
+
+
+def training_page(request):
+    tasks = Task.objects.prefetch_related('initial_dependencies')
+
+    graph_nodes = []
+    graph_edges = []
+
+    for task in tasks:
+        graph_nodes.append({"id": task.id, "label": task.name})
+        for dep in task.initial_dependencies.all():
+            graph_edges.append({"from": dep.id, "to": task.id})
+
+    context = {
+        "graph_nodes": graph_nodes,
+        "graph_edges": graph_edges
+    }
+
+    return render(request, 'distributor/training_page.html', context)

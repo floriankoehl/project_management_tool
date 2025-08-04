@@ -14,6 +14,84 @@ body {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*h1 {*/
 /*    color: green*/
 /*}*/
@@ -40,7 +118,7 @@ body {
     max-width: 100%;
 }
 .task_listing {
-    height: 400px;
+    height: 600px;
     width: 250px;
     background-color: white;
     /*border-radius: 5px;*/
@@ -128,6 +206,11 @@ body {
 
 
 
+.edit_task_page_body {
+    justify-self: center;
+    margin: 0px;
+    padding: 0px;
+}
 
 
 
@@ -135,12 +218,23 @@ body {
 
 
 
+.edit_task_page_hardfacts {
+    display:flex;
+    justify-content: space-between;
+}
 
 
+.single_task_graph_visualisation {
+    width: 700px;
+    border: 1px solid black;
+    border-radius: 3px;
+    height: 400px;
+}
 
+.edit_task_page_name_and_todo {
+    width: 400px;
 
-
-
+}
 
 
 
@@ -360,6 +454,7 @@ body {
     margin: 10px;
     padding: 10px;
     border-radius: 5px;
+    /*height: 500px;*/
 }
 
 .view_task_container * {

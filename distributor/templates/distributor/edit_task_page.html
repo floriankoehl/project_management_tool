@@ -7,67 +7,40 @@
 {% block title %}Edit task {{ task.name }}{% endblock %}
 
 {% block content %}
-{#    <h1>Edit Task: </h1>#}
-{#    <h2>Name: {{ task.name }}</h2>#}
-{#    <h2>Team: {{ task.team }}</h2>#}
-{#    <h2>Priority: {{ task.priority }}</h2>#}
-{#    <h2>Difficulty: {{ task.difficulty }}</h2>#}
-{#    <h2>Approval Required: {{ task.approval_required }}</h2>#}
-{#    <h2>Loops: {{ task.loops }}</h2>#}
- <h1 style="margin: 10px; ">{{ task }}</h1>
+    {#    <h1>Edit Task: </h1>#}
+    {#    <h2>Name: {{ task.name }}</h2>#}
+    {#    <h2>Team: {{ task.team }}</h2>#}
+    {#    <h2>Priority: {{ task.priority }}</h2>#}
+    {#    <h2>Difficulty: {{ task.difficulty }}</h2>#}
+    {#    <h2>Approval Required: {{ task.approval_required }}</h2>#}
+    {#    <h2>Loops: {{ task.loops }}</h2>#}
+    <div class="edit_task_page_body">
+        <div class="edit_task_page_hardfacts">
 
-    <div class="visualisation_div">
-        {% display_connection_training task %}
+            <div class="edit_task_page_name_and_todo">
+                <h1 style="margin: 10px; ">{{ task }}</h1>
+                {% todo_component task %}
+            </div>
+
+            <div class="visualisation_div">
+                {% display_connection_training task %}
+            </div>
+
+
+        </div>
+
+
+        <div class="edit_task_form_temp">
+            {% view_task task.id %}
+
+            {% edit_task_comp task.id %}
+        </div>
+
+
+        {% update_dependencies task.id %}
+
+        {#        {% comp_show_all_task_loop_objects_of_one_task_loop task.id %}#}
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    {% todo_component task %}
-
-
-
-
-    <div class="edit_task_form_temp">
-    {% view_task task.id %}
-
-    {% edit_task_comp task.id %}
-    </div>
-
-
-    {% update_dependencies task.id %}
-
-        {% comp_show_all_task_loop_objects_of_one_task_loop task.id %}
-
 
 
 

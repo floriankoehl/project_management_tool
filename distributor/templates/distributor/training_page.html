@@ -1,0 +1,285 @@
+{% extends 'distributor/base.html' %}
+{% load custom_tags %}
+
+{% block title %}Training Page{% endblock %}
+
+{% block content %}
+
+    <!-- ✅ CSS Styles -->
+    <style>
+        .training_page {
+            background: rgba(221, 221, 221, 0.29);
+            height: 800px;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #my_graph {
+            height: 800px;
+            width: 800px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid lightgray;
+        }
+
+        #nodeFormModal {
+            height: 500px;
+            width: 500px;
+            position: relative;
+        }
+
+    </style>
+
+    <!-- ✅ Graph container -->
+    <div class="training_page container">
+        <div id="my_graph"></div>
+        {{ graph_nodes|json_script:"node-data" }}
+        {{ graph_edges|json_script:"edge-data" }}
+        <div id="nodeFormModal"
+             style="display: none; background: white; border: 1px solid #ccc; padding: 20px; position: fixed; top: 20%; left: 40%; z-index: 1000;">
+            {% display_create_task_form %}
+        </div>
+        <form id="dependencyForm" method="POST" action="{% url 'add_dependency_training_page' %}"
+              style="display: none;">
+            {% csrf_token %}
+            <input type="hidden" name="from_id" id="from_id_input">
+            <input type="hidden" name="to_id" id="to_id_input">
+            <input type="hidden" name="source" value="training_page">
+        </form>
+
+
+        <script>
+            function openNodeModal() {
+                document.getElementById("nodeFormModal").style.display = "block";
+            }
+
+            function closeNodeModal() {
+                document.getElementById("nodeFormModal").style.display = "none";
+            }
+
+        </script>
+
+    </div>
+
+
+
+
+
+    <!-- ✅ vis-network -->
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <!-- ✅ Graph logic -->
+    <script>
+        window.onload = function () {
+            const container = document.getElementById('my_graph');
+
+
+            const nodes = new vis.DataSet(JSON.parse(document.getElementById("node-data").textContent));
+            const edges = new vis.DataSet(JSON.parse(document.getElementById("edge-data").textContent));
+
+
+            const data = {
+                nodes: nodes,
+                edges: edges
+            };
+
+            const options = {
+
+                layout: {
+                    hierarchical: {
+                        enabled: true,
+                        direction: "UD",         // 👈 Top to bottom
+                        sortMethod: "directed", // 👈 Follow the edge direction
+                        nodeSpacing: 150,
+                        levelSeparation: 100
+                    }
+                },
+                physics: {
+                    enabled: false,
+
+                },
+                manipulation: {
+                    enabled: true,
+                    addNode: function (data, callback) {
+                        window.pendingNodeCallback = callback;
+                        window.pendingNodeData = data;
+
+                        // Optionally clear previous values in the form here
+
+                        openNodeModal(); // ✅ Show modal
+                    },
+                    addEdge: function (data, callback) {
+                        if (data.from === data.to) {
+                            alert("Cannot connect a node to itself.");
+                            return;
+                        }
+
+                        // ✅ Step 1: Build current adjacency list
+                        const adjacency = {};
+                        edges.forEach(edge => {
+                            if (!adjacency[edge.from]) adjacency[edge.from] = [];
+                            adjacency[edge.from].push(edge.to);
+                        });
+
+                        // Include the new edge temporarily
+                        if (!adjacency[data.from]) adjacency[data.from] = [];
+                        adjacency[data.from].push(data.to);
+
+                        // ✅ Step 2: Check for cycles using DFS
+                        function hasPathToStart(current, visited = new Set()) {
+                            if (current === data.from) return true;
+                            if (visited.has(current)) return false;
+                            visited.add(current);
+                            const neighbors = adjacency[current] || [];
+                            for (const neighbor of neighbors) {
+                                if (hasPathToStart(neighbor, visited)) return true;
+                            }
+                            return false;
+                        }
+
+                        if (hasPathToStart(data.to)) {
+                            alert("❌ This edge would create a circular dependency.");
+                            return;
+                        }
+
+                        // ✅ Step 3: Submit the hidden form with from & to values
+                        document.getElementById("from_id_input").value = data.from;
+                        document.getElementById("to_id_input").value = data.to;
+                        document.getElementById("dependencyForm").submit();
+                    },
+
+                    {#editNode: false,#}
+                    deleteNode: true,
+                    deleteEdge: true
+                },
+                nodes: {
+                    shape: "box",
+                    size: 20,
+                    background: '#ffffff',
+
+
+                },
+                edges: {
+                    arrows: "to",
+                    color: '#848484'
+                }
+            };
+
+            const network = new vis.Network(container, data, options);
+
+
+            network.on("selectNode", function (params) {
+    const selectedNodeId = params.nodes[0];
+
+    // Reset all edges and nodes first
+    edges.forEach(edge =>
+        edges.update({
+            id: edge.id,
+            color: {
+                color: '#848484',
+                highlight: '#848484',
+                hover: '#a8a8a8',
+                opacity: 1.0
+            }
+        })
+    );
+    nodes.forEach(node =>
+        nodes.update({
+            id: node.id,
+            color: {
+                background: '#ffffff',
+                border: '#2B7CE9'
+            }
+        })
+    );
+
+    // Highlight incoming edges (TO this node)
+    edges.forEach(edge => {
+        if (edge.to === selectedNodeId) {
+            // red edges TO the node
+            edges.update({
+                id: edge.id,
+                color: {
+                    color: '#ff0000',
+                    highlight: '#ff0000',
+                    hover: '#ff4d4d',
+                    opacity: 1.0
+                }
+            });
+
+            // red nodes FROM which the edge came
+            nodes.update({
+                id: edge.from,
+                color: {
+                    background: '#ffe5e5',
+                    border: '#ff0000'
+                }
+            });
+        }
+
+        if (edge.from === selectedNodeId) {
+            // green edges FROM the node
+            edges.update({
+                id: edge.id,
+                color: {
+                    color: '#00aa00',
+                    highlight: '#00aa00',
+                    hover: '#66ff66',
+                    opacity: 1.0
+                }
+            });
+
+            // green nodes TO which the edge points
+            nodes.update({
+                id: edge.to,
+                color: {
+                    background: '#e5ffe5',
+                    border: '#00aa00'
+                }
+            });
+        }
+    });
+
+    // Optional: highlight the selected node itself with a border
+    nodes.update({
+        id: selectedNodeId,
+        color: {
+            background: '#f0f0f0',
+            border: '#0000ff'
+        }
+    });
+});
+
+
+            network.on("deselectNode", function () {
+    edges.forEach(edge =>
+        edges.update({
+            id: edge.id,
+            color: {
+                color: '#848484',
+                highlight: '#848484',
+                hover: '#a8a8a8',
+                opacity: 1.0
+            }
+        })
+    );
+    nodes.forEach(node =>
+        nodes.update({
+            id: node.id,
+            color: {
+                background: '#ffffff',
+                border: '#2B7CE9'
+            }
+        })
+    );
+});
+
+
+        };
+    </script>
+
+{% endblock %}

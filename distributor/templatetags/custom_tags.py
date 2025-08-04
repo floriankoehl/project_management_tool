@@ -217,42 +217,38 @@ def display_task_dependency_universe():
 
 
 
+@register.inclusion_tag("components/display_create_task_form.html")
+def display_create_task_form():
+    all_tasks = Task.objects.all()
+    task_form = TaskCreationForm()
+    context = {
+        'all_tasks': all_tasks,
+        'task_form': task_form
+    }
+    return context
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#
+# @register.inclusion_tag('components/display_create_task_form.html')
+# def display_create_task_form(task_id):
+#     task = Task.objects.get(pk=task_id)
+#     task_name_update_form = TaskNameUpdateForm(instance=task)
+#     task_team_update_form = TaskTeamUpdateForm(instance=task)
+#     task_loop_update_form = TaskLoopUpdateForm(instance=task)
+#     task_priorty_update_form = TaskPriorityUpdateForm(instance=task)
+#     task_difficulty_update_form = TaskDifficultyUpdateForm(instance=task)
+#     task_approval_required_update_form = TaskApprovalRequiredUpdateForm(instance=task)
+#     todo_form = TodoCreateForm()
+#     todo_done_form = TodoDoneForm()
+#
+#     context = {
+#         'task': task,
+#         'task_name_update_form': task_name_update_form,
+#         'task_team_update_form': task_team_update_form,
+#         'task_loop_update_form': task_loop_update_form,
+#         'task_priorty_update_form': task_priorty_update_form,
+#         'task_difficulty_update_form': task_difficulty_update_form,
+#         'task_approval_required_update_form': task_approval_required_update_form,
+#         'todo_form': todo_form,
+#         'todo_done_form': todo_done_form,
+#     }
+#     return context

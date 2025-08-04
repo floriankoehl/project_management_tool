@@ -14,6 +14,14 @@
             <li>{{ dep.name }}</li>
         {% endfor %}
     </ul>
+
+    <h3>Required by: </h3>
+    <ul>
+        {% for dep in task.required_by.all %}
+            <li>{{ dep.name }}</li>
+        {% endfor %}
+    </ul>
+
     <div class="task_essential_buttons_container">
         <form method="POST" action="{% url 'delete_task' task.id %}">
             {% csrf_token %}
