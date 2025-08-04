@@ -1,6 +1,5 @@
 {% extends 'distributor/base.html' %}
 {% load custom_tags %}
-{#{% load graph_tags %}#}
 
 {% block title %}Timeline{% endblock %}
 
@@ -13,9 +12,6 @@
 
 
 
-{##}
-{#<h2>🪐 Full Task Dependency Universe</h2>#}
-{#{% display_task_dependency_universe %}#}
 
 
 
@@ -40,280 +36,176 @@
 
 
 
+<div class="actual_timeline">
+    <h1>Timeline</h1>
+    {% display_reload_buttons %}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="actual_timeline">
-        <h1>Timeline</h1>
-        {% display_reload_buttons %}
-
-        <form method="get">
-            <label for="team_filter">Filter by team:</label>
-            <select name="team" id="team_filter" onchange="this.form.submit()">
-                <option value="">All teams</option>
-                {% for team in all_teams %}
-                    <option value="{{ team.id }}"
-                            {% if team.id|stringformat:"s" == request.GET.team %}selected{% endif %}>
-                        {{ team.name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<br>
-    <br>
-    <br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <table class="actual_timeline_table">
-        <tr>
-            <th class="scheduled_task_details_cells">Team</th>
-            <th class="scheduled_task_details_cells">Task</th>
-            <th class="edit_task_button_timeline"></th>
-{#            <th class="edit_task_button_timeline">Prio.</th>#}
-            <th class="edit_task_button_timeline">Dur.</th>
-            <th class="edit_task_button_timeline">order.</th>
-        <th class="edit_task_button_timeline">Mag.</th>
-
-            {% for day in day_list %}
-                <th>{{ day|date:"d.m" }}</th>
+    <!-- Team Filter (Shared) -->
+    <form method="get">
+        <label for="team_filter">Filter by team:</label>
+        <select name="team" id="team_filter" onchange="this.form.submit()">
+            <option value="">All teams</option>
+            {% for team in all_teams %}
+                <option value="{{ team.id }}"
+                        {% if team.id|stringformat:"s" == request.GET.team %}selected{% endif %}>
+                    {{ team.name }}
+                </option>
             {% endfor %}
-        </tr>
-        {% for taskloop in all_task_loops %}
-            <tr>
-                <td class="nowrap_selfdefined" style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.task.team }}</td>
-                <td class="task-todo-hover-container" style="background-color: {{ taskloop.task.team.color }}">
-    {{ taskloop }}
-    <div class="task-todo-popup">
-{#        {% todo_component taskloop.task %}#}
-{#            {% display_connection_training taskloop.task %}#}
-    </div>
-</td>
+        </select>
+    </form>
 
-                <td class="dependency-hover-container">
-                    <form method="POST" action="{% url 'edit_task_page' taskloop.task.id %}">
-                        {% csrf_token %}
-                        <button class="task_essential_button dependency-hover-trigger" type="submit">Edit</button>
-                        <div class="dependency-popup">
-                            {% display_connection_training taskloop.task %}
+    <!-- Toggle Button 1 -->
+    <button onclick="toggleTimeline('taskloop_timeline')">Toggle Taskloop Timeline</button>
+
+    <div id="taskloop_timeline">
+        <br><br>
+        <table class="actual_timeline_table">
+            <tr>
+                <th class="scheduled_task_details_cells">Team</th>
+                <th class="scheduled_task_details_cells">Task</th>
+                <th class="edit_task_button_timeline"></th>
+                <th class="edit_task_button_timeline">Dur.</th>
+                <th class="edit_task_button_timeline">order.</th>
+                <th class="edit_task_button_timeline">Mag.</th>
+
+                {% for day in day_list %}
+                    <th>{{ day|date:"d.m" }}</th>
+                {% endfor %}
+            </tr>
+            {% for taskloop in all_task_loops %}
+                <tr>
+                    <td class="nowrap_selfdefined" style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.task.team }}</td>
+                    <td class="task-todo-hover-container" style="background-color: {{ taskloop.task.team.color }}">
+                        {{ taskloop }}
+                        <div class="task-todo-popup">
+                            {# {% todo_component taskloop.task %} #}
                         </div>
-                    </form>
-                </td>
-                <td>{{ taskloop.duration }}</td>
-                 <td>{{ taskloop.order_number }}</td>
-                <td style="background-color: {{ taskloop.magnitude|heat_color:'0,100,50;100,100,100' }}">
-                    {{ taskloop.magnitude }}
-                </td>
+                    </td>
 
-
-                {% for order in order_range %}
-                    {% if taskloop.order_number == order %}
-                        <td class="scheduled_cell activity-hover-container">
-                            {{ taskloop.loop_index }}
-                            <div class="activity-popup">
-
-
-                                {% display_schedule_log taskloop %}
-
+                    <td class="dependency-hover-container">
+                        <form method="POST" action="{% url 'edit_task_page' taskloop.task.id %}">
+                            {% csrf_token %}
+                            <button class="task_essential_button dependency-hover-trigger" type="submit">Edit</button>
+                            <div class="dependency-popup">
+                                {% display_connection_training taskloop.task %}
                             </div>
-                        </td>
-                    {% elif taskloop.timframe_days == order%}
-                        <td class="scheduled_end_cell">X</td>
+                        </form>
+                    </td>
+                    <td>{{ taskloop.duration }}</td>
+                    <td>{{ taskloop.order_number }}</td>
+                    <td style="background-color: {{ taskloop.magnitude|heat_color:'0,100,50;100,100,100' }}">
+                        {{ taskloop.magnitude }}
+                    </td>
 
-                    {% elif order in taskloop.time_frame_orders%}
-                        <td class="scheduled_timeframe"></td>
+                    {% for order in order_range %}
+                        {% if taskloop.order_number == order %}
+                            <td class="scheduled_cell activity-hover-container">
+                                {{ taskloop.loop_index }}
+                                <div class="activity-popup">
+                                    {% display_schedule_log taskloop %}
+                                </div>
+                            </td>
+                        {% elif taskloop.timframe_days == order %}
+                            <td class="scheduled_end_cell">X</td>
+                        {% elif order in taskloop.time_frame_orders %}
+                            <td class="scheduled_timeframe"></td>
+                        {% elif taskloop.order_end == order %}
+                            <td class="scheduled_end_cell">X</td>
+                        {% else %}
+                            <td class="not_scheduled_cell"></td>
+                        {% endif %}
+                    {% endfor %}
 
-                    {% elif taskloop.order_end == order%}
-                        <td class="scheduled_end_cell">X</td>
-
-                    {% else %}
-                        <td class="not_scheduled_cell"></td>
-                    {% endif %}
-
-                {% endfor %}
-            {% for rest in rest_render_days_number_range %}
-                <td class="rest_cell"></td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-
-
-    </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <br>
-    <br>
-    <br>
-
-
-
-
-    <table class="actual_timeline_table">
-        <tr>
-            <th class="scheduled_task_details_cells">Team</th>
-            <th class="scheduled_task_details_cells">Task</th>
-            <th class="edit_task_button_timeline"></th>
-{#            <th class="edit_task_button_timeline">Prio.</th>#}
-
-
-            {% for day in day_list %}
-                <th>{{ day|date:"d.m" }}</th>
+                    {% for rest in rest_render_days_number_range %}
+                        <td class="rest_cell"></td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-        </tr>
-        {% for task in all_tasks %}
+        </table>
+    </div>
+
+    <br><br>
+
+    <!-- Team Filter (Again, for second table) -->
+{#    <form method="get">#}
+{#        <label for="team_filter_2">Filter by team:</label>#}
+{#        <select name="team" id="team_filter_2" onchange="this.form.submit()">#}
+{#            <option value="">All teams</option>#}
+{#            {% for team in all_teams %}#}
+{#                <option value="{{ team.id }}"#}
+{#                        {% if team.id|stringformat:"s" == request.GET.team %}selected{% endif %}>#}
+{#                    {{ team.name }}#}
+{#                </option>#}
+{#            {% endfor %}#}
+{#        </select>#}
+{#    </form>#}
+
+    <!-- Toggle Button 2 -->
+    <button onclick="toggleTimeline('task_timeline')">Toggle Task Timeline</button>
+
+    <div id="task_timeline">
+        <br><br>
+        <table class="actual_timeline_table">
             <tr>
-                <td style="background-color: {{ task.team.color }}" class="nowrap_selfdefined">{{ task.team }}</td>
+                <th class="scheduled_task_details_cells">Team</th>
+                <th class="scheduled_task_details_cells">Task</th>
+                <th class="edit_task_button_timeline"></th>
 
-
-
-
-
-                <td style="background-color: {{ task.team.color }}">{{ task }}</td>
-                <td class="dependency-hover-container">
-                    <form method="POST" action="{% url 'edit_task_page' task.id %}">
-                        {% csrf_token %}
-                        <button class="task_essential_button dependency-hover-trigger" type="submit">Edit</button>
-                    </form>
-                </td>
-{#                <td>{{ tasks }}</td>#}
-{#                 <td>{{ task }}</td>#}
-{#                <td style="background-color: {{ taskloop.magnitude|heat_color:'0,100,50;100,100,100' }}">#}
-{#                    {{ task }}#}
-{#                </td>#}
-
-
-                {% for order in order_range %}
-                    {% if order in task.order_numbers_of_tasks %}
-                        <td class="scheduled_cell activity-hover-container">
-                            X
-                        </td>
-{#                    {% elif time_frame_orders.timframe_days == order%}#}
-{#                        <td class="scheduled_end_cell">X</td>#}
-
-                    {% elif order in task.in_between_numbers_of_tasks %}
-                        <td class="scheduled_timeframe"></td>
-
-                    {% elif order in task.end_number_of_tasks %}
-                        <td class="scheduled_end_cell">X</td>
-
-                    {% else %}
-                        <td class="not_scheduled_cell"></td>
-                    {% endif %}
-
-                {% endfor %}
-            {% for rest in rest_render_days_number_range %}
-                <td class="rest_cell"></td>
+                {% for day in day_list %}
+                    <th>{{ day|date:"d.m" }}</th>
                 {% endfor %}
             </tr>
-        {% endfor %}
+            {% for task in all_tasks %}
+                <tr>
+                    <td style="background-color: {{ task.team.color }}" class="nowrap_selfdefined">{{ task.team }}</td>
+                    <td style="background-color: {{ task.team.color }}">{{ task }}</td>
+                    <td class="dependency-hover-container">
+                        <form method="POST" action="{% url 'edit_task_page' task.id %}">
+                            {% csrf_token %}
+                            <button class="task_essential_button dependency-hover-trigger" type="submit">Edit</button>
+                        </form>
+                    </td>
+
+                    {% for order in order_range %}
+                        {% if order in task.order_numbers_of_tasks %}
+                            <td class="scheduled_cell activity-hover-container">X</td>
+                        {% elif order in task.in_between_numbers_of_tasks %}
+                            <td class="scheduled_timeframe"></td>
+                        {% elif order in task.end_number_of_tasks %}
+                            <td class="scheduled_end_cell">X</td>
+                        {% else %}
+                            <td class="not_scheduled_cell"></td>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for rest in rest_render_days_number_range %}
+                        <td class="rest_cell"></td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<!-- ✅ Toggle JavaScript -->
+<script>
+    function toggleTimeline(id) {
+        const section = document.getElementById(id);
+        if (section.style.display === "none") {
+            section.style.display = "block";
+        } else {
+            section.style.display = "none";
+        }
+    }
+</script>
 
 
-    </table>
+
+
+
+
+
+    {% include 'distributor/training_page.html' %}
 
 
 
@@ -326,134 +218,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{##}
-{##}
-{##}
-{#    </div>#}
-{##}
-{##}
-{##}
-{##}
-{#    <div class="timeline_headline">#}
-{#    <h1>Timeline</h1>#}
-{#    {% display_reload_buttons %}#}
-{##}
-{##}
-{##}
-{#    </div>#}
-{##}
-{#    <table class="timeline_table">#}
-{#        <tr>#}
-{#            <th class="scheduled_task_details_cells">Team</th>#}
-{#            <th class="scheduled_task_details_cells">Task</th>#}
-{#            <th class="edit_task_button_timeline"></th>#}
-{#            <th class="edit_task_button_timeline">Prio.</th>#}
-{#            <th class="edit_task_button_timeline">Magn.</th>#}
-{##}
-{#            {% for order in order_range %}#}
-{#                <th>{{ order }}</th>#}
-{#            {% endfor %}#}
-{#        </tr>#}
-{#        {% for taskloop in all_task_loops %}#}
-{#            <tr>#}
-{#                <td class="nowrap_selfdefined" style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.task.team }}</td>#}
-{#                <td class="task-todo-hover-container" style="background-color: {{ taskloop.task.team.color }}">#}
-{#    {{ taskloop }}#}
-{#    <div class="task-todo-popup">#}
-{#        {% todo_component taskloop.task %}#}
-{#            {% display_dep_log_task_loop taskloop %}#}
-{#    </div>#}
-{#</td>#}
-{##}
-{#                <td class="dependency-hover-container">#}
-{#                    <form method="POST" action="{% url 'edit_task_page' taskloop.task.id %}">#}
-{#                        {% csrf_token %}#}
-{#                        <button class="task_essential_button dependency-hover-trigger" type="submit">Edit</button>#}
-{#                        <div class="dependency-popup">#}
-{#                            <strong>Dependencies:</strong>#}
-{#                            <ul>#}
-{#                                {% for dep in taskloop.all_dependencies %}#}
-{#                                    <li style="background-color: {{ dep.task.team.color }}">{{ dep }}</li>#}
-{#                                {% empty %}#}
-{#                                    <li><em>None</em></li>#}
-{#                                {% endfor %}#}
-{#                            </ul>#}
-{#                            <strong>Required by:</strong>#}
-{#                            <ul>#}
-{#                                {% for dep in taskloop.all_required_by %}#}
-{#                                    <li style="background-color: {{ dep.task.team.color }}">{{ dep }}</li>#}
-{#                                {% empty %}#}
-{#                                    <li><em>None</em></li>#}
-{#                                {% endfor %}#}
-{#                            </ul>#}
-{#                        </div>#}
-{#                    </form>#}
-{#                </td>#}
-{#                <td style="background-color: {{ taskloop.task.team.color }}">{{ taskloop.priority }}</td>#}
-{#                <td style="background-color: {{ taskloop.magnitude|heat_color:'0,100,50;100,100,100' }}">#}
-{#                    {{ taskloop.magnitude }}#}
-{#                </td>#}
-{##}
-{##}
-{#                {% for order in order_range %}#}
-{#                    {% if taskloop.order_number == order %}#}
-{#                        <td class="scheduled_cell activity-hover-container">#}
-{#                            {{ taskloop.loop_index }}#}
-{#                            <div class="activity-popup">#}
-{##}
-{##}
-{#                                {% display_schedule_log taskloop %}#}
-{##}
-{#                            </div>#}
-{#                        </td>#}
-{##}
-{#                    {% else %}#}
-{#                        <td class="not_scheduled_cell"></td>#}
-{#                    {% endif %}#}
-{##}
-{#                {% endfor %}#}
-{#            </tr>#}
-{#        {% endfor %}#}
-{##}
-{##}
-{#    </table>#}
-{##}
-{##}
-{##}
-{##}
-{##}
-{##}
-{##}
-{##}
-{##}
-{##}
-{##}
-{##}
-{##}
-{##}
-{#    <br>#}
-{#    <br>#}
-{#    <br>#}
-{##}
-{##}
 
 
 

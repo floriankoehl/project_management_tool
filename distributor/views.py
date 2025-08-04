@@ -360,6 +360,34 @@ def timeline(request):
     rest_render_days_number_range = len(day_list) - order_counter -1
     all_tasks = Task.objects.all()
 
+
+
+
+    #########
+    tasks = Task.objects.prefetch_related('initial_dependencies')
+
+    graph_nodes = []
+    graph_edges = []
+
+    for task in tasks:
+        graph_nodes.append({"id": task.id, "label": task.name})
+        for dep in task.initial_dependencies.all():
+            graph_edges.append({"from": dep.id, "to": task.id})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     # print(order_counter)
 
     order_range = range(order_counter + 1)       # ✅ include all possible values
@@ -371,10 +399,16 @@ def timeline(request):
     #     taskloop.order_end = taskloop.order_number + taskloop.duration
     #     taskloop.save()
 
-    if team_id:
-        all_task_loops = TaskLoop.objects.filter(task__team_id=team_id)
+    team_filter = request.GET.get('team')
+
+    if team_filter:
+        all_task_loops = TaskLoop.objects.filter(task__team__id=team_filter)
+        all_tasks = Task.objects.filter(team__id=team_filter)
     else:
         all_task_loops = TaskLoop.objects.all().order_by('task__team')
+        all_tasks = Task.objects.all().order_by('team')
+
+
 
     context = {
         'all_tasks': all_tasks,
@@ -384,6 +418,8 @@ def timeline(request):
         'day_list': day_list,
         "request": request,
         "rest_render_days_number_range": range(rest_render_days_number_range),
+        "graph_nodes": graph_nodes,
+        "graph_edges": graph_edges
     }
 
     # parent_function(TaskLoop.objects.all().order_by('order_number'))
