@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 
@@ -486,15 +488,18 @@ def todo_done_update(request, id):
 
 
 def training_page(request):
-    tasks = Task.objects.prefetch_related('initial_dependencies')
+    tasks = TaskLoop.objects.prefetch_related('dependencies')
 
     graph_nodes = []
     graph_edges = []
 
     for task in tasks:
-        graph_nodes.append({"id": task.id, "label": task.name})
-        for dep in task.initial_dependencies.all():
-            graph_edges.append({"from": dep.id, "to": task.id})
+        graph_nodes.append({"id": task.id, "label": str(task)})
+        for dep in task.dependencies.all():
+            graph_edges.append({
+                "from": dep.master_task_loop.id,
+                "to": task.id  # or dep.dependent_task_loop.id
+            })
 
     context = {
         "graph_nodes": graph_nodes,
@@ -502,3 +507,71 @@ def training_page(request):
     }
 
     return render(request, 'distributor/training_page.html', context)
+
+
+    # tasks = Task.objects.prefetch_related('initial_dependencies')
+    #
+    # graph_nodes = []
+    # graph_edges = []
+    #
+    # for task in tasks:
+    #     graph_nodes.append({"id": task.id, "label": task.name})
+    #     for dep in task.initial_dependencies.all():
+    #         graph_edges.append({"from": dep.id, "to": task.id})
+    #
+    # context = {
+    #     "graph_nodes": graph_nodes,
+    #     "graph_edges": graph_edges
+    # }
+    #
+    # return render(request, 'distributor/training_page.html', context)
+    #
+
+
+
+
+def training(request):
+    context = {
+
+    }
+
+    return render(request, "distributor/training.html", context)
+
+
+
+from django.shortcuts import redirect, render
+from .forms import DefineCurrentDate
+from .models import Project
+
+def define_current_date(request):
+    project = Project.objects.first()
+
+    if request.method == "POST":
+        form = DefineCurrentDate(request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+    else:
+        form = DefineCurrentDate(instance=project)
+
+    # Return something in all cases
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def current_date_next_date(request):
+    project = Project.objects.first()
+    project.current_date = project.current_date + timedelta(days=1)
+    project.save()
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def current_date_previous_date(request):
+    project = Project.objects.first()
+    project.current_date = project.current_date - timedelta(days=1)
+    project.save()
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+

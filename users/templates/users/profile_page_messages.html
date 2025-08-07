@@ -1,0 +1,21 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+{#    <h1>Messages of {{ user.first_name }}</h1>#}
+
+    <div class="profile_messages_page_container">
+    <div class="profile_messages_settings">
+        <h1>Messages of {{ user.first_name }}</h1>
+    </div>
+
+        <div class="profile_messages_content">
+            {% for message in user.messages.all %}
+                <div class="message_card">{{ message }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}

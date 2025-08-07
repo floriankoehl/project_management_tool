@@ -38,28 +38,62 @@ def profile_page(request, user_id):
 
     if request.method == "POST":
         join_team_form = JoinTeamForm(request.POST, user=profile_user)
-        print("✅ [VIEW DEBUG] POST form instance:", join_team_form)
-        print("✅ [VIEW DEBUG] Form fields:", join_team_form.fields.keys())
+        # print("✅ [VIEW DEBUG] POST form instance:", join_team_form)
+        # print("✅ [VIEW DEBUG] Form fields:", join_team_form.fields.keys())
         if join_team_form.is_valid():
             team = join_team_form.cleaned_data["team"]
             TeamMembership.objects.get_or_create(user=profile_user, team=team)
             return redirect(request.META.get("HTTP_REFERER", "/"))
     else:
         join_team_form = JoinTeamForm(user=profile_user)
-        print("✅ [VIEW DEBUG] GET form instance:", join_team_form)
-        print("✅ [VIEW DEBUG] Form fields:", join_team_form.fields.keys())
+        # print("✅ [VIEW DEBUG] GET form instance:", join_team_form)
+        # print("✅ [VIEW DEBUG] Form fields:", join_team_form.fields.keys())
 
 
     user_tasks = TaskAssignment.objects.filter(user=profile_user)
 
     context = {
         'join_team_form': join_team_form,
-        'user': profile_user,
+        'profile_user': profile_user,
         'user_tasks': user_tasks,
         "task_assignment_team_member_mismatch_bool": task_assignment_team_member_mismatch_bool,
     }
 
     return render(request, "users/profile_page.html", context)
+
+
+
+
+
+
+
+
+def view_messages(request, user_id):
+    user = CustomUser.objects.get(id=user_id)
+    context = {
+        "user": user,
+    }
+    return render(request, 'users/profile_page_messages.html',context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

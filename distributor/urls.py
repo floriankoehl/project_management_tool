@@ -27,5 +27,9 @@ urlpatterns = [
     path('reload_all', views.reload_all, name="reload_all"),
     path('training_page', views.training_page, name='training_page'),
     path('add_dependency_training_page', views.add_dependency_training_page, name='add_dependency_training_page'),
+    path('training', views.training, name='training'),
+    path('define_current_date', views.define_current_date, name='define_current_date'),
+    path('current_date_previous_date', views.current_date_previous_date, name='current_date_previous_date'),
+    path('current_date_next_date', views.current_date_next_date, name='current_date_next_date'),
 
 ]

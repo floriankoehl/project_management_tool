@@ -99,7 +99,11 @@ class TaskApprovalRequiredUpdateForm(forms.ModelForm):
 
 
 
-
+class DefineCurrentDate(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['current_date']
+        widgets = {'current_date': forms.DateInput(attrs={'id': 'current_date_input', 'placeholder': 'Current Date', 'type': 'date'})}
 
 
 

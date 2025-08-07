@@ -1,0 +1,201 @@
+{% extends 'distributor/base.html' %}
+
+{% block title %}Training{% endblock %}
+{#  <script src="https://cdnjs.cloudflare.com/ajax/libs/leader-line/1.0.7/leader-line.min.js"></script>#}
+
+{% block content %}
+
+<style>
+
+    .training_div {
+        background-color: #a3ffa3;
+        height: 200px;
+        width: 200px;
+        margin: 20px;
+        border-radius: 5px;
+    }
+
+
+    #training_container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #bottom_right {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+
+</style>
+
+
+
+    <div id="training_container">
+        <div class="training_div" id="top_left">
+            <li id="target_list"></li>
+        </div>
+
+        <div class="training_div" id="top_right">
+            <button id="top_right_adding">Add</button>
+            <button id="top_right_removing">Remove</button>
+        </div>
+
+    </div>
+
+    <div class="training_div" id="bottom_right">
+            <button id="bottom_right_adding">Add</button>
+            <button id="bottom_right_removing">Remove</button>
+        </div>
+
+
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leader-line/1.0.7/leader-line.min.js"></script>
+
+<script>
+    window.onload = function () {
+        const elements_to_point_list = []
+
+
+        const target_list = document.getElementById('target_list');
+        function reload_target_list(){
+            target_list.innerHTML = "";
+
+            for (const item of elements_to_point_list) {
+                const li = document.createElement('li');
+                li.textContent = item.id
+                target_list.appendChild(li)
+            }
+        }
+
+        const top_right_adding_button = document.getElementById('top_right_adding')
+        const top_right_removing_button = document.getElementById('top_right_removing')
+
+        const bottom_right_adding_button = document.getElementById('bottom_right_adding')
+        const bottom_right_removing_button = document.getElementById('bottom_right_removing')
+
+
+
+        function add_element_to_list(element_id) {
+            const element_to_add = document.getElementById(element_id);
+            if (elements_to_point_list.includes(element_to_add)) {
+                return;
+            } else {
+                elements_to_point_list.push(element_to_add);
+                reload_target_list();
+            }
+        }
+
+
+
+        function remove_element_of_list(element_id) {
+            const element_to_remove = document.getElementById(element_id);
+            const index = elements_to_point_list.indexOf(element_to_remove);
+            if (index !== -1) {
+                elements_to_point_list.splice(index, 1);
+            }
+            reload_target_list();
+        }
+
+
+
+
+        top_right_adding_button.addEventListener('click', () => {
+            add_element_to_list('top_right')
+        });
+
+        top_right_removing_button.addEventListener('click', () => {
+            remove_element_of_list("top_right")
+        });
+
+
+        bottom_right_adding_button.addEventListener('click', () => {
+            add_element_to_list('bottom_right')
+        });
+
+        bottom_right_removing_button.addEventListener('click', () => {
+            remove_element_of_list("bottom_right")
+        });
+
+
+
+
+
+        let arrows_list = []
+        let arrows_displayed = false;
+
+
+
+        function display_or_remove_arrows(){
+            if (arrows_displayed) {
+                arrows_list.forEach(arrow => arrow.remove());
+                arrows_list = [];
+                arrows_displayed = false;
+            } else {
+                for (const item of elements_to_point_list) {
+                    const arrow = new LeaderLine(start, item, {
+                        path: 'straight'
+                    });
+                    arrows_list.push(arrow);
+                };
+            arrows_displayed = true;
+            };
+        };
+
+        const start = document.getElementById('top_left')
+        start.addEventListener('click', () => {
+            display_or_remove_arrows();
+        });
+
+
+
+
+    };
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

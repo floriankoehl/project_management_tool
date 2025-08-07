@@ -16,8 +16,8 @@ def comp_display_single_team(context, team):
     user = context.get("user", None)
     memberships = TeamMembership.objects.filter(team=team)
 
-    for membership in memberships:
-        print(membership.user)
+    # for membership in memberships:
+    #     print(membership.user)
 
     return {'team': team, 'memberships': memberships, 'user': user}
 
@@ -27,8 +27,8 @@ def comp_display_single_team_medium(context, team_id):
     team = Team.objects.get(pk=team_id)
     memberships = TeamMembership.objects.filter(team=team)
 
-    for membership in memberships:
-        print(membership.user)
+    # for membership in memberships:
+    #     print(membership.user)
 
     return {'team': team, 'memberships': memberships, 'user': user}
 
@@ -42,9 +42,10 @@ def show_all_teams(context):
 
 
 @register.inclusion_tag("components/display_single_user.html")
-def display_single_user(user_id):
-    user = User.objects.get(pk=user_id)
-    return {'user': user}
+def display_single_user(profile_user):
+    team_memberships = TeamMembership.objects.filter(user=profile_user)
+    task_assignments = TaskAssignment.objects.filter(user=profile_user)
+    return {'profile_user': profile_user, "team_memberships": team_memberships, 'task_assignments': task_assignments}
 
 
 
@@ -65,12 +66,12 @@ def display_all_users():
 
 
 @register.inclusion_tag("components/user_page_team_overview.html")
-def user_page_team_overview(user):
-    memberships = TeamMembership.objects.filter(user=user)
-    join_team_form = JoinTeamForm(user=user)
+def user_page_team_overview(profile_user):
+    memberships = TeamMembership.objects.filter(user=profile_user)
+    join_team_form = JoinTeamForm(user=profile_user)
     context = {
         'memberships': memberships,
-        'user': user,
+        'profile_user': profile_user,
         'join_team_form': join_team_form
     }
 
@@ -79,8 +80,8 @@ def user_page_team_overview(user):
 
 
 @register.inclusion_tag("components/user_page_task_overview.html")
-def user_page_task_overview(user):
-    task_assignments = TaskAssignment.objects.filter(user=user).order_by('task__team')
+def user_page_task_overview(profile_user):
+    task_assignments = TaskAssignment.objects.filter(user=profile_user).order_by('task__team')
     context = {
         'task_assignments': task_assignments,
     }

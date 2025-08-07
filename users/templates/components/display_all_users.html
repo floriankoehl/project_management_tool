@@ -2,9 +2,9 @@
 
 
 <div class="all_users_medium">
-    {% for user in users %}
+    {% for profile_users in users %}
         <div class="user_listing_medium">
-            {% display_single_user user.id %}
+            {% display_single_user profile_users %}
         </div>
     {% endfor %}
 </div>

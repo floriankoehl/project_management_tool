@@ -12,11 +12,14 @@
         <div class="profile_page_content">
 
             <div class="profile_page_hardfacts">
-                <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                <h2>{{ profile_user.first_name }} {{ profile_user.last_name }}</h2>
                 <div class="user_page_role_container">
-                    <h3>Role: {{ user.role }}</h3>
+                    <h3>Role: {{ profile_user.role }}</h3>
 
                 </div>
+                <form method="GET" action="{% url 'view_messages' profile_user.id %}">
+                        <button class="user_page_team_overview_join_team_form_button">Messages</button>
+                    </form>
 
                 {% if not task_assignment_team_member_mismatch_bool %}
                     <div class="missmatch_alert">
@@ -28,16 +31,21 @@
             </div>
 
             <div class="profile_page_tasks">
-                {% user_page_task_overview user %}
+                {% user_page_task_overview profile_user %}
             </div>
 
             <div class="profile_page_teams">
                 <h2>Teams</h2>
-                {% user_page_team_overview user%}
+                {% user_page_team_overview profile_user%}
             </div>
 
             <div class="profile_page_overview">
-                <h2>Next Steps</h2>
+                <h2>Next Deadlines</h2>
+                <ul>
+                    {% for taskassignment in user_tasks %}
+                        <li>{{ taskassignment.task }} - Deadline in {{ taskassignment.task.days_till_deadline }}</li>
+                    {% endfor %}
+                </ul>
 
             </div>
 

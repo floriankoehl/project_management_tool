@@ -13,6 +13,7 @@ class Task(models.Model):
     priority = models.IntegerField(default=0)
     difficulty = models.IntegerField(default=0)
     approval_required = models.BooleanField(default=False)
+    generated_deadline = models.DateField(null=True, blank=True)
 
 
     initial_dependencies = models.ManyToManyField("self",
@@ -62,9 +63,22 @@ class Task(models.Model):
 
         return in_between_numbers
 
+    @property
+    def check_if_deadline_is_met(self):
+        deadline = self.generated_deadline
+        current_date = Project.objects.first().current_date
 
+        if deadline < current_date:
+            return False
+        else:
+            return True
 
+    @property
+    def days_till_deadline(self):
+        deadline = self.generated_deadline
+        current_date = Project.objects.first().current_date
 
+        return (deadline - current_date).days
 
 
 
@@ -83,6 +97,7 @@ class TaskLoop(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     loop_index = models.IntegerField(default=1)
     scheduled_date = models.DateField(null=True, blank=True)
+
     # defined_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="defined_dependencies_set")
     # prior_loop_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="generated_dependencies_set")
     # cross_loop_dependencies = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="cross_loop_dependencies_set")
@@ -98,7 +113,7 @@ class TaskLoop(models.Model):
     magnitude = models.FloatField(default=0)
 
     def __str__(self):
-        return f"{self.task} - {self.loop_index}"
+        return f"{self.task} - {self.loop_index} [{self.task.generated_deadline}]"
 
     @property
     def duration(self):
@@ -283,9 +298,10 @@ class ActivityLog(models.Model):
 
 
 
-
+from datetime import date
 
 class Project(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     order_counter = models.IntegerField(default=0)
+    current_date = models.DateField(default=date.today)

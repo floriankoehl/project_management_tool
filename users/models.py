@@ -9,9 +9,36 @@ class CustomUser(AbstractUser):
         ("supervisor", "Supervisor"),
     )
     role = models.CharField(max_length=50, choices=ROLE_CHOICES)
+    # messages = models.CharField(max_length=200)
 
     def __str__(self):
         return self.username
+
+
+
+
+class Message(models.Model):
+    status = models.CharField(max_length=50, choices=[
+        ('read', 'read'),
+        ('unread', 'unread'),
+    ],
+                              default='unread')
+    type = models.CharField(max_length=50, null=True, blank=True)
+    text = models.CharField(max_length=300, null=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='messages')
+
+    def __str__(self):
+        return f"{self.type} - {self.text}"
+
+
+
+
+
+
+
+
+
+
 
 
 

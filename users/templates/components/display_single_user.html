@@ -7,7 +7,10 @@
     <div class="user_content">
         <div class="user_content_upper_part">
             <div class="user_content_header">
-                <h1>{{ user.username }}</h1>
+                <h1>{{ profile_user.username }}</h1>
+                <form method="GET" action="{% url 'profile_page' profile_user.id %}">
+                    <button type="submit">View Profile</button>
+                </form>
                 <div class="user_essential_buttons_container">
                     <form method="POST" action="">
 {#                        {% url 'delete_user' user.id %}#}
@@ -23,11 +26,11 @@
 
             <div class="user_content_memberships_and_tasks">
                 <h3>Role:</h3>
-                <p>{{ user.role|title }}</p>
+                <p>{{ profile_user.role|title }}</p>
 
                 <h3>Teams</h3>
                 <ul>
-                    {% for membership in user.teammembership_set.all %}
+                    {% for membership in team_memberships %}
                         <li>
                             {{ membership.team.name }}
                             <form method="POST" action="">
@@ -38,6 +41,21 @@
                         </li>
                     {% empty %}
                         <li>No teams yet.</li>
+                    {% endfor %}
+                </ul>
+                <h3>Teams</h3>
+                <ul>
+                    {% for assignment in task_assignments %}
+                        <li>
+                            {{ assignment.task }}
+                            <form method="POST" action="">
+{#                                {% url 'remove_user_from_team' membership.team.id user.id %}#}
+                                {% csrf_token %}
+                                <button type="submit">Leave</button>
+                            </form>
+                        </li>
+                    {% empty %}
+                        <li>No tasks yet.</li>
                     {% endfor %}
                 </ul>
             </div>

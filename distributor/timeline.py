@@ -62,7 +62,14 @@ def get_days_in_timeframe():
 # TODO MAKE ORDER END A DYNAMIC PROPERTY update the order end to a non static property, its just the calculation of taskloop.duration + taskloop.order_number
 
 def plan_order_of_task_loops(minus_days):
-    # day_list = get_days_in_timeframe()
+    day_list = get_days_in_timeframe()
+
+    order_counter_daytime_dict = {}
+    for index, day in enumerate(day_list):
+        order_counter_daytime_dict[index] = day
+
+
+
     print(f"____________________________________\n" * 3)
     print("⏩⏩⏩⏩⏩ NEW RELOAD: ", datetime.now())
     print(f"____________________________________\n" * 3)
@@ -120,6 +127,13 @@ def plan_order_of_task_loops(minus_days):
             task_loop.save()
             task_loop.task.team.schedule_flag = True
             task_loop.task.team.save()
+            if task_loop.loop_index == task_loop.task.loops:
+                end_day_number = task_loop.order_number + task_loop.duration - minus_days
+                task_loop.task.generated_deadline = order_counter_daytime_dict[end_day_number]
+                task_loop.task.save()
+
+
+
 
     project = Project.objects.first()
     if project:

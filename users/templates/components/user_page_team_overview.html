@@ -29,11 +29,11 @@
         <div style="background-color: {{ membership.team.color }}" class="user_page_team_listing">
             <div class="user_page_team_listing_name">
                 {{ membership.team }}
-            </div>
-            <div class="user_page_team_listing_buttons">
+            </div>m
+            <div class="user_page_tea_listing_buttons">
 
 
-                <form method="POST" action="{% url 'remove_user_from_team' membership.team.id user.id %}">
+                <form method="POST" action="{% url 'remove_user_from_team' membership.team.id profile_user.id %}">
                     {% csrf_token %}
                     <button>❌</button>
                 </form>

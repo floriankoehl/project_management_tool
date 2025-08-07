@@ -66,7 +66,7 @@ def create_task_loop_objects():
             TaskLoop.objects.create(task=task, priority=prio, difficulty=task.difficulty, approval_required=task.approval_required,  loop_index=loop+1)
 
     setup_up_prior_loop_dependencies()
-    setup_up_cross_loop_dependencies()
+    # setup_up_cross_loop_dependencies()
     setup_up_inital_dependencies()
     cache_magnitudes()
 

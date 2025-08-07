@@ -1987,3 +1987,188 @@ overflow-x: auto;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#prototype_tester {
+    background: #c1fdff !important;
+}
+
+
+.prototype_workflow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+
+
+
+.next_and_previous_buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.next_and_previous_buttons button {
+    padding: 5px;
+    border-radius: 2px;
+    border: none;
+    background: #353535;
+    color: white;
+
+}
+
+.change_current_date_forms {
+    display: flex;
+    gap: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.profile_messages_page_container {
+    width: 90vh;
+    height: 90vh;
+    background: #e6e6e6;
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    flex-direction: column;
+}
+
+.profile_messages_content {
+    background: #ffffff;
+    height: 90%;
+    width: 90%;
+    border-radius: 10px;
+}
+
+.message_card {
+    background: #dfdfdf;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 5px;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

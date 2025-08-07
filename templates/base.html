@@ -68,6 +68,45 @@
             </div>
         </div>
     </nav>
+<nav id="prototype_tester" class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <ul class="navbar-nav">
+
+
+                    <div class="prototype_workflow">
+                        <div class="next_and_previous_buttons">
+
+
+                            <form method="POST" action="{% url 'current_date_previous_date' %}">
+                                {% csrf_token %}
+                                <button>Previous Day</button>
+                            </form>
+
+                            <strong>
+                                {{ project.current_date }}
+                            </strong>
+
+                            <form method="POST" action="{% url 'current_date_next_date' %}">
+                                {% csrf_token %}
+                                <button>Next Day</button>
+                            </form>
+
+
+                        </div>
+                        <div class="change_current_date_forms">
+                            <form method="POST" action="{% url 'define_current_date' %}">
+                                {% csrf_token %}
+                                {{ global_define_current_date_form.current_date }}
+                                <button type="submit">Save Timeframe</button>
+                            </form>
+                        </div>
+                    </div>
+                </ul>
+
+            </ul>
+        </div>
+    </nav>
 </header>
 <main>
     {% block content %}

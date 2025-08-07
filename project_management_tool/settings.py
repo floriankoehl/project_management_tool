@@ -65,7 +65,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'distributor.context_processors.global_project_timeframe_form',
-                'distributor.context_processors.global_project_timeframe'
+                'distributor.context_processors.global_project_timeframe',
+                'distributor.context_processors.global_define_current_date_form',
+                'distributor.context_processors.global_project_info',
             ],
         },
     },

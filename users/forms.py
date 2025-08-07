@@ -55,16 +55,16 @@ class JoinTeamForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
-        print(user)
+        # print(user)
 
         super().__init__(*args, **kwargs)
 
         joined_team_ids = TeamMembership.objects.filter(user=user).values_list("team_id", flat=True)
         available_teams = Team.objects.exclude(id__in=joined_team_ids)
 
-        print("🧠 [DEBUG] Available teams for user:", user)
-        for t in available_teams:
-            print(f" - {t.name} (id={t.id})")
+        # print("🧠 [DEBUG] Available teams for user:", user)
+        # for t in available_teams:
+        #     print(f" - {t.name} (id={t.id})")
 
         self.fields["team"].queryset = available_teams
 
