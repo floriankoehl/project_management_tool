@@ -2322,6 +2322,63 @@ overflow-y: auto;}
 }
 
 
+.team_page_container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: 90vh;
+    width: 90vw;
+    justify-self: center;
+    margin: 20px;
+}
+
+.team_page_container > * {
+    margin: 10px;
+    border-radius: 10px;
+    background: #dfdfdf;
+    padding: 10px;
+}
+
+
+.hard_facts_team_page { grid-area: 1 / 1 / 2 / 2; }
+.tasks_team_page {
+    grid-area: 1 / 2 / 2 / 4;
+}
+.members_team_page { grid-area: 2 / 1 / 5 / 2; }
+.main_content_team_page { grid-area: 2 / 2 / 5 / 4; }
+
+
+
+
+.member_listing_team_page {
+    background: #ffffff;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+
+.task_listing_team_page {
+    background: #ffffff;
+    padding: 5px;
+    border-radius: 5px;
+    width: 200px;
+
+}
+
+
+.all_tasks_team_page {
+    display: flex;
+    gap: 10px;
+    height: 80%;
+    overflow-x: auto;
+
+}
+
+
+
 
 
 

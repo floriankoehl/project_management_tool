@@ -381,3 +381,54 @@ def remove_user_from_team(request, team_id, user_id):
 
 
 
+
+
+def view_team_page(request, team_id):
+    team = Team.objects.get(pk=team_id)
+    memberships = TeamMembership.objects.filter(team=team).all()
+    # tasks = Team.tasks.all()
+
+    context = {
+        'team': team,
+        'memberships': memberships,
+        # 'tasks': tasks
+    }
+
+    return render(request, 'users/team_page.html', context)
+
+
+
+
+def user_team_leader_membership(request, team_id, user_id):
+    user = CustomUser.objects.get(pk=user_id)
+    team = Team.objects.get(pk=team_id)
+
+    try:
+        existing_membership = TeamMembership.objects.get(user=user, team=team)
+        if existing_membership.role_in_team != "lead":
+            existing_membership.role_in_team = "lead"
+            existing_membership.save()
+        else:
+            print("is already Team Leader")
+    except TeamMembership.DoesNotExist:
+        TeamMembership.objects.create(user=user, team=team, role_in_team="lead")
+
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

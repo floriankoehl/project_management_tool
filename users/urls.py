@@ -20,4 +20,6 @@ urlpatterns = [
     path("delete_task_assignment/<int:task_assignment_id>", views.delete_task_assignment, name='delete_task_assignment'),
     path('view_messages/<int:user_id>', views.view_messages, name='view_messages'),
     path("assign_some_user_to_task/<int:task_id>", views.assign_some_user_to_task, name='assign_some_user_to_task'),
+    path('view_team_page/<int:team_id>', views.view_team_page, name='view_team_page'),
+    path('user_team_leader_membership/<int:team_id>/<int:user_id>', views.user_team_leader_membership, name='user_team_leader_membership'),
 ]

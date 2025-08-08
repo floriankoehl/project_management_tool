@@ -1,0 +1,61 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Team Page{% endblock %}
+
+{% block content %}
+
+
+
+<style>
+    .team_page_container > * {
+        background-color: {{ team.color }};
+    }
+</style>
+
+
+
+
+
+    <div class="team_page_container">
+        <div class="hard_facts_team_page">
+            <h1>{{ team.name }}</h1>
+            <h2>Leader: </h2>
+            <form method="POST" action="{% url "user_team_leader_membership" team.id request.user.id %}">
+                {% csrf_token %}
+                <button>become leader</button>
+            </form>
+            {% for member in memberships %}
+                {% if member.role_in_team == "lead" %}
+                    <div class="member_listing_team_page">
+                        {{ member.user }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div  class="tasks_team_page">
+            <h2>Tasks: </h2>
+            <div class="all_tasks_team_page">
+            {% for task in team.task_set.all %}
+                <div class="task_listing_team_page">
+                    {{ task.name }}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="members_team_page">
+            <h2>Members: </h2>
+            {% for member in memberships %}
+                <div class="member_listing_team_page">
+                    {{ member.user }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="main_content_team_page"></div>
+    </div>
+
+
+
+{% endblock %}
