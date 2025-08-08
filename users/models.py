@@ -26,9 +26,13 @@ class Message(models.Model):
     type = models.CharField(max_length=50, null=True, blank=True)
     text = models.CharField(max_length=300, null=True, blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='messages')
+    timestamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.type} - {self.text}"
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.type == other.type and self.text == other.text
 
 
 

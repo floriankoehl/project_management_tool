@@ -128,6 +128,19 @@ class AssignUserToTaskForm(forms.ModelForm):
 
 
 
+# from django import forms
+# from .models import TaskAssignment, CustomUser
+
+class UserSelectForm(forms.ModelForm):
+    user = forms.ModelChoiceField(
+        queryset=CustomUser.objects.all(),
+        label="Select a user",
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    class Meta:
+        model = TaskAssignment
+        fields = ['user']
 
 
 

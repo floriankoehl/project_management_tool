@@ -7,13 +7,24 @@
 
     <div class="profile_messages_page_container">
     <div class="profile_messages_settings">
-        <h1>Messages of {{ user.first_name }}</h1>
+        <h1>Messages of {{ profile_user.first_name }}</h1>
     </div>
 
         <div class="profile_messages_content">
-            {% for message in user.messages.all %}
-                <div class="message_card">{{ message }}</div>
-            {% endfor %}
+            <div class="profile_page_unread_messages">
+            <h1>New messages: {{ all_unread_messages|length }}</h1>
+                {% for message in all_unread_messages %}
+                    <div class="message_card">{{ message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="profile_messaged_all_messages">
+            <h1>All messages:</h1>
+                {% for message in all_read_messages %}
+                    <div class="message_card">{{ message }}</div>
+                {% endfor %}
+            </div>
+
         </div>
     </div>
 

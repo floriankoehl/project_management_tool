@@ -1,9 +1,9 @@
 {% load team_tags %}
 
 
-<div class="all_users_medium">
+<div class="all_users_medium_grid">
     {% for profile_users in users %}
-        <div class="user_listing_medium">
+        <div class="user_listing_medium_grid">
             {% display_single_user profile_users %}
         </div>
     {% endfor %}

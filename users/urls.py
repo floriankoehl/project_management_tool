@@ -19,4 +19,5 @@ urlpatterns = [
     path('assign_user_to_task/<int:task_id>', views.assign_user_to_task, name='assign_user_to_task'),
     path("delete_task_assignment/<int:task_assignment_id>", views.delete_task_assignment, name='delete_task_assignment'),
     path('view_messages/<int:user_id>', views.view_messages, name='view_messages'),
+    path("assign_some_user_to_task/<int:task_id>", views.assign_some_user_to_task, name='assign_some_user_to_task'),
 ]

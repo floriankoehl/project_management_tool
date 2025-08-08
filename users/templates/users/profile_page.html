@@ -17,9 +17,17 @@
                     <h3>Role: {{ profile_user.role }}</h3>
 
                 </div>
-                <form method="GET" action="{% url 'view_messages' profile_user.id %}">
-                        <button class="user_page_team_overview_join_team_form_button">Messages</button>
+                <div class="message_inbox_buttons">
+                    <form method="GET" action="{% url 'view_messages' profile_user.id %}">
+                        <button id="message_call_button">Messages</button>
                     </form>
+
+                    {% if number_new_messages > 0 %}
+                        <p class="display_number_new_messages">{{ number_new_messages }} NEW</p>
+                    {% else %}
+                        <p style="margin-left: 10px;">0</p>
+                    {% endif %}
+                </div>
 
                 {% if not task_assignment_team_member_mismatch_bool %}
                     <div class="missmatch_alert">
@@ -41,13 +49,17 @@
 
             <div class="profile_page_overview">
                 <h2>Next Deadlines</h2>
-                <ul>
-                    {% for taskassignment in user_tasks %}
-                        <li>{{ taskassignment.task }} - Deadline in {{ taskassignment.task.days_till_deadline }}</li>
-                    {% endfor %}
-                </ul>
+                <div class="deadlines_grid">
+                    <div class="grid_header">Task</div>
+                    <div class="grid_header">Deadline (days)</div>
 
+                    {% for taskassignment in user_tasks %}
+                        <div class="grid_cell">{{ taskassignment.task }}</div>
+                        <div class="grid_cell">{{ taskassignment.task.days_till_deadline }}</div>
+                    {% endfor %}
+                </div>
             </div>
+
 
         </div>
     </div>

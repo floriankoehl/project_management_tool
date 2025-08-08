@@ -39,7 +39,15 @@
             {{ assign_user_to_task_form.user.as_hidden }}
             <button type="submit">Join Task</button>
         </form>
-
     </div>
+        <div class="assign_member_form">
+            <form method="POST" action="{% url 'assign_some_user_to_task' task.id %}">
+                {% csrf_token %}
+                {{ user_select_form.as_p }}
+                <button type="submit">Assign member</button>
+            </form>
+        </div>
+
+
 </div>
 

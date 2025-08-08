@@ -2,16 +2,17 @@
 
 
 
-<div style="background-color: #f4f4f4;" class="display_user_medium">
+<div class="display_user_medium_grid">
 
     <div class="user_content">
         <div class="user_content_upper_part">
             <div class="user_content_header">
                 <h1>{{ profile_user.username }}</h1>
-                <form method="GET" action="{% url 'profile_page' profile_user.id %}">
-                    <button type="submit">View Profile</button>
-                </form>
+
                 <div class="user_essential_buttons_container">
+                    <form method="GET" action="{% url 'profile_page' profile_user.id %}">
+                    <button class="user_essential_button" type="submit">View Profile</button>
+                </form>
                     <form method="POST" action="">
 {#                        {% url 'delete_user' user.id %}#}
                         {% csrf_token %}
@@ -29,7 +30,7 @@
                 <p>{{ profile_user.role|title }}</p>
 
                 <h3>Teams</h3>
-                <ul>
+                <ul class="all_team_memberships">
                     {% for membership in team_memberships %}
                         <li>
                             {{ membership.team.name }}

@@ -68,6 +68,7 @@ TEMPLATES = [
                 'distributor.context_processors.global_project_timeframe',
                 'distributor.context_processors.global_define_current_date_form',
                 'distributor.context_processors.global_project_info',
+                'distributor.context_processors.global_number_new_messages_user',
             ],
         },
     },

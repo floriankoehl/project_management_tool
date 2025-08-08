@@ -1117,8 +1117,9 @@ overflow-x: auto;
 }
 
 .display_team_medium {
-        height: 800px;
-    width: 500px;
+    border-radius: 5px;
+    /*    height: 500px;*/
+    /*width: 400px;*/
     background-color: white;
     /*border-radius: 5px;*/
     padding: 5px;
@@ -1156,14 +1157,36 @@ overflow-x: auto;
 
 
 
+.all_teams_grid {
+    width: 80vw;
+    padding: 10px;
+    border-radius: 5px;
+    /*background: #19284c;*/
+    justify-self: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);;
+    gap: 10px;
+}
 
-
+.create_team_form {
+    justify-self: center;
+    padding: 20px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #dadada;
+    border-radius: 5px;
+    /*align-items: center;*/
+}
 
 
 
 
 
 .team_content {
+    border-radius: 5px !important;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -1344,13 +1367,96 @@ overflow-x: auto;
 
 
 
-.team_content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-size: 15px;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.all_users_medium_grid {
+    width: 80vw;
+    padding: 10px;
+    border-radius: 5px;
+    /*background: #19284c;*/
+    justify-self: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);;
+    gap: 10px;
 }
+
+
+.all_team_memberships {
+
+}
+
+.user_listing_medium_grid {
+    overflow-y: auto;
+
+}
+
+.display_user_medium_grid {
+    height: 500px;
+    background: #ffffff;
+}
+
+.all_users_medium_grid {
+    background-color: #9aaed5;
+    margin: 20px;
+}
+/*.user_content_grid {*/
+/*    height: 100%;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: space-between;*/
+/*    font-size: 15px;*/
+/*}*/
+
+
+
+
+#new_message_global {
+    background: #94ff2f;
+    border-radius: 5px;
+    /*height: 20px;*/
+    /*width: 60px;*/
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*.team_content {*/
+/*    height: 100%;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: space-between;*/
+/*    font-size: 15px;*/
+/*}*/
 
 .team_content * {
     font-size: 15px;
@@ -1433,11 +1539,15 @@ overflow-x: auto;
 
 /* Shared layout styles for content inside the card */
 .user_content {
-    height: 100%;
+    /*height: 100%;*/
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     font-size: 15px;
+    padding: 20px;
+    border-radius: 5px;
+    /*background: #bbc8d8;*/
+    /*color: white;*/
 }
 
 .user_content * {
@@ -1645,12 +1755,16 @@ overflow-x: auto;
 .profile_page_hardfacts { grid-area: 1 / 1 / 2 / 2; }
 .profile_page_tasks { grid-area: 1 / 2 / 2 / 6; }
 .profile_page_teams { grid-area: 2 / 1 / 6 / 2; }
-.profile_page_overview { grid-area: 2 / 2 / 6 / 5; }
+.profile_page_overview { grid-area: 2 / 2 / 6 / 5;
+overflow-y: auto;}
 
 
 
 
+.assign_member_form {
+    display: flex;
 
+}
 
 
 
@@ -1804,6 +1918,7 @@ overflow-x: auto;
     background: white;
     padding: 10px;
     border-radius: 3px;
+    overflow-y: auto;
 }
 
 .team_overview_container > * {
@@ -2114,8 +2229,6 @@ overflow-x: auto;
 
 
 
-
-
 .profile_messages_page_container {
     width: 90vh;
     height: 90vh;
@@ -2126,6 +2239,7 @@ overflow-x: auto;
     justify-content: center;
     border-radius: 10px;
     flex-direction: column;
+    margin: 20px;
 }
 
 .profile_messages_content {
@@ -2133,28 +2247,79 @@ overflow-x: auto;
     height: 90%;
     width: 90%;
     border-radius: 10px;
+    overflow-y: auto;
 }
 
 .message_card {
     background: #dfdfdf;
-    margin: 20px;
+    margin-bottom: 5px;
     padding: 10px;
     border-radius: 5px;
 
 }
 
+.profile_messaged_all_messages, .profile_page_unread_messages {
+    padding: 20px;
+    margin: 0 !important;
+}
+
+
+.display_number_new_messages {
+    background: #90ff90;
+    font-weight: bold;
+    height: 20px;
+    padding: 5px;
+    width: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.message_inbox_buttons {
+    display: flex;
+    align-items: center;
+    /*justify-content: center;*/
+}
+
+
+#message_call_button {
+    background: #323232;
+    color: white;
+    border-radius: 3px;
+    width: 70px;
+    height: 30px;
+}
+
+
+/*.message_inbox_buttons form {*/
+/*    margin: 0px;*/
+/*    padding: 0px;*/
+
+/*}*/
 
 
 
 
+.deadlines_grid {
+    display: grid;
+    grid-template-columns: 1fr 150px; /* task name grows, deadline fixed */
+    gap: 8px;
+    align-items: center;
 
+}
 
+.grid_header {
+    font-weight: bold;
+    background: #f2f2f2;
+    padding: 6px;
+    border-bottom: 2px solid #ccc;
+}
 
-
-
-
-
-
+.grid_cell {
+    padding: 6px;
+    border-bottom: 1px solid #ddd;
+}
 
 
 

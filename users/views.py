@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
 from distributor.models import Task
-from .models import Team, TeamMembership, CustomUser, TaskAssignment
+from .models import Team, TeamMembership, CustomUser, TaskAssignment, Message
 from .forms import TeamCreationForm, TeamUpdateNameForm, TeamUpdateColorForm, CustomUserCreationForm, JoinTeamForm, \
-    AssignUserToTaskForm
+    AssignUserToTaskForm, UserSelectForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -21,6 +21,9 @@ from django.contrib.auth.forms import AuthenticationForm
 def profile_page(request, user_id):
     profile_user = get_object_or_404(CustomUser, id=user_id)
     task_assignment_team_member_mismatch_bool = False
+    number_new_messages = len(list(
+        Message.objects.filter(user=profile_user, status="unread")
+    ))
 
     def has_mismatched_task_assignments(user):
         memberships = TeamMembership.objects.filter(user=user).values_list("team_id", flat=True)
@@ -49,14 +52,19 @@ def profile_page(request, user_id):
         # print("✅ [VIEW DEBUG] GET form instance:", join_team_form)
         # print("✅ [VIEW DEBUG] Form fields:", join_team_form.fields.keys())
 
-
-    user_tasks = TaskAssignment.objects.filter(user=profile_user)
+    user_tasks = (
+        TaskAssignment.objects
+        .filter(user=profile_user)
+        .select_related("task")
+        .order_by("task__generated_deadline")
+    )
 
     context = {
         'join_team_form': join_team_form,
         'profile_user': profile_user,
         'user_tasks': user_tasks,
         "task_assignment_team_member_mismatch_bool": task_assignment_team_member_mismatch_bool,
+        "number_new_messages": number_new_messages,
     }
 
     return render(request, "users/profile_page.html", context)
@@ -69,9 +77,21 @@ def profile_page(request, user_id):
 
 
 def view_messages(request, user_id):
-    user = CustomUser.objects.get(id=user_id)
+    profile_user = CustomUser.objects.get(id=user_id)
+    all_read_messages = list(
+        Message.objects.filter(user=profile_user, status="read")
+    )
+
+    all_unread_messages = list(
+        Message.objects.filter(user=profile_user, status="unread")
+    )
+    Message.objects.filter(user=profile_user, status="unread").update(status='read')
+
+
     context = {
-        "user": user,
+        "profile_user": profile_user,
+        "all_unread_messages": all_unread_messages,
+        "all_read_messages": all_read_messages,
     }
     return render(request, 'users/profile_page_messages.html',context)
 
@@ -95,7 +115,19 @@ def view_messages(request, user_id):
 
 
 
+def assign_some_user_to_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
 
+    if request.method == 'POST':
+        form = UserSelectForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['user']
+            TaskAssignment.objects.get_or_create(task=task, user=user)
+
+            if not TeamMembership.objects.filter(user=user, team=task.team).exists():
+                TeamMembership.objects.create(user=user, team=task.team)
+
+    return redirect(request.META.get("HTTP_REFERER", "/"))
 
 
 def assign_user_to_task(request, task_id):

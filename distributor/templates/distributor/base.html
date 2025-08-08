@@ -63,6 +63,9 @@
 
                         </div>
                         <div class="user_view">
+                            {% if number_new_messages > 0 %}
+                                    <a id="new_message_global" class="nav-link" href="{% url 'view_messages' user.id %}">{{ number_new_messages }} new</a>
+                                {% endif %}
                             {% if user.is_authenticated %}
                                 <a class="nav-link" href="{% url 'training' %}">Training</a>
                                 <a class="nav-link" href="{% url 'profile_page' user.id %}">{{ user }}</a>

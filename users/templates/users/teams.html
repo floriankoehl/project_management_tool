@@ -7,20 +7,16 @@
 {% block content %}
 
 
-<p>user: {{ user }}</p>
-<p>is_authenticated: {{ user.is_authenticated }}</p>
-
-{% if user.is_authenticated %}
-    <p>✅ I'm logged in and this block is rendered!</p>
-{% endif %}
 
 
-    <h1>Teams</h1>
-    <form method="POST" action="{% url 'create_team' %}">
-        {% csrf_token %}
-        {{ team_form.as_p }}
-        <button type="submit">Create Team</button>
-    </form>
+    <div class="create_team_form">
+        <h1>Create New Team</h1>
+        <form method="POST" action="{% url 'create_team' %}">
+            {% csrf_token %}
+            {{ team_form.as_p }}
+            <button type="submit">Create Team</button>
+        </form>
+    </div>
     
 {#    <div class="all_teams">#}
 {#        {% for team in all_teams %}#}
@@ -31,7 +27,7 @@
 {#    </div>#}
 
 
-<h2>All Teams</h2>
+
     {% show_all_teams %}
 
 

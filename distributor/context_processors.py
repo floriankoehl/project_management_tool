@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 
+from users.models import Message
 from .forms import ProjectTimeframeForm, DefineCurrentDate
 from .models import Project
 
@@ -36,3 +37,18 @@ def global_project_info(request):
         return {
             "project": 'No values picked yet',
         }
+
+
+from users.models import Message
+
+def global_number_new_messages_user(request):
+    if request.user.is_authenticated:
+        number_new_messages = Message.objects.filter(
+            user=request.user, status="unread"
+        ).count()
+    else:
+        number_new_messages = 0
+
+    return {
+        "number_new_messages": number_new_messages
+    }

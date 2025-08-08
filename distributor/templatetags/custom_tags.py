@@ -6,8 +6,7 @@ from distributor.utils import get_valid_possible_dependencies
 from ..forms import *
 
 register = template.Library()
-from users.forms import AssignUserToTaskForm
-
+from users.forms import AssignUserToTaskForm, UserSelectForm
 
 
 @register.inclusion_tag('components/all_tasks.html', takes_context=True)
@@ -19,11 +18,12 @@ def show_all_tasks(context):
 @register.inclusion_tag('components/view_task.html', takes_context=True)
 def view_task(context, task_id):
     user = context['user']
+    user_select_form = UserSelectForm()
 
     task = Task.objects.get(pk=task_id)
 
     assign_user_to_task_form = AssignUserToTaskForm(user=user, task=task)
-    return {'task': task, 'user': user, "assign_user_to_task_form": assign_user_to_task_form}
+    return {'task': task, 'user': user, "assign_user_to_task_form": assign_user_to_task_form, "user_select_form": user_select_form}
 
 
 
