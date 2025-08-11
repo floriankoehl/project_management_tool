@@ -1,0 +1,51 @@
+{% extends 'distributor/calender/base.html' %}
+{% load custom_tags %}
+
+
+{% block title %}Tasks and Processes{% endblock %}
+
+{% block content %}
+
+
+    <div class="tasks_and_processes_page_container">
+        <div class="create_task_container">
+                <div class="create_task_form">
+                    <form method="POST" action="{% url 'create_task_v2' %}">
+                        {% csrf_token %}
+                        {{ task_form.as_p }}
+                        <button type="submit">Create Task</button>
+                    </form>
+                </div>
+                <div class="all_tasks_listed_v2">
+                    {% for task in all_tasks %}
+                        <div class="task_listing_v2">
+                            {% view_task task.id %}
+{#                            <a href="{% url 'edit_task_page_v2' task.id %}">Edit V2</a>#}
+                        </div>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="create_process_container">
+            <a href="{% url 'create_process_page' %}">Create Process</a>
+            <div class="all_processes_listed_v2">
+            {% for process in all_processes %}
+                <div class="process_listing_v2">
+                    {% display_process process %}
+                </div>
+            {% endfor %}
+        </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

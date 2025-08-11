@@ -1,13 +1,5 @@
 from django import forms
-from .models import Task, Project, Todo
-
-
-
-
-
-
-
-
+from .models import Task, Project, Todo, Process
 
 
 class TaskCreationForm(forms.ModelForm):
@@ -152,11 +144,63 @@ class TodoDoneForm(forms.ModelForm):
 
 
 
+class TaskFormV2(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["name", 'priority', 'difficulty', 'approval_required',  'team']
+        widgets = {
+            'name': forms.TextInput(attrs={'id': 'name_input_task', 'placeholder': 'Task Name'}),
+            'team': forms.Select(attrs={'id': 'team_input_task', 'placeholder': 'Team'}),
+            'priority': forms.Select(
+                choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                attrs={'id': 'priority_input_task'}
+                ),
+            'difficulty': forms.Select(
+                choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                attrs={'id': 'difficulty_input_task'}
+            ),
+            'approval_required': forms.Select(
+                choices=[(True, 'Yes'), (False, 'No')],
+                attrs={'id': 'difficulty_input_task'}
+            ),
+
+        }
 
 
 
 
 
+class CreateMilestoneForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["name", 'priority', 'difficulty', 'approval_required']
+        widgets = {
+            'name': forms.TextInput(attrs={'id': 'name_input_task', 'placeholder': 'Task Name'}),
+            'priority': forms.Select(
+                choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                attrs={'id': 'priority_input_task'}
+            ),
+            'difficulty': forms.Select(
+                choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)],
+                attrs={'id': 'difficulty_input_task'}
+            ),
+            'approval_required': forms.Select(
+                choices=[(True, 'Yes'), (False, 'No')],
+                attrs={'id': 'difficulty_input_task'}
+            ),}
+
+
+
+
+
+
+
+
+
+class CreateProcessForm(forms.ModelForm):
+    class Meta:
+        model = Process
+        fields = ["name", "team"]
 
 
 

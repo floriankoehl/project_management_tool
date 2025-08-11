@@ -1,14 +1,12 @@
-{% extends 'distributor/base.html' %}
 {% load custom_tags %}
 
-{% block title %}Training Page{% endblock %}
+<form action="{% url 'reload_calender' %}">
+            {% csrf_token %}
+            <button>reload calender</button>
+        </form>
 
-{% block content %}
 
-    {% display_reload_buttons %}
-
-    <!-- ✅ CSS Styles -->
-    <style>
+<style>
         .training_page {
             background: rgba(221, 221, 221, 0.29);
             height: 800px;
@@ -51,6 +49,11 @@
             <input type="hidden" name="from_id" id="from_id_input">
             <input type="hidden" name="to_id" id="to_id_input">
             <input type="hidden" name="source" value="training_page">
+        </form>
+        <form id="deleteDependencyForm" method="POST" action="{% url 'delete_dependency_graph_repr' %}"
+              style="display:none;">
+            {% csrf_token %}
+            <input type="hidden" name="edge_id" id="edge_id_input">
         </form>
 
 
@@ -150,14 +153,25 @@
                         }
 
                         // ✅ Step 3: Submit the hidden form with from & to values
-                        document.getElementById("from_id_input").value = data.from;
-                        document.getElementById("to_id_input").value = data.to;
+                        document.getElementById("from_id_input").value = data.to;
+                        document.getElementById("to_id_input").value = data.from;
                         document.getElementById("dependencyForm").submit();
                     },
+                    deleteEdge: function (data, callback) {
+                        // data.edges is an array of vis edge IDs (we set them to DB ids)
+                        if (!data.edges || data.edges.length === 0) return;
+
+                        // post the first id and let the server delete it
+                        document.getElementById("edge_id_input").value = data.edges[0];
+                        document.getElementById("deleteDependencyForm").submit();
+
+                        // do NOT call callback(); page will reload after server response
+                    },
+
 
                     {#editNode: false,#}
                     deleteNode: true,
-                    deleteEdge: true
+                    {#deleteEdge: true#}
                 },
                 nodes: {
                     shape: "box",
@@ -168,11 +182,14 @@
                 },
                 edges: {
                     arrows: "to",
-                    color: '#848484'
                 }
             };
 
             const network = new vis.Network(container, data, options);
+
+
+            const baselineNodes = new Map(nodes.get().map(n => [n.id, JSON.parse(JSON.stringify(n))]));
+            const baselineEdges = new Map(edges.get().map(e => [e.id, JSON.parse(JSON.stringify(e))]));
 
 
             network.on("selectNode", function (params) {
@@ -259,30 +276,19 @@
 
 
             network.on("deselectNode", function () {
-    edges.forEach(edge =>
-        edges.update({
-            id: edge.id,
-            color: {
-                color: '#848484',
-                highlight: '#848484',
-                hover: '#a8a8a8',
-                opacity: 1.0
-            }
-        })
-    );
-    nodes.forEach(node =>
-        nodes.update({
-            id: node.id,
-            color: {
-                background: '#ffffff',
-                border: '#2B7CE9'
-            }
-        })
-    );
-});
+                nodes.update(Array.from(baselineNodes.values())); // restore original node colors/etc
+                edges.update(Array.from(baselineEdges.values())); // restore original edge styles
+                const reset = {
+                    color: '#848484',
+                    highlight: '#848484',
+                    hover: '#a8a8a8',
+                    opacity: 1.0
+                };
+                edges.forEach(e => edges.update({id: e.id, color: reset}));
+            });
+
+
 
 
         };
     </script>
-
-{% endblock %}

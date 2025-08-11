@@ -1,0 +1,23 @@
+
+
+<div class="update_dependencies_container">
+        <h2>Possible Processes: </h2>
+        <div class="select_possible_dependencies">
+            <div class="dependency-buttons">
+                {% for process in all_processes %}
+
+                        <form method="POST" action="">
+                            {% csrf_token %}
+
+                            <button name="dep_to_be_added" value="{{ process.id }}"
+                            class="pos_dep_add_button">{{ process.name }}</button>
+                        </form>
+
+                {% endfor %}
+            </div>
+        </div>
+
+{#        <form method="GET" action="{% url 'display_task' task.id %}">#}
+{#            <button type="submit">Finish Task</button>#}
+{#        </form>#}
+    </div>

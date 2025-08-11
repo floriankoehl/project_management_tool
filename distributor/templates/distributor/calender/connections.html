@@ -1,0 +1,10 @@
+{% extends 'distributor/calender/base.html' %}
+{% load custom_tags %}
+
+{% block title %}Task Connections{% endblock %}
+
+{% block content %}
+
+    {% visual_graph_dep_update %}
+
+{% endblock %}

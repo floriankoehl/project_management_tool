@@ -1,10 +1,9 @@
 from datetime import timedelta
 
-from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 
-from .models import Task, Project, TaskLoop, Todo
-from .timeline import plan_order_of_task_loops, compare_max_order_number_to_timeframe
+from .models import Task, TaskLoop, TaskDependency
+from .timeline import compare_max_order_number_to_timeframe
 from .utils import get_valid_possible_dependencies, create_task_loop_objects, get_days_in_timeframe
 
 
@@ -253,73 +252,117 @@ def add_dependency_page(request, id):
     return render(request, 'distributor/add_dep_task.html', context)
 
 
-def add_dependency(request, id):
-    if request.method == "POST":
-        dep_to_be_added = request.POST.get('dep_to_be_added')
-        task_to_be_modified = Task.objects.get(id=id)
-        task_to_be_modified.initial_dependencies.add(dep_to_be_added)
-        task_to_be_modified.save()
+# def add_dependency(request, id):
+#     if request.method == "POST":
+#         dep_to_be_added = request.POST.get('dep_to_be_added')
+#         task_to_be_modified = Task.objects.get(id=id)
+#         task_to_be_modified.initial_dependencies.add(dep_to_be_added)
+#         task_to_be_modified.save()
+#
+#         referer = request.META.get('HTTP_REFERER')  # where the request came from
+#         return redirect(referer or 'tasks')  # fallback if header is missing
 
-        referer = request.META.get('HTTP_REFERER')  # where the request came from
-        return redirect(referer or 'tasks')  # fallback if header is missing
+
+def add_dependency(request, id):          # id = successor task id from URL
+    dep_id = request.POST.get("dep_to_be_added")  # predecessor task id from button
+    referer = request.META.get("HTTP_REFERER", "/")
+
+    if not dep_id or str(dep_id) == str(id):  # guard + no self-dependency
+        return redirect(referer)
+
+    TaskDependency.objects.get_or_create(
+        successor_id=int(dep_id),
+        presuccessor_id=int(id),
+    )
+    return redirect(referer)
 
 
+
+# from django.views.decorators.http import require_POST
+#
+# @require_POST
+# def add_dependency_training_page(request):
+#     from_id = request.POST.get("from_id")
+#     to_id = request.POST.get("to_id")
+#     source = request.POST.get("source", "")
+#
+#     try:
+#         from_task = Task.objects.get(id=from_id)
+#         to_task = Task.objects.get(id=to_id)
+#
+#         to_task.initial_dependencies.add(from_task)
+#
+#         if source == "training_page":
+#             return redirect("training_page")
+#         else:
+#             return redirect("edit_task_page", to_task.id)
+#
+#     except Task.DoesNotExist:
+#         return redirect("training_page")  # fallback in case of invalid ID
 
 
 from django.views.decorators.http import require_POST
+from django.shortcuts import redirect
+from .models import Task, TaskDependency
 
 @require_POST
 def add_dependency_training_page(request):
     from_id = request.POST.get("from_id")
-    to_id = request.POST.get("to_id")
-    source = request.POST.get("source", "")
+    to_id   = request.POST.get("to_id")
+    source  = request.POST.get("source", "")
 
-    try:
-        from_task = Task.objects.get(id=from_id)
-        to_task = Task.objects.get(id=to_id)
+    # guards
+    if not from_id or not to_id or from_id == to_id:
+        return redirect(request.META.get("HTTP_REFERER", "/"))
 
-        to_task.initial_dependencies.add(from_task)
+    # ✅ use the through model instead of M2M .add(...)
+    TaskDependency.objects.get_or_create(
+        presuccessor_id=int(from_id),
+        successor_id=int(to_id),
+    )
 
-        if source == "training_page":
-            return redirect("training_page")
-        else:
-            return redirect("edit_task_page", to_task.id)
-
-    except Task.DoesNotExist:
-        return redirect("training_page")  # fallback in case of invalid ID
-
-
+    # if source == "training_page":
+    #     return redirect("training_page")
+    return redirect("connections")
 
 
 
 
-
-
-
-
-
-
+def delete_dependency_graph_repr(request):
+    print("succesfully inside")
+    edge_id = request.POST.get('edge_id')
+    if edge_id:
+        TaskDependency.objects.filter(id=edge_id).delete()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
 
 
 
-def delete_dependency(request, id):
-    if request.method == "POST":
-        task_to_be_modified = Task.objects.get(id=id)
-        dep_to_be_removed = request.POST.get('dep_to_be_removed')
-        task_to_be_modified.initial_dependencies.remove(dep_to_be_removed)
-        task_to_be_modified.save()
-        referer = request.META.get('HTTP_REFERER')
-        return redirect(referer or 'tasks')
+def delete_dependency(request, task_id):
+    dep_id = request.POST.get("dependency_id")
+    TaskDependency.objects.filter(id=dep_id, presuccessor_id=task_id).delete()
+    return redirect(request.META.get("HTTP_REFERER", "/"))
 
+
+
+
+# def delete_dependency(request, id):
+#     if request.method == "POST":
+#         task_to_be_modified = Task.objects.get(id=id)
+#         dep_to_be_removed = request.POST.get('dep_to_be_removed')
+#         task_to_be_modified.initial_dependencies.remove(dep_to_be_removed)
+#         task_to_be_modified.save()
+#         referer = request.META.get('HTTP_REFERER')
+#         return redirect(referer or 'tasks')
+#
 
 
 def delete_task(request, id):
     if request.method == "POST":
         task = Task.objects.get(pk=id)
         task.delete()
-        return redirect('tasks')
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 
@@ -349,6 +392,36 @@ def define_project_timeframe(request):
 
 def change_project_page(request):
     return render(request, "distributor/change_project_timeframe.html")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -468,7 +541,7 @@ def add_todo(request, id):
     return render(request, 'your_template.html', {'form': form})
 
 
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from .models import Todo
 from .forms import TodoDoneForm
 
@@ -572,6 +645,251 @@ def current_date_previous_date(request):
     project.save()
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+
+
+
+
+
+
+# def create_task_page_v2(request):
+#     task_form = TaskFormV2()
+#     context = {
+#         'task_form': task_form,
+#     }
+#     return render(request, 'distributor/calender/create_task_page_v2.html', context)
+#
+
+
+def create_process(request):
+    if request.method == "POST":
+        form = CreateProcessForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+        # else:
+        #     form = CreateProcessForm()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+
+def tasks_and_processes(request):
+    task_form = TaskFormV2()
+    process_form = CreateProcessForm()
+    all_tasks = Task.objects.all()
+    all_processes = Process.objects.all()
+
+    context = {
+        'task_form': task_form,
+        'process_form': process_form,
+        'all_tasks': all_tasks,
+        'all_processes': all_processes,
+    }
+    return render(request, 'distributor/calender/tasks_and_processes.html', context)
+
+
+
+
+from distributor.calculator.calculate_calender import plan_raw_order
+
+
+def calender(request):
+    day_list = range(20)
+    all_tasks = Task.objects.all().order_by('team')
+    all_teams = Team.objects.all()
+
+
+    context = {
+        "day_list": day_list,
+        "all_tasks": all_tasks,
+        "all_teams": all_teams,
+    }
+    return render(request, 'distributor/calender/calender.html', context)
+
+
+
+
+
+def reload_calender(request):
+    plan_raw_order()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+
+
+def create_task_v2(request):
+    if request.method == "POST":
+        form = TaskFormV2(request.POST)
+        if form.is_valid():
+            new_task = form.save()
+            return redirect('edit_task_page_v2', new_task.id)
+
+        else:
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+def edit_task_page_v2(request,task_id):
+    task = Task.objects.get(pk=task_id)
+    task_name_update_form = TaskNameUpdateForm(instance=task)
+    task_team_update_form = TaskTeamUpdateForm(instance=task)
+    task_loop_update_form = TaskLoopUpdateForm(instance=task)
+    task_priorty_update_form = TaskPriorityUpdateForm(instance=task)
+    task_difficulty_update_form = TaskDifficultyUpdateForm(instance=task)
+    task_approval_required_update_form = TaskApprovalRequiredUpdateForm(instance=task)
+    todo_form = TodoCreateForm()
+    todo_done_form = TodoDoneForm()
+
+    context = {
+        'task': task,
+        'task_name_update_form': task_name_update_form,
+        'task_team_update_form': task_team_update_form,
+        'task_loop_update_form': task_loop_update_form,
+        'task_priorty_update_form': task_priorty_update_form,
+        'task_difficulty_update_form': task_difficulty_update_form,
+        'task_approval_required_update_form': task_approval_required_update_form,
+        'todo_form': todo_form,
+        'todo_done_form': todo_done_form,
+    }
+    return render(request, 'distributor/calender/edit_task_page_v2.html', context)
+
+
+
+
+
+
+
+def create_process_page(request):
+    process_form = CreateProcessForm()
+    all_processes = Process.objects.all()
+
+    context = {
+        'process_form': process_form,
+        'all_processes': all_processes,
+    }
+    return render(request, 'distributor/calender/create_process_page.html', context)
+
+
+
+
+def edit_process_page(request, process_id):
+    process = get_object_or_404(Process, pk=process_id)
+    milestone_form = CreateMilestoneForm()
+    current_milestones = process.milestones.all().order_by("hierarchy_in_process")
+
+    context = {
+        "process": process,
+        'milestone_form': milestone_form,
+        'current_milestones': current_milestones,
+    }
+    return render(request, 'distributor/calender/edit_process_page.html', context)
+
+
+
+
+def create_milestone(request, process_id):
+    process = get_object_or_404(Process, pk=process_id)
+
+    if request.method == "POST":
+        form = CreateMilestoneForm(request.POST)
+        if form.is_valid():
+            new_milestone = form.save()
+            new_milestone.team = process.team
+            new_milestone.process = process
+            new_milestone.hierarchy_in_process = (len(process.milestones.all()) + 1)
+            new_milestone.save()
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+#
+# def create_task(request):
+#     if request.method == "POST":
+#         form = TaskCreationForm(request.POST)
+#         if form.is_valid():
+#             new_task = form.save()
+#
+#             source_page = request.POST.get("source", "")
+#
+#
+#             if source_page == "create_task_page":
+#                 return redirect('edit_task_page_v2', new_task.id)
+#             else:
+#                 referer = request.META.get('HTTP_REFERER')
+#                 return redirect(referer)
+#
+#         else:
+#             form = TaskCreationForm()
+#             return render(request, 'distributor/tasks.html', {'form': form})
+
+
+
+
+
+# views.py
+import json
+from django.db import transaction
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+from .models import Task, Process
+
+@require_POST
+def reorder_milestones(request, process_id):
+    get_object_or_404(Process, pk=process_id)  # 404 if wrong process
+
+    try:
+        payload = json.loads(request.body or "{}")
+        order = payload.get("order", [])
+        ids = [int(x) for x in order]
+    except Exception:
+        return HttpResponseBadRequest("Invalid JSON payload")
+
+    # Fetch only milestones from this process
+    qs = Task.objects.filter(process_id=process_id, id__in=ids)
+    if qs.count() != len(set(ids)):
+        return HttpResponseBadRequest("IDs invalid for this process")
+
+    id_to_rank = {tid: idx + 1 for idx, tid in enumerate(ids)}  # 1-based
+    tasks = list(qs)
+    for t in tasks:
+        t.hierarchy_in_process = id_to_rank[t.id]   # or t.position if that’s your field
+
+    with transaction.atomic():
+        Task.objects.bulk_update(tasks, ["hierarchy_in_process"])
+
+    return JsonResponse({"ok": True})
+
+
+
+
+
+
+def connections(request):
+    return render(request, "distributor/calender/connections.html")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

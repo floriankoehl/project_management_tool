@@ -1,0 +1,19 @@
+<h1>Name: {{ process.name }}</h1>
+<h2>Milestones</h2>
+<ul>
+    {% for task_of_process in process.milestones.all|dictsort:"hierarchy_in_process" %}
+
+        <li>{{ task_of_process.name }}</li>
+    {% endfor %}
+</ul>
+
+
+<a href="{% url 'edit_process_page' process.id %}">Edit Process</a>
+
+
+
+
+
+
+
+

@@ -1,0 +1,204 @@
+{% extends 'distributor/calender/base.html' %}
+{% load custom_tags %}
+
+
+{% block title %}Tasks and Processes{% endblock %}
+
+{% block content %}
+
+  <style>
+    .sortable {
+        max-width: 420px;
+        margin: 20px;
+        padding: 0;
+        list-style: none;
+        {#display: flex;#}
+    }
+
+    .sortable .item {
+      padding: 10px 12px; margin: 6px 0;
+      border: 1px solid #ddd; border-radius: 8px;
+      background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      cursor: grab; user-select: none; transition: transform .08s ease, box-shadow .08s ease;
+    }
+    .sortable .item.dragging {
+      opacity: .9;
+      transform: scale(1.03) rotate(.6deg);
+      box-shadow: 0 10px 26px rgba(0,0,0,.18);
+      border-color: #3b82f6; background: #eef4ff;
+      cursor: grabbing;
+    }
+    /* Drop target indicator */
+    .drop-indicator {
+      height: 8px; margin: 4px 0;
+      border-radius: 999px;
+      background: #3b82f6;
+      box-shadow: 0 2px 8px rgba(59,130,246,.35);
+    }
+  </style>
+
+
+
+{#  <ul class="sortable" id="todo-ul" role="list">#}
+{#        {% for task in process.milestones.all %}#}
+{#            <li class="item" draggable="true" data-id="1">{{ task.name }}</li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+
+    <h1>Name: {{ process.name }}</h1>
+    <h2>Milestones: </h2>
+
+
+
+<div class="sortable" id="todo-ul" role="list" data-process-id="{{ process.id }}">
+  {% for task in current_milestones %}
+    <div class="item" draggable="true" data-id="{{ task.id }}">
+      {{ task.hierarchy_in_process }} | {{ task.name }}
+      <form action="{% url 'edit_task_page_v2' task.id %}">
+        <button type="submit">Edit</button>
+      </form>
+    </div>
+  {% endfor %}
+</div>
+
+<button id="save-order" type="button">Save order</button>
+
+
+    <h2>Add Milestones: </h2>
+    <form method="POST" action="{% url 'create_milestone' process.id %}">
+        {% csrf_token %}
+    {{ milestone_form.as_p }}
+    <button type="submit">Create Milestone</button>
+    </form>
+
+{#  <div class="sortable" id="todo-divs" role="list">#}
+{#    <div class="item" draggable="true" data-id="a">Alpha</div>#}
+{#    <div class="item" draggable="true" data-id="b">Bravo</div>#}
+{#    <div class="item" draggable="true" data-id="c">Charlie</div>#}
+{#  </div>#}
+
+  <script>
+    function makeSortable(container, { onUpdate } = {}) {
+      let draggingEl = null;
+      const indicator = document.createElement('div');
+      indicator.className = 'drop-indicator';
+
+      container.addEventListener('dragstart', (e) => {
+        const item = e.target.closest('.item');
+        if (!item) return;
+        draggingEl = item;
+        item.classList.add('dragging');
+
+        // required for Firefox + custom ghost
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', '');
+
+        // nicer ghost image
+        const ghost = item.cloneNode(true);
+        ghost.style.width = getComputedStyle(item).width;
+        ghost.style.position = 'absolute';
+        ghost.style.top = '-9999px';
+        ghost.style.transform = 'scale(1.03)';
+        document.body.appendChild(ghost);
+        e.dataTransfer.setDragImage(ghost, 10, 10);
+        setTimeout(() => document.body.removeChild(ghost), 0);
+      });
+
+      container.addEventListener('dragover', (e) => {
+        if (!draggingEl) return;
+        e.preventDefault(); // allow drop
+
+        const afterEl = getAfterElement(container, e.clientY);
+        if (afterEl) {
+          container.insertBefore(indicator, afterEl);
+        } else {
+          container.appendChild(indicator);
+        }
+      });
+
+      container.addEventListener('drop', (e) => {
+        if (!draggingEl) return;
+        e.preventDefault();
+        // insert dragged element where the indicator is
+        if (indicator.parentNode === container) {
+          container.insertBefore(draggingEl, indicator);
+        } else {
+          container.appendChild(draggingEl);
+        }
+        cleanup();
+        if (onUpdate) {
+          const order = Array.from(container.children)
+            .filter(el => el.classList.contains('item'))
+            .map(el => el.dataset.id ?? el.textContent.trim());
+          onUpdate(order);
+        }
+      });
+
+      container.addEventListener('dragend', () => cleanup());
+
+      function cleanup() {
+        if (draggingEl) draggingEl.classList.remove('dragging');
+        draggingEl = null;
+        if (indicator.parentNode) indicator.parentNode.removeChild(indicator);
+      }
+
+      function getAfterElement(container, y) {
+        const els = [...container.querySelectorAll('.item:not(.dragging)')];
+        let closest = { offset: Number.NEGATIVE_INFINITY, el: null };
+        for (const el of els) {
+          const box = el.getBoundingClientRect();
+          const offset = y - box.top - box.height / 2;
+          if (offset < 0 && offset > closest.offset) closest = { offset, el };
+        }
+        return closest.el;
+      }
+    }
+
+    document.querySelectorAll('.sortable').forEach((c) =>
+      makeSortable(c, { onUpdate: (order) => console.log('New order:', order) })
+    );
+
+
+
+
+
+  // get CSRF from existing form token OR cookie
+  function getCookie(name) {
+    const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return m ? m.pop() : '';
+  }
+  const csrfToken =
+    document.querySelector('input[name=csrfmiddlewaretoken]')?.value ||
+    getCookie('csrftoken');
+
+  document.getElementById('save-order').addEventListener('click', async () => {
+    const container = document.getElementById('todo-ul');
+    const processId = container.dataset.processId;
+    const order = Array.from(container.querySelectorAll('.item'))
+      .map(el => Number(el.dataset.id));  // [task_id, task_id, ...]
+
+    const btn = document.getElementById('save-order');
+    btn.disabled = true; btn.textContent = 'Saving…';
+
+    const res = await fetch(`/distributor/process/${processId}/milestones/reorder/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+      body: JSON.stringify({ order })
+    });
+
+    if (res.ok) {
+  window.location.reload(); // ✅ force server-rendered values to show
+  return;
+} else {
+      const msg = await res.text();
+      console.error(msg);
+      btn.textContent = 'Save failed';
+      setTimeout(() => { btn.textContent = 'Save order'; btn.disabled = false; }, 1200);
+    }
+  });
+
+
+  </script>
+
+
+{% endblock %}

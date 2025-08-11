@@ -6,24 +6,83 @@ from users.models import Team
 #Here was the team but now its in users/models.py
 
 
+
+
+
+
+class Process(models.Model):
+    name = models.CharField(max_length=100)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+
+
+
+    def __str__(self):
+        return self.name
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
+
+
+    @property  # or @cached_property if positions don’t change during the request
+    def positions_of_tasks(self):
+        # Use .values_list for a single field
+        positions = list(self.milestones.all().values_list('position', flat=True))
+        # print("positions_list", positions)  # shows in the server console
+        return positions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Task(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
+    process = models.ForeignKey(Process, on_delete=models.CASCADE, null=True, blank=True, related_name='milestones')
     loops = models.IntegerField(default=0)
     priority = models.IntegerField(default=0)
     difficulty = models.IntegerField(default=0)
     approval_required = models.BooleanField(default=False)
     generated_deadline = models.DateField(null=True, blank=True)
+    position = models.IntegerField(null=True, blank=True)
+    hierarchy_in_process = models.IntegerField(default=0)
 
 
-    initial_dependencies = models.ManyToManyField("self",
-                                                  symmetrical=False,
-                                                  blank=True,
-                                                  related_name="required_by")
+    initial_dependencies = models.ManyToManyField(
+    "self",
+    through="TaskDependency",
+    through_fields=("presuccessor", "successor"),
+    symmetrical=False,
+    related_name="required_by",
+    blank=True,
+)
 
     def __str__(self):
-        return self.name
+        if self.process:
+            return f"{self.process} - {self.name}"
+        else:
+            return f"{self.name}"
 
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
 
 
     @property
@@ -79,6 +138,89 @@ class Task(models.Model):
         current_date = Project.objects.first().current_date
 
         return (deadline - current_date).days
+
+
+
+
+
+
+
+from django.db import models
+from django.core.exceptions import ValidationError
+
+class TaskDependency(models.Model):
+    presuccessor = models.ForeignKey(
+        "Task",
+        on_delete=models.CASCADE,
+        related_name="presuccessor_set",
+    )
+    successor = models.ForeignKey(
+        "Task",
+        on_delete=models.CASCADE,
+        related_name="successor_set",
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["presuccessor", "successor"],
+                name="uniq_task_dependency",
+            ),
+            models.CheckConstraint(
+                check=~models.Q(presuccessor=models.F("successor")),
+                name="no_self_dependency",
+            ),
+        ]
+
+    def clean(self):
+        if self.presuccessor_id == self.successor_id:
+            raise ValidationError("A task cannot depend on itself.")
+
+    def __str__(self):
+        return f"Master Task: {self.presuccessor} ➝ Dependent Task: {self.successor}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -190,6 +332,11 @@ class TaskLoop(models.Model):
     #         return 0.0
     #
     #     return own_magnitude / total_magnitude
+
+
+
+
+
 
 
 

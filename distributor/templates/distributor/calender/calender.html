@@ -1,0 +1,130 @@
+{% extends 'distributor/calender/base.html' %}
+{% load custom_tags %}
+
+
+{% block title %}Calender{% endblock %}
+
+{% block content %}
+
+
+
+
+
+    <div class="actual_timeline">
+        <h1>Timeline</h1>
+        <form action="{% url 'reload_calender' %}">
+            {% csrf_token %}
+            <button>reload calender</button>
+        </form>
+
+        <div id="taskloop_timeline">
+            <br><br>
+            <table class="actual_timeline_table">
+                <tr>
+                    <th class="scheduled_task_details_cells">Team</th>
+                    <th class="scheduled_task_details_cells">Task</th>
+                    <th class="edit_task_button_timeline"></th>
+
+
+                    {% for day in day_list %}
+                        <th>{{ day }}</th>
+                    {% endfor %}
+                </tr>
+                {% for team in all_teams %}
+                    {% for task in team.task_set.all %}
+                        {% if not task.process %}
+                            <tr>
+                                <td class="nowrap_selfdefined"
+                                    style="background-color: {{ task.team.color }}">{{ task.team }}</td>
+                                <td class="task-todo-hover-container" style="background-color: {{ task.team.color }}">
+                                    {{ task }}
+
+                                </td>
+
+
+
+                                <td>
+                                    <form method="POST" action="{% url 'edit_task_page_v2' task.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit">Edit</button>
+                                    </form>
+                                </td>
+
+                                {% for order in day_list %}
+                                    {% if task.position == order %}
+                                        <td class="scheduled_cell">
+                                            X
+                                        </td>
+                                    {% else %}
+                                        <td class="not_scheduled_cell"></td>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            </tr>
+
+                        {% else %}
+                        {% endif %}
+                    {% endfor %}
+                    {% for process in team.process_set.all %}
+                        <tr>
+                            <td class="nowrap_selfdefined" style="background-color: {{ process.team.color }}">{{ process.team }}</td>
+                            <td class="task-todo-hover-container" style="background-color: {{ process.team.color }}">
+                                {{ process }}
+                            </td>
+                            <td>
+                                <form method="GET" action="{% url 'edit_process_page' process.id %}">
+{#                                        {% csrf_token %}#}
+                                        <button type="submit">Edit</button>
+                                    </form>
+                            </td>
+
+                            {% for order in day_list %}
+                                {% if order in process.positions_of_tasks %}
+                                    <td class="scheduled_cell">
+                                        X
+                                    </td>
+                                {% else %}
+                                    <td class="not_scheduled_cell"></td>
+                                {% endif %}
+
+                            {% endfor %}
+
+
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </table>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

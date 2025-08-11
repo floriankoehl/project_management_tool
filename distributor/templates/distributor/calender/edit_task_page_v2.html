@@ -1,0 +1,63 @@
+{% extends "distributor/calender/base.html" %}
+{% load custom_tags %}
+{% load team_tags %}
+{#{% load graph_tags %}#}
+
+
+
+
+{% block title %}Edit task {{ task.name }}{% endblock %}
+
+{% block content %}
+    {#    <h1>Edit Task: </h1>#}
+    {#    <h2>Name: {{ task.name }}</h2>#}
+    {#    <h2>Team: {{ task.team }}</h2>#}
+    {#    <h2>Priority: {{ task.priority }}</h2>#}
+    {#    <h2>Difficulty: {{ task.difficulty }}</h2>#}
+    {#    <h2>Approval Required: {{ task.approval_required }}</h2>#}
+    {#    <h2>Loops: {{ task.loops }}</h2>#}
+    <div class="edit_task_page_body">
+        <div class="edit_task_page_hardfacts">
+
+            <div class="edit_task_page_name_and_todo">
+                <h1 style="margin: 10px; ">{{ task }}</h1>
+                {% todo_component task %}
+            </div>
+
+            <div class="visualisation_div">
+                {% display_connection_training task %}
+            </div>
+
+
+        </div>
+
+
+        <div class="edit_task_form_temp">
+            {% view_task task.id %}
+
+            {% edit_task_comp task.id %}
+        </div>
+        <h2>Current dependencies: </h2>
+
+        {% for dep in task.presuccessor_set.all %}
+            <div class="display_dependency_with_button">
+                <form method="POST" action="{% url 'delete_dependency' task.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="dependency_id" value="{{ dep.id }}">
+                    <button type="submit">Delete</button>
+                </form>
+                {{ dep.successor }}
+            </div>
+        {% endfor %}
+
+
+        {% update_dependencies task.id %}
+
+        {#        {% comp_show_all_task_loop_objects_of_one_task_loop task.id %}#}
+
+        {% update_dependencies_processes task %}
+    </div>
+
+
+
+{% endblock %}

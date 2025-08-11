@@ -2394,3 +2394,141 @@ overflow-y: auto;}
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.tasks_and_processes_page_container {
+    width: 90vw;
+    /*height: 50vh;*/
+    background: #e1e1e1;
+    justify-self: center;
+    margin: 20px;
+    border-radius: 5px;
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+
+.create_task_container {
+    width: 50%;
+    height: 100%;
+    background: #ceffce;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.create_process_container {
+    width: 50%;
+    height: 100%;
+    background: #a1ffdd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.create_process_form {
+    height: 200px;
+    width: 300px;
+    background: grey;
+}
+
+
+.all_tasks_listed_v2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.task_listing_v2 {
+
+}
+
+.all_processes_listed_v2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    background: #d1fdc4;
+}
+
+.process_listing_v2 {
+    width: 300px;
+    height: 500px;
+    background: white;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.create_task_page_container {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.create_task_page_container > * {
+    margin: 20px;
+}
+
+.item {
+    background: #d8d8d8 !important;
+    display: flex;
+}
+
+
+
+
+
+
+
+

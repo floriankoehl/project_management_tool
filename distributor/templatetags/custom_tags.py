@@ -27,14 +27,7 @@ def view_task(context, task_id):
 
 
 
-@register.inclusion_tag('components/update_dependencies.html')
-def update_dependencies(task_id):
-    task = Task.objects.get(pk=task_id)
-    possible_deps = get_valid_possible_dependencies(task)
-    return {
-        'task': task,
-        'possible_deps': possible_deps
-    }
+
 
 
 
@@ -252,3 +245,99 @@ def display_create_task_form():
 #         'todo_done_form': todo_done_form,
 #     }
 #     return context
+
+
+@register.inclusion_tag("components/calender/display_process.html")
+def display_process(process):
+    context =  {
+        'process': process
+    }
+    return context
+
+
+
+
+@register.inclusion_tag('components/update_dependencies.html')
+def update_dependencies(task_id):
+    task = Task.objects.get(pk=task_id)
+    possible_deps = get_valid_possible_dependencies(task)
+    return {
+        'task': task,
+        'possible_deps': possible_deps
+    }
+
+
+
+
+@register.inclusion_tag("components/calender/update_dependencies_processes.html")
+def update_dependencies_processes(task):
+    all_processes = Process.objects.all()
+
+    context = {
+        'all_processes': all_processes,
+    }
+    return context
+
+
+
+from distributor.models import Task, TaskDependency
+
+
+# @register.inclusion_tag("components/calender/visual_graph_dep_update.html")
+# def visual_graph_dep_update():
+#     # Nodes: all tasks
+#     tasks = Task.objects.all()
+#     graph_nodes = [{"id": t.id, "label": str(t)} for t in tasks]
+#
+#     # Edges: use TaskDependency so each edge has a DB id
+#     deps = TaskDependency.objects.all().values("id", "presuccessor_id", "successor_id")
+#     graph_edges = [{"id": d["id"], "from": d["presuccessor_id"], "to": d["successor_id"]} for d in deps]
+#
+#     return {"graph_nodes": graph_nodes, "graph_edges": graph_edges}
+
+
+
+
+@register.inclusion_tag("components/calender/visual_graph_dep_update.html")
+def visual_graph_dep_update():
+    # Nodes filled with team color; keep process grouping
+    tasks = Task.objects.select_related("team", "process").all()
+    deps  = TaskDependency.objects.values("id", "presuccessor_id", "successor_id")
+
+    # process id per task (for grouping)
+    id2proc = {t.id: (t.process_id or 0) for t in tasks}
+
+    graph_nodes = [
+        {
+            "id": t.id,
+            "label": str(t),
+            "group": id2proc[t.id],                   # process id
+            "color": {"background": getattr(t.team, "color", "#e5e7eb")},  # fill with team color
+        }
+        for t in tasks
+    ]
+
+    graph_edges = []
+    for d in deps:
+        # keep your current direction (successor -> presuccessor)
+        a = d["successor_id"]
+        b = d["presuccessor_id"]
+        graph_edges.append({"id": d["id"], "from": a, "to": b})
+
+    return {"graph_nodes": graph_nodes, "graph_edges": graph_edges}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
